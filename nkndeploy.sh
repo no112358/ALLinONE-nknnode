@@ -1,11 +1,10 @@
 #!/bin/bash
-# Changelog:
-# v1.00 All new script
+#v1.1 Added method 5
 
 method1(){
 clear
 printf "================================================================================\n"
-printf "Setup: Download ChainDB from NKN.org and host it on this server\n"
+printf "Setup: Download ChainDB from NKN.org  and host it on this server\n"
 printf "To force exit this script press CTRL+C.\n"
 printf "This will probably take a very long time, be patient!\n"
 printf "================================================================================\n\n"
@@ -16,6 +15,7 @@ printf "20GB minimum, IF the server is only going to host the ChainDB and nothin
 printf "If you also want to run a NKN node on this server you neeed minimum 35GB.\n\n"
 
 read -p "Press enter to continue!"
+printf "\033[1A\033[2K"
 fi
 
 printf "Installing Apache Web Server............................................ "
@@ -33,12 +33,17 @@ printf "DONE!\n"
 cd /var/www/html/ > /dev/null 2>&1
 
 printf "Downloading ChainDB archive............................................. \n"
-wget --quiet --continue --show-progress https://nkn.org/ChainDB_pruned_latest.tar.gz
+websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
+wget --quiet --continue --show-progress $websource
 printf "Downloading ChainDB archive............................................. DONE!\n\n"
 
 # cleanup
-mv -f Chain*.tar.gz ChainDB.tar.gz > /dev/null 2>&1
+filename=${websource##*/}
+mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
 rm -f index.html > /dev/null 2>&1
+
+# NEW websource for the install
+websource="http://"$PUBLIC_IP"/ChainDB.tar.gz"
 
 printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
@@ -58,15 +63,14 @@ if [ $mode == "beginner" ]; then
         case "$response" in
                 [yY][eE][sS]|[yY])
                 # correct continue script
-                userdata1
-		;;
+                installation="local" ; userdata1 ;;
                 *)
                 # wrong exit
-                menu
-                ;;
+                menu ;;
         esac
 else
         read -p "Press enter to continue!"
+	menu
 fi
 }
 
@@ -81,15 +85,7 @@ printf "REQ.: Fully synced node (mining). To host the file on this server you mu
 printf "have enough storage space 35GB.\n\n"
 
 read -p "Press enter to continue!"
-
-clear
-printf "================================================================================\n"
-printf "Setup: Create ChainDB from own node and host on the same server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
-
-printf "REQ.: Fully synced node (mining). To host the file on this server you must\n"
-printf "have enough storage space 35GB.\n\n"
+printf "\033[1A\033[2K"
 
 printf "Installing Apache Web Server............................................ "
 apt-get install apache2 -y > /dev/null 2>&1
@@ -242,16 +238,7 @@ printf "REQ.: Fully synced node (mining). To host the file on this server you mu
 printf "have enough storage space 35GB.\n\n"
 
 read -p "Press enter to continue!"
-
-clear
-printf "================================================================================\n"
-printf "Setup: Update existing ChainDB on your ChainDB host server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
-
-printf "UPDATE ONLY! Run only on previous ChainDB server!\n"
-printf "REQ.: Fully synced node (mining). To host the file on this server you must\n"
-printf "have enough storage space 35GB.\n\n"
+printf "\033[1A\033[2K"
 
 printf "Stopping NKN node software.............................................. "
 systemctl stop nkn-commercial.service > /dev/null 2>&1
@@ -284,6 +271,85 @@ printf "Next time you install a node, it will use the new database.\n\n"
 
 read -p "Press enter to continue!"
 menu
+}
+
+method5(){
+clear
+printf "================================================================================\n"
+printf "Setup: Download ChainDB from custom URL and host it on this server\n"
+printf "To force exit this script press CTRL+C.\n"
+printf "This will probably take some time, be patient!\n"
+printf "================================================================================\n\n"
+
+printf "FRESH server only! You must have enough storage space on VPS!\n"
+printf "25GB minimum IF the server is only going to host the ChainDB and nothing else.\n"
+printf "If you also want to run a NKN node on this server you neeed minimum 35GB.\n\n"
+
+read -p "Press enter to continue!"
+printf "\033[1A\033[2K"
+
+printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
+read websource
+printf "\n"
+
+# URL CHECK
+if curl --output /dev/null --silent --head --fail "$websource"; then
+        printf "URL OK: %s\n" "$websource"
+        read -t 4
+        #continue if URL ok
+else
+        printf "ERROR URL does NOT exist: %s\n" "$websource"
+        read -t 4
+        method5
+fi
+
+printf "\nInstalling Apache Web Server............................................ "
+apt-get install apache2 -y > /dev/null 2>&1
+printf "DONE!\n"
+
+# Configure Firewall and ports
+printf "Configuring firewall.................................................... "
+ufw allow 80 > /dev/null 2>&1
+ufw allow 22 > /dev/null 2>&1
+ufw allow 443 > /dev/null 2>&1
+ufw --force enable > /dev/null 2>&1
+printf "DONE!\n"
+
+cd /var/www/html/ > /dev/null 2>&1
+
+printf "Downloading ChainDB archive............................................. \n"
+wget --quiet --continue --show-progress $websource
+printf "Downloading ChainDB archive............................................. DONE!\n\n"
+
+# cleanup
+filename=${websource##*/}
+mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
+rm -f index.html > /dev/null 2>&1
+
+# NEW websource for the install
+websource="http://"$PUBLIC_IP"/ChainDB.tar.gz"
+
+printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
+
+printf "${red}"
+printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
+printf "${normal}"
+
+printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
+printf "${red}"
+printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
+printf "${normal}"
+
+# Question
+read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
+case "$response" in
+        [yY][eE][sS]|[yY])
+        # correct continue script
+        installation="local" ; userdata1 ;;
+        *)
+        # wrong exit
+        menuadvanced ;;
+esac
 }
 
 ################################ user input ####################################
@@ -374,13 +440,17 @@ printf "Check what you entered:\n\n"
 printf "Wallet address: %s\n" "$benaddress"
 printf "Username: %s\n" "$username"
 printf "Password: %s\n" "$userpassword"
+printf "Chain database source: %s\n\n" "$websource"
+
 
 # if beginner skip web source
-if [ $mode == "beginner" ]; then
-	printf "\n"
-else
-	printf "Chain database source: %s\n\n" "$websource"
-fi
+#if [ $mode == "beginner" ]; then
+#	printf "\n"
+#else
+#	printf "Chain database source: %s\n\n" "$websource"
+#fi
+
+
 
 # ASK if the entered data is correct
 read -r -p "Are you sure this data is correct? [y/n] " response
@@ -503,8 +573,9 @@ cd "$DIR" > /dev/null 2>&1
 rm -rf ChainDB/ > /dev/null 2>&1
 
 # if from beginner menu, extract locally, if not download from websource
-if [ $mode == "beginner" ]; then
+if [ $installation == "local" ]; then
 	cd /var/www/html/
+	#printf "LOCAL!\n"
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
         # internet download
@@ -569,13 +640,9 @@ printf "The server should be visible on nstatus.org in a few minutes.\n"
 printf "Enter the Server IP provided here!\n"
 printf "The node will take an hour or two do it's thing, so dont' worry.\n\n"
 
-printf "Enjoy your new NKN node miner. Thanks for using this script!\n\n"
-install5
-}
+printf "Thanks for using this script!\n\n"
 
-function install5(){
-# Exit to terminal and change user to $username
-sudo su - $username
+exit
 }
 
 ################################## Menu stuff ##################################
@@ -601,28 +668,33 @@ printf "\n======================================================================
 
 printf "NKN ChainDB creation:\n"
 printf "1) Download ChainDB from NKN.org and host it on THIS server\n"
-printf "2) Create ChainDB from own node and host on the SAME server\n"
-printf "3) Create ChainDB from own node and host it on ANOTHER server\n"
-printf "4) Update existing ChainDB on your ChainDB host server\n\n"
+printf "2) Download ChainDB from a custom URL and host it on THIS server\n"
+printf "3) Create ChainDB from own node and host on the SAME server\n"
+printf "4) Create ChainDB from own node and host it on ANOTHER server\n"
+printf "5) Update existing ChainDB on your ChainDB host server\n\n"
+
 
 printf "NKN Node server install:\n"
-printf "5) via custom server (requires URL to ChainDB*.tar.gz)\n"
-printf "6) no ChainDB install, sync starts from 0 (takes a long time)\n\n"
+printf "6) via custom server (requires URL to ChainDB*.tar.gz)\n"
+printf "7) no ChainDB install, sync starts from 0 (takes a long time)\n\n"
 
-printf "9) Go back to first menu\n"
+printf "10) Go back to first menu\n"
 printf "0) Exit\n\n"
 printf "Enter selection: "
 read selection
 printf "\n"
 
 case $selection in
-	1 ) method1 ; mode="advanced" ;;
-	2 ) method2 ;;
-	3 ) method3 ;;
-        4 ) method4 ;;
-	5 ) installtype="custom" ; database="yes" ; userdata1 ;;
-        6 ) installtype="nodatabase" ; database="no" ; websource="none" ; userdata1 ;;
-	9 ) menu ;;
+	1 ) mode="advanced" ; method1 ;;
+	2 ) method5 ;;
+	3 ) method2 ;;
+	4 ) method3 ;;
+        5 ) method4 ;;
+
+	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
+        7 ) database="no" ; websource="none" ; userdata1 ;;
+
+	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -p "Wrong selection press enter to continue!" ;;
 esac
@@ -670,6 +742,7 @@ case $selection in
         1 ) mode="beginner" ; database="yes" ; method1 ;;
 	2 ) read -p "Put on your glasses and press enter to continue :D " ; menubeginner ;;
         3 ) installtype="custom" ; database="yes" ; userdata1 ;;
+
 	5 ) menu ;;
         0 ) clear ; exit ;;
         * ) read -p "Wrong selection press enter to continue!" ;;
@@ -757,5 +830,6 @@ apt-get install unzip glances vnstat ufw pv -y
 username="nkn"
 mode="whatever"
 database="whatever"
+installation="whatever"
 PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
 menu
