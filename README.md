@@ -23,7 +23,9 @@ https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-on
 # PREPARATION:
 **VPS server size:**
 To deploy a ChainDB and node: 35+ GB min
+
 To deploy ChainDB only: 25 GB min
+
 To deploy NKN nodes: 25 GB min
 
 **Operating system:** Ubuntu 20.04+
