@@ -29,7 +29,9 @@ To deploy ChainDB only: 25 GB min
 To deploy NKN nodes: 25 GB min
 
 **Operating system:** Ubuntu 20.04+
+
 **Private IP check (Linode)**
+
 **Be sure to "disable" VPS provider firewalls!**
 
 # STARTING THE SCRIPT:
