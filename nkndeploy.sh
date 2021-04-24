@@ -58,18 +58,18 @@ printf "${normal}"
 
 # if from beginner menu, then also install a node on this server
 if [ $mode == "beginner" ]; then
-        # Question
-        read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
-        case "$response" in
-                [yY][eE][sS]|[yY])
-                # correct continue script
-                installation="local" ; userdata1 ;;
-                *)
-                # wrong exit
-                menu ;;
-        esac
+	# Question
+	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
+	case "$response" in
+		[yY][eE][sS]|[yY])
+		# correct continue script
+		installation="local" ; userdata1 ;;
+		*)
+		# wrong exit
+		menu ;;
+	esac
 else
-        read -p "Press enter to continue!"
+    read -p "Press enter to continue!"
 	menu
 fi
 }
@@ -97,7 +97,6 @@ sleep 5
 printf "DONE!\n"
 
 # find directory and change dir to it
-#cd "$(find / -type d -name "nkn-node")" > /dev/null 2>&1 #OLD
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)"
 
 printf "Pruning ChainDB folder.................................................. "
@@ -294,13 +293,13 @@ printf "\n"
 
 # URL CHECK
 if curl --output /dev/null --silent --head --fail "$websource"; then
-        printf "URL OK: %s\n" "$websource"
-        read -t 4
-        #continue if URL ok
+	printf "URL OK: %s\n" "$websource"
+	read -t 4
+	#continue if URL ok
 else
-        printf "ERROR URL does NOT exist: %s\n" "$websource"
-        read -t 4
-        method5
+	printf "ERROR URL does NOT exist: %s\n" "$websource"
+	read -t 4
+	method5
 fi
 
 printf "\nInstalling Apache Web Server............................................ "
@@ -343,12 +342,12 @@ printf "${normal}"
 # Question
 read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
 case "$response" in
-        [yY][eE][sS]|[yY])
-        # correct continue script
-        installation="local" ; userdata1 ;;
-        *)
-        # wrong exit
-        menuadvanced ;;
+	[yY][eE][sS]|[yY])
+	# correct continue script
+	installation="local" ; userdata1 ;;
+	*)
+	# wrong exit
+	menuadvanced ;;
 esac
 }
 
@@ -372,15 +371,15 @@ read benaddress
 walletlenght=`expr length "$benaddress"`
 
 if [ $walletlenght == "36" ]; then
-        # Continues script
-        userdata2
+	# Continues script
+	userdata2
 else
-        # restarts function F1
-        printf "\nNKN address you entered is wrong.\n"
-        printf "Use mainnet NKN wallet, NOT ERC-20.\n"
-        printf "Address starts with NKN*\n\n"
+	# restarts function F1
+	printf "\nNKN address you entered is wrong.\n"
+	printf "Use mainnet NKN wallet, NOT ERC-20.\n"
+	printf "Address starts with NKN*\n\n"
 
-        read -p "Press enter to continue!"
+	read -p "Press enter to continue!"
 	userdata1
 fi
 }
@@ -414,13 +413,13 @@ if [ $installtype == "custom" ]; then
 	printf "\n"
 
 	if curl --output /dev/null --silent --head --fail "$websource"; then
-	        printf "URL OK: %s\n" "$websource"
-	        read -t 4
-	        userdata4
+		printf "URL OK: %s\n" "$websource"
+		read -t 4
+		userdata4
 	else
-	        printf "ERROR URL does NOT exist: %s\n" "$websource"
-	        read -t 4
-	        userdata3
+		printf "ERROR URL does NOT exist: %s\n" "$websource"
+		read -t 4
+		userdata3
 	fi
 else
 	userdata4
@@ -456,13 +455,12 @@ printf "Chain database source: %s\n\n" "$websource"
 read -r -p "Are you sure this data is correct? [y/n] " response
 case "$response" in
     [yY][eE][sS]|[yY])
-        #correct continue script
-	install1
-        ;;
+	#correct continue script
+	install1 ;;
     *)
-        #wrong restarts userdata input
-        userdata1
-        ;;
+	#wrong restarts userdata input
+	userdata1
+	;;
 esac
 }
 
@@ -543,27 +541,26 @@ printf "DONE!\n"
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
 if [ $database == "no" ]; then
 	# script skips DB download and continues
-        install3
+    install3
 else
 	printf "Waiting for NKN node software to start.................................. "
 
 	timestart=$(date +%s)
 	while [[ $(($(date +%s) - $timestart)) -lt 300 ]]; do # 300sec 5 min
-	        if [ ! -d "$DIR"ChainDB ] && [ ! -f "$DIR"wallet.json ]; then
-		        # if folder and file don't exist wait and repeat check
-	                sleep 5
-	        else
-	                # when file is detected
+		if [ ! -d "$DIR"ChainDB ] && [ ! -f "$DIR"wallet.json ]; then
+			# if folder and file don't exist wait and repeat check
+			sleep 5
+		else
+			# when file is detected
 			sleep 5 > /dev/null 2>&1
 			systemctl stop nkn-commercial.service > /dev/null 2>&1
-	                sleep 5 > /dev/null 2>&1
+			sleep 5 > /dev/null 2>&1
 			printf "DONE!\n"
-	                install2
-	        fi
+			install2
+		fi
 	done
 	# when timer runs out go to the firewall warning
 	firewallwarn
-
 fi
 }
 
@@ -578,7 +575,7 @@ if [ $installation == "local" ]; then
 	#printf "LOCAL!\n"
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
-        # internet download
+    # internet download
 	wget -O - "$websource" -q --show-progress | tar -xzf -
 fi
 
@@ -689,10 +686,10 @@ case $selection in
 	2 ) method5 ;;
 	3 ) method2 ;;
 	4 ) method3 ;;
-        5 ) method4 ;;
+	5 ) method4 ;;
 
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
-        7 ) database="no" ; websource="none" ; userdata1 ;;
+    7 ) database="no" ; websource="none" ; userdata1 ;;
 
 	10 ) menu ;;
 	0 ) clear ; exit ;;
@@ -739,13 +736,13 @@ read selection
 printf "\n"
 
 case $selection in
-        1 ) mode="beginner" ; database="yes" ; method1 ;;
+	1 ) mode="beginner" ; database="yes" ; method1 ;;
 	2 ) read -p "Put on your glasses and press enter to continue :D " ; menubeginner ;;
-        3 ) installtype="custom" ; database="yes" ; userdata1 ;;
+	3 ) installtype="custom" ; database="yes" ; userdata1 ;;
 
 	5 ) menu ;;
-        0 ) clear ; exit ;;
-        * ) read -p "Wrong selection press enter to continue!" ;;
+	0 ) clear ; exit ;;
+	* ) read -p "Wrong selection press enter to continue!" ;;
 esac
 done
 }
