@@ -20,8 +20,8 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
-printf "\033[1A\033[2K"
+read -s -r -p "Press Enter to continue!"
+printf "\r\033[K"
 fi
 
 printf "Installing Apache Web Server............................................ "
@@ -75,7 +75,7 @@ if [ "$mode" == "beginner" ]; then
 		menu ;;
 	esac
 else
-    read -sp "Press Enter to continue!"
+    read -s -r -p "Press Enter to continue!"
 	menu
 fi
 }
@@ -93,8 +93,8 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
-printf "\033[1A\033[2K"
+read -s -r -p "Press Enter to continue!"
+printf "\r\033[K"
 
 printf "Installing Apache Web Server............................................ "
 apt-get install apache2 -y > /dev/null 2>&1
@@ -132,7 +132,7 @@ printf "Custom URL to the ChainDB archive. You will need this URL, make a copy o
 printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
-read -sp "Press Enter to continue!"
+read -s -r -p "Press Enter to continue!"
 }
 
 method3(){
@@ -166,7 +166,7 @@ use to host the ChainDB file, so you can deploy your next NKN nodes faster!
 Requirement: web host with 1 core, 512 MB RAM, 20GB storage minimum.
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
+read -s -r -p "Press Enter to continue!"
 method3host
 }
 
@@ -233,7 +233,7 @@ printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$sship"
 printf "%s" "$normal"
 
-read -sp "Press enter to continue!"
+read -s -r -p "Press Enter to continue!"
 menu
 }
 
@@ -251,8 +251,8 @@ Previous ChainDB will be replaced
 ================================================================================
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
-printf "\033[1A\033[2K"
+read -s -r -p "Press Enter to continue!"
+printf "\r\033[K"
 
 printf "Stopping NKN node software.............................................. "
 systemctl stop nkn-commercial.service > /dev/null 2>&1
@@ -283,7 +283,7 @@ printf "The ChainDB.tar.gz archive was updated.\n\n"
 
 printf "Next time you install a node, it will use the new database.\n\n"
 
-read -sp "Press enter to continue!"
+read -s -r -p "Press Enter to continue!"
 menu
 }
 
@@ -301,8 +301,8 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
-printf "\033[1A\033[2K"
+read -s -r -p "Press Enter to continue!"
+printf "\r\033[K"
 
 printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
 read -r websource
@@ -400,7 +400,7 @@ NKN wallet address you entered is wrong. Use mainnet NKN wallet,
 not ERC-20 wallet. NKN mainnet address starts with NKN*
 
 EOF
-	read -sp "Press enter to continue!"
+	read -s -r -p "Press Enter to continue!"
 	userdata1
 fi
 }
@@ -505,7 +505,7 @@ https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-on
 EOF
 printf "%s" "$normal"
 
-read -sp "Press enter to continue!"
+read -s -r -p "Press Enter to continue!"
 exit
 }
 
@@ -716,7 +716,7 @@ case $selection in
 
 	10 ) menu ;;
 	0 ) clear ; exit ;;
-	* ) read -sp "Wrong selection press enter to continue!" ;;
+	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
 esac
 done
 }
@@ -767,12 +767,12 @@ printf "\n"
 
 case $selection in
 	1 ) mode="beginner" ; database="yes" ; method1 ;;
-	2 ) read -sp "Put on your glasses and press enter to continue :D " ; menubeginner ;;
+	2 ) read -s -r -p "Put on your glasses and press enter to continue :D" ; menubeginner ;;
 	3 ) installtype="custom" ; database="yes" ; userdata1 ;;
 
 	10 ) menu ;;
 	0 ) clear ; exit ;;
-	* ) read -sp "Wrong selection press enter to continue!" ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
 done
 }
@@ -820,7 +820,7 @@ case $selection in
 	1 ) menubeginner ;;
 	3 ) menuadvanced ;;
 	0 ) clear ; exit ;;
-	* ) read -sp "Wrong selection press enter to continue!" ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
 done
 }
@@ -833,7 +833,7 @@ blue=$(tput setaf 4)
 magenta=$(tput setaf 5)
 normal=$(tput sgr0)
 
-if [[ $EUID > 0 ]]; then
+if [[ $EUID -gt 0 ]]; then
 printf "%s" "$red"
 cat << "EOF"
 =================================
@@ -856,5 +856,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev7"
+version="1.1 dev8"
 menu
