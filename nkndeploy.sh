@@ -3,18 +3,22 @@
 
 method1(){
 clear
-printf "================================================================================\n"
-printf "Setup: Download ChainDB from NKN.org  and host it on this server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "This will probably take a very long time, be patient!\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: Download ChainDB from NKN.org  and host it on this server
+To force exit this script press CTRL+C.
+This will probably take a very long time, be patient!
+================================================================================
 
+EOF
 if [ $mode == "advanced" ]; then
-printf "To host the file on this server you must have enough storage space.\n"
-printf "20GB minimum, IF the server is only going to host the ChainDB and nothing else.\n"
-printf "If you also want to run a NKN node on this server you neeed minimum 35GB.\n\n"
+cat << "EOF"
+To host the file on this server you must have enough storage space.
+20GB minimum, IF the server is only going to host the ChainDB and nothing else.
+If you also want to run a NKN node on this server you neeed minimum 35GB.
 
-read -p "Press enter to continue!"
+EOF
+read -sp "Press enter to continue!"
 printf "\033[1A\033[2K"
 fi
 
@@ -69,22 +73,24 @@ if [ $mode == "beginner" ]; then
 		menu ;;
 	esac
 else
-    read -p "Press enter to continue!"
+    read -sp "Press enter to continue!"
 	menu
 fi
 }
 
 method2(){
 clear
-printf "================================================================================\n"
-printf "Setup: Create ChainDB from own node and host on the same server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: Create ChainDB from own node and host on the same server
+To force exit this script press CTRL+C.
+================================================================================
 
-printf "REQ.: Fully synced node (mining). To host the file on this server you must\n"
-printf "have enough storage space 35GB.\n\n"
+REQ.: Fully synced node (mining). To host the file on this server you must
+have enough storage space 35GB.
 
-read -p "Press enter to continue!"
+EOF
+read -sp "Press enter to continue!"
 printf "\033[1A\033[2K"
 
 printf "Installing Apache Web Server............................................ "
@@ -123,17 +129,17 @@ printf "Custom URL to the ChainDB archive. You will need this URL, make a copy o
 printf "${red}"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "${normal}"
-read -p "Press enter to continue!"
+read -sp "Press enter to continue!"
 }
 
 method3(){
 clear
-printf "================================================================================\n"
-printf "Setup: Create ChainDB from own node and host it on another server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
-
 cat << "EOF"
+================================================================================
+Setup: Create ChainDB from own node and host it on another server
+To force exit this script press CTRL+C.
+================================================================================
+
   ________________                         ________________
  |  ____________  |                       |  ____________  |
  | |            | |                       | |            | |
@@ -146,38 +152,40 @@ cat << "EOF"
    / ********** \                           / ********** \
  /  ************  \                       /  ************  \
 --------------------                     --------------------
+
+READ CAREFULLY!
+
+This process will make a ChainDB file on NKN node server and transfer it
+to the web host server.
+
+You need to provide a WEB HOST SERVER! Make another VPS server which you will
+use to host the ChainDB file, so you can deploy your next NKN nodes faster!
+REQ.: web host: 1 core, 512 MB RAM, 20GB storage minimum.
+
 EOF
-printf "\nREAD CAREFULLY!\n\n"
-
-printf "This process will make a ChainDB file on NKN node server and transfer it\n"
-printf "to the web host server.\n\n"
-
-printf "You need to provide a WEB HOST SERVER! Make another VPS server which you will\n"
-printf "use to host the ChainDB file, so you can deploy your next NKN nodes faster!\n"
-printf "REQ.: web host: 1 core, 512 MB RAM, 20GB storage minimum.\n\n"
-
-read -p "Press enter to continue!"
-
+read -sp "Press enter to continue!"
 method3host
 }
 
 method3host(){
 clear
-printf "================================================================================\n"
-printf "Setup: Create ChainDB and host it on another server.\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: Create ChainDB and host it on another server.
+To force exit this script press CTRL+C.
+================================================================================
 
-printf "We will now connect to the HOST server and configure it from this script.\n"
-printf "After you put in the username and address, you will be asked to confirm the\n"
-printf "ECDSA security. Type yes and hit enter. You will be asked for the password\n"
-printf "to establish the SSH connection and to install software on the web host server.\n\n"
+We will now connect to the HOST server and configure it from this script.
+After you put in the username and address, you will be asked to confirm the
+ECDSA security. Type yes and hit enter. You will be asked for the password
+to establish the SSH connection and to install software on the web host server.
 
-printf "Type in WEB HOST SERVER username:\n"
-read sshusername
+Type in WEB HOST SERVER username:
+EOF
+read -r sshusername
 
 printf "\nType in WEB HOST SERVER IP address:\n"
-read sship
+read -r sship
 
 printf "\nConfiguring Web Host Server............................................. \n"
 sudo ssh -t "$sshusername"@"$sship" 'sudo apt-get update -y > /dev/null 2>&1; sudo apt-get install apache2 -y > /dev/null 2>&1; sudo rm -f /var/www/html/index.html > /dev/null 2>&1; exit > /dev/null 2>&1'
@@ -222,21 +230,23 @@ printf "${red}"
 printf "http://%s/ChainDB.tar.gz\n\n" "$sship"
 printf "${normal}"
 
-read -p "Press enter to continue!"
+read -sp "Press enter to continue!"
 }
 
 method4(){
 clear
-printf "================================================================================\n"
-printf "Setup: Update existing ChainDB on your ChainDB host server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: Update existing ChainDB on your ChainDB host server
+To force exit this script press CTRL+C.
+================================================================================
 
-printf "UPDATE ONLY! Run only on previous ChainDB server!\n"
-printf "REQ.: Fully synced node (mining). To host the file on this server you must\n"
-printf "have enough storage space 35GB.\n\n"
+UPDATE ONLY! Run only on previous ChainDB server!
+REQ.: Fully synced node (mining). To host the file on this server you must
+have enough storage space 35GB.
 
-read -p "Press enter to continue!"
+EOF
+read -sp "Press enter to continue!"
 printf "\033[1A\033[2K"
 
 printf "Stopping NKN node software.............................................. "
@@ -268,37 +278,39 @@ printf "The ChainDB.tar.gz archive was updated.\n\n"
 
 printf "Next time you install a node, it will use the new database.\n\n"
 
-read -p "Press enter to continue!"
+read -sp "Press enter to continue!"
 menu
 }
 
 method5(){
 clear
-printf "================================================================================\n"
-printf "Setup: Download ChainDB from custom URL and host it on this server\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "This will probably take some time, be patient!\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: Download ChainDB from custom URL and host it on this server
+To force exit this script press CTRL+C.
+This will probably take some time, be patient!
+================================================================================
 
-printf "FRESH server only! You must have enough storage space on VPS!\n"
-printf "25GB minimum IF the server is only going to host the ChainDB and nothing else.\n"
-printf "If you also want to run a NKN node on this server you neeed minimum 35GB.\n\n"
+FRESH server only! You must have enough storage space on VPS!
+25GB minimum IF the server is only going to host the ChainDB and nothing else.
+If you also want to run a NKN node on this server you neeed minimum 35GB.
 
-read -p "Press enter to continue!"
+EOF
+read -sp "Press enter to continue!"
 printf "\033[1A\033[2K"
 
 printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
-read websource
+read -r websource
 printf "\n"
 
 # URL CHECK
 if curl --output /dev/null --silent --head --fail "$websource"; then
 	printf "URL OK: %s\n" "$websource"
-	read -t 4
+	sleep 4
 	#continue if URL ok
 else
 	printf "ERROR URL does NOT exist: %s\n" "$websource"
-	read -t 4
+	sleep 4
 	method5
 fi
 
@@ -355,17 +367,19 @@ esac
 
 function userdata1(){
 clear
-printf "================================================================================\n"
-printf "Setup: necessary data input\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: necessary data input
+To force exit this script press CTRL+C.
+================================================================================
 
-# input NKN wallet address
-printf "Enter the MAINNET! NKN address where you want to receive payments.\n"
-printf "Example address: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ\n\n"
+Enter the MAINNET! NKN address where you want to receive payments.
+Example address: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 
-printf "NKN Wallet address:\n"
-read benaddress
+"NKN Wallet address:
+EOF
+# Input beneficiary wallet adddress
+read -r benaddress
 
 # check wallet address lengh
 walletlenght=`expr length "$benaddress"`
@@ -375,50 +389,55 @@ if [ $walletlenght == "36" ]; then
 	userdata2
 else
 	# restarts function F1
-	printf "\nNKN address you entered is wrong.\n"
-	printf "Use mainnet NKN wallet, NOT ERC-20.\n"
-	printf "Address starts with NKN*\n\n"
-
-	read -p "Press enter to continue!"
+	cat << "EOF"
+	nNKN address you entered is wrong.
+	Use mainnet NKN wallet, NOT ERC-20.
+	Address starts with NKN*
+EOF
+	read -sp "Press enter to continue!"
 	userdata1
 fi
 }
 
 function userdata2(){
 clear
-printf "================================================================================\n"
-printf "Setup: necessary data input\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: necessary data input
+To force exit this script press CTRL+C.
+================================================================================
 
-printf "A new user will be created for security reasons. Please input any password.\n\n"
+A new user will be created for security reasons. Please input any password.
 
+EOF
 printf "Pre-set Username: %s\n\n" "$username"
 
 printf "Password:\n"
-read userpassword
+read -r userpassword
 userdata3
 }
 
 function userdata3(){
 if [ $installtype == "custom" ]; then
 	clear
-	printf "================================================================================\n"
-	printf "Setup: necessary data input\n"
-	printf "To force exit this script press CTRL+C.\n"
-	printf "================================================================================\n\n"
+	cat << "EOF"
+	================================================================================
+	Setup: necessary data input
+	To force exit this script press CTRL+C.
+	================================================================================
 
-	printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
-	read websource
+	Enter the custom URL address where the ChainDB*.tar.gz is located at:
+EOF
+	read -r websource
 	printf "\n"
 
 	if curl --output /dev/null --silent --head --fail "$websource"; then
 		printf "URL OK: %s\n" "$websource"
-		read -t 4
+		sleep 4
 		userdata4
 	else
 		printf "ERROR URL does NOT exist: %s\n" "$websource"
-		read -t 4
+		sleep 4
 		userdata3
 	fi
 else
@@ -428,11 +447,13 @@ fi
 
 function userdata4(){
 clear
-printf "================================================================================\n"
-printf "Setup: necessary data input\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
+cat << "EOF"
+================================================================================
+Setup: necessary data input
+To force exit this script press CTRL+C
+================================================================================
 
+EOF
 # Check data if true
 printf "Check what you entered:\n\n"
 
@@ -441,17 +462,7 @@ printf "Username: %s\n" "$username"
 printf "Password: %s\n" "$userpassword"
 printf "Chain database source: %s\n\n" "$websource"
 
-
-# if beginner skip web source
-#if [ $mode == "beginner" ]; then
-#	printf "\n"
-#else
-#	printf "Chain database source: %s\n\n" "$websource"
-#fi
-
-
-
-# ASK if the entered data is correct
+# Question
 read -r -p "Are you sure this data is correct? [y/n] " response
 case "$response" in
     [yY][eE][sS]|[yY])
@@ -459,8 +470,7 @@ case "$response" in
 	install1 ;;
     *)
 	#wrong restarts userdata input
-	userdata1
-	;;
+	userdata1 ;;
 esac
 }
 
@@ -474,17 +484,20 @@ pkill -KILL -u "$username" > /dev/null 2>&1
 deluser --remove-home "$username" > /dev/null 2>&1
 
 printf "${red}"
-printf "A modem/router or VPS provided firewall is prohobiting access to the internet!\n"
-printf "Please disable the firewall and allow all internet through.\n\n"
+cat << "EOF"
+A modem/router or VPS provided firewall is prohobiting access to the internet!
+Please disable the firewall and allow all internet through.
 
-printf "The system changes were REVERTED, once you fix the firewall settings\n"
-printf "restart the server and just run the same script again\n\n"
+The system changes were REVERTED, once you fix the firewall settings
+restart the server and just run the same script again
 
-printf "For info on how to do that visit:\n"
-printf "https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-one-script-your-own-chaindb-no-donation/2753\n\n"
+For info on how to do that visit:
+https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-one-script-your-own-chaindb-no-donation/2753
+
+EOF
 printf "${normal}"
 
-read -p "Press enter to continue!"
+read -sp "Press enter to continue!"
 exit
 }
 
@@ -504,12 +517,13 @@ cat << "EOF"
      (_;-// | \ \-'.\    <_,\_\`--'|
      ( `.__ _  ___,')      <_,-'__,'
       `'(_ )_)(_)_)'
-EOF
-printf "\n================================================================================\n"
-printf "This will take some time. Please be patient.\n"
-printf "To force exit this script press CTRL+C.\n"
-printf "================================================================================\n\n"
 
+================================================================================
+This will take some time. Please be patient.
+To force exit this script press CTRL+C.
+================================================================================
+
+EOF
 # disable firewall for the installation
 ufw --force disable > /dev/null 2>&1
 
@@ -583,12 +597,11 @@ chown -R $username:$username /home/$username > /dev/null 2>&1
 chmod -R 755 /home/$username > /dev/null 2>&1
 
 printf "Downloading / Extracting NKN Chain database............................. DONE!\n"
-
 install3
 }
 
 function install3(){
-# Configure Firewall and ports
+# Configure Firewall / ports
 printf "Configuring firewall.................................................... "
 ufw allow 30001 > /dev/null 2>&1
 ufw allow 30002 > /dev/null 2>&1
@@ -614,12 +627,12 @@ printf "DONE!\n"
 # sudo passwd -u root
 printf "Disabling Root account for security reasons............................. "
 passwd --lock root > /dev/null 2>&1
-printf "DONE!\n"
+printf "DONE!\n\n"
 install4
 }
 
 function install4(){
-printf "\n===============================================================================\n"
+printf "===============================================================================\n"
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
@@ -660,23 +673,24 @@ cat << "EOF"
 (__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
   |_____'|_____|   \__________/   |              |;`_________'________`;-'
    '----------'    '----------'   '--------------'`--------------------`
+
+================================================================================
+
+NKN ChainDB creation:
+1) Download ChainDB from NKN.org and host it on THIS server
+2) Download ChainDB from a custom URL and host it on THIS server
+3) Create ChainDB from own node and host on the SAME server
+4) Create ChainDB from own node and host it on ANOTHER server
+5) Update existing ChainDB on your ChainDB host server
+
+NKN Node server install
+6) via custom server (requires URL to ChainDB*.tar.gz)
+7) no ChainDB install, sync starts from 0 (takes a long time)
+
+10) Go back to first menu
+0) Exit
+
 EOF
-printf "\n================================================================================\n\n"
-
-printf "NKN ChainDB creation:\n"
-printf "1) Download ChainDB from NKN.org and host it on THIS server\n"
-printf "2) Download ChainDB from a custom URL and host it on THIS server\n"
-printf "3) Create ChainDB from own node and host on the SAME server\n"
-printf "4) Create ChainDB from own node and host it on ANOTHER server\n"
-printf "5) Update existing ChainDB on your ChainDB host server\n\n"
-
-
-printf "NKN Node server install:\n"
-printf "6) via custom server (requires URL to ChainDB*.tar.gz)\n"
-printf "7) no ChainDB install, sync starts from 0 (takes a long time)\n\n"
-
-printf "10) Go back to first menu\n"
-printf "0) Exit\n\n"
 printf "Enter selection: "
 read selection
 printf "\n"
@@ -693,7 +707,7 @@ case $selection in
 
 	10 ) menu ;;
 	0 ) clear ; exit ;;
-	* ) read -p "Wrong selection press enter to continue!" ;;
+	* ) read -sp "Wrong selection press enter to continue!" ;;
 esac
 done
 }
@@ -702,47 +716,54 @@ menubeginner() {
 until [ "$selection" = "0" ]; do
 clear
 printf "${blue}"
-printf "STEP 1: I have no NKN nodes / servers:\n\n"
+cat << "EOF"
+STEP 1: I have no NKN nodes / servers:
 
-printf "YOU NEED TO DO THIS STEP ONLY ONE TIME!\n\n"
+YOU NEED TO DO THIS STEP ONLY ONE TIME!
 
-printf "Hosting the ChainDB archive yourself is essential to deploy your nodes\n"
-printf "fast. Get the cheapest server with 1GB+ RAM and 35+ GB of storage\n"
-printf "to store the ChainDB archive and start your first NKN node.\n\n"
+Hosting the ChainDB archive yourself is essential to deploy your nodes
+fast. Get the cheapest server with 1GB+ RAM and 35+ GB of storage
+to store the ChainDB archive and start your first NKN node.
 
-printf "Free credits for server providers: https://vpstrial.net/vps/\n\n"
+Free credits for server providers: https://vpstrial.net/vps/
 
-printf "If THIS server already has enough storage space, then you don't\n"
-printf "need to create a new one you can just continue by selecting STEP 1.\n\n"
+If THIS server already has enough storage space, then you don't
+need to create a new one you can just continue by selecting STEP 1.
+
+EOF
 printf "${normal}"
-
 printf "${magenta}"
-printf "STEP 2: Deploy new nodes:\n\n"
+cat << "EOF"
+STEP 2: Deploy new nodes:
 
-printf "RUN STEP 2 ONLY ON NEW SERVERS, not on the first one you created!\n\n"
-printf "Make a new 1core, 1GB RAM, minium 25GB storage ubuntu 20.04+ server\n"
-printf "and use the custom URL address provided to you in the first part of the\n"
-printf "script to deploy new node servers.\n\n"
+RUN STEP 2 ONLY ON NEW SERVERS, not on the first one you created!
+Make a new 1core, 1GB RAM, minium 25GB storage ubuntu 20.04+ server
+and use the custom URL address provided to you in the first part of the
+script to deploy new node servers.
+
+EOF
 printf "${normal}"
 
-printf "1) STEP 1: I have no NKN nodes / servers\n"
-printf "3) STEP 2: Deploy new nodes\n\n"
+cat << "EOF"
+1) STEP 1: I have no NKN nodes / servers
+3) STEP 2: Deploy new nodes
 
-printf "5) Go back to first menu\n"
-printf "0) Exit\n\n"
+5) Go back to first menu
+0) Exit
 
+EOF
 printf "Enter selection: "
 read selection
 printf "\n"
 
 case $selection in
 	1 ) mode="beginner" ; database="yes" ; method1 ;;
-	2 ) read -p "Put on your glasses and press enter to continue :D " ; menubeginner ;;
+	2 ) read -sp "Put on your glasses and press enter to continue :D " ; menubeginner ;;
 	3 ) installtype="custom" ; database="yes" ; userdata1 ;;
 
 	5 ) menu ;;
 	0 ) clear ; exit ;;
-	* ) read -p "Wrong selection press enter to continue!" ;;
+	* ) read -sp "Wrong selection press enter to continue!" ;;
 esac
 done
 }
@@ -763,13 +784,14 @@ cat << "EOF"
 (__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
   |_____'|_____|   \__________/   |              |;`_________'________`;-'
    '----------'    '----------'   '--------------'`--------------------`
+
+================================================================================
+
+Welcome to no112358 script for deploying NKN node servers!
+
+READ CAREFULLY!
+
 EOF
-printf "\n================================================================================\n\n"
-
-printf "Welcome to no112358 script for deploying NKN node servers!\n\n"
-
-printf "READ CAREFULLY!\n\n"
-
 printf "${blue}"
 printf "1) BEGINNERS SELECT 1!\n\n"
 printf "${normal}"
@@ -785,41 +807,36 @@ read selection
 printf "\n"
 
 case $selection in
-        1 ) menubeginner ;;
-        3 ) menuadvanced ;;
-        0 ) clear ; exit ;;
-        * ) read -p "Wrong selection press enter to continue!" ;;
+	1 ) menubeginner ;;
+	3 ) menuadvanced ;;
+	0 ) clear ; exit ;;
+	* ) read -sp "Wrong selection press enter to continue!" ;;
 esac
 done
 }
 
-###################### Start of the script with Root check ####################
+###################### Start of the script & Root check ####################
 
 # Define colors
 red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
 magenta=$(tput setaf 5)
-cyan=$(tput setaf 6)
 normal=$(tput sgr0)
-underline=$(tput smul)
 
 if [[ $EUID > 0 ]]; then
 printf "${red}"
-printf "\n=================================\n"
-printf "PLEASE RUN AS ROOT USER! Type in:\n\n"
+cat << "EOF"
+=================================
+PLEASE RUN AS ROOT USER! Type in:
 
-printf "sudo su -\n\n"
+sudo su -
 
-printf "and then run the script again.\n"
-printf "=================================\n"
+and then run the script again.
+=================================
+EOF
 printf "${normal}"
 exit
 fi
-
-
-
 
 # Start point
 apt-get update -y; apt-get upgrade -y
