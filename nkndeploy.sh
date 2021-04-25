@@ -792,11 +792,11 @@ cat << "EOF"
 
 ================================================================================
 
-Welcome to no112358 script for deploying NKN node servers!
-
-READ CAREFULLY!
-
 EOF
+printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
+
+printf "READ CAREFULLY!\n\n"
+
 printf "${blue}"
 printf "1) BEGINNERS SELECT 1!\n\n"
 printf "${normal}"
@@ -851,4 +851,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
+version="1.1 dev1"
 menu
