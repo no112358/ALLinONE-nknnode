@@ -5,7 +5,7 @@ method1(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Download ChainDB from NKN.org  and host it on this server
+Setup: Download ChainDB from NKN.org and host it on THIS server
 To force exit this script press CTRL+C.
 ================================================================================
 
@@ -15,8 +15,8 @@ printf "\033[2A\033[2K"
 cat << "EOF"
 
 Requirements:
-1. ChainDB HOST ONLY 20 GB+ storage space, 1+ cpu, 1+GB ram
-2. ChainDB HOST + NKN node 35+ GB storage space, 1+ cpu, 1+GB ram
+1. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
+2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
 ================================================================================
 
 EOF
@@ -84,16 +84,13 @@ method2(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Create ChainDB from own node and host on the same server
+Setup: Create ChainDB from own NKN node and host on the SAME server
 To force exit this script press CTRL+C.
-================================================================================
-
-Requirement: Fully synced node (mining). To host the file on this server you must
-have enough storage space 35GB minimum.
 
 Requirements:
 1. NKN node syncState: "PERSIST_FINISHED"
-2. ChainDB HOST + NKN node 35+ GB storage space, 1+ cpu, 1+GB ram
+2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+================================================================================
 
 EOF
 read -sp "Press enter to continue!"
@@ -295,12 +292,12 @@ cat << "EOF"
 ================================================================================
 Setup: Download ChainDB from custom URL and host it on this server
 To force exit this script press CTRL+C.
-This will probably take some time, be patient!
-================================================================================
 
-FRESH server only! You must have enough storage space on VPS!
-25GB minimum IF the server is only going to host the ChainDB and nothing else.
-If you also want to run a NKN node on this server you neeed minimum 35GB.
+Requirements:
+1. Fresh Server only!
+2. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
+3. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+================================================================================
 
 EOF
 read -sp "Press enter to continue!"
@@ -687,8 +684,8 @@ cat << "EOF"
 NKN ChainDB creation:
 1) Download ChainDB from NKN.org and host it on THIS server
 2) Download ChainDB from a custom URL and host it on THIS server
-3) Create ChainDB from own node and host on the SAME server
-4) Create ChainDB from own node and host it on ANOTHER server
+3) Create ChainDB from own NKN node and host on the SAME server
+4) Create ChainDB from own NKN node and host it on ANOTHER server
 5) Update existing ChainDB on THIS server
 
 NKN Node server install
