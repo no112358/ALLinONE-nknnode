@@ -75,7 +75,7 @@ if [ $mode == "beginner" ]; then
 		menu ;;
 	esac
 else
-    read -sp "Press enter to continue!"
+    read -sp "Press Enter to continue!"
 	menu
 fi
 }
@@ -93,7 +93,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press enter to continue!"
+read -sp "Press Enter to continue!"; printf "\n"
 printf "\033[1A\033[2K"
 
 printf "Installing Apache Web Server............................................ "
@@ -132,7 +132,7 @@ printf "Custom URL to the ChainDB archive. You will need this URL, make a copy o
 printf "${red}"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "${normal}"
-read -sp "Press enter to continue!"
+read -sp "Press Enter to continue!"
 }
 
 method3(){
@@ -166,7 +166,7 @@ use to host the ChainDB file, so you can deploy your next NKN nodes faster!
 Requirement: web host with 1 core, 512 MB RAM, 20GB storage minimum.
 
 EOF
-read -sp "Press enter to continue!"
+read -sp "Press Enter to continue!"; printf "\n"
 method3host
 }
 
@@ -234,6 +234,7 @@ printf "http://%s/ChainDB.tar.gz\n\n" "$sship"
 printf "${normal}"
 
 read -sp "Press enter to continue!"
+menu
 }
 
 method4(){
@@ -250,7 +251,7 @@ Previous ChainDB will be replaced
 ================================================================================
 
 EOF
-read -sp "Press enter to continue!"
+read -sp "Press Enter to continue!"; printf "\n"
 printf "\033[1A\033[2K"
 
 printf "Stopping NKN node software.............................................. "
@@ -300,7 +301,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press enter to continue!"
+read -sp "Press Enter to continue!"; printf "\n"
 printf "\033[1A\033[2K"
 
 printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
