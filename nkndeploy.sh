@@ -855,5 +855,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
-version="1.1 dev3"
+version="1.1 dev4"
 menu
