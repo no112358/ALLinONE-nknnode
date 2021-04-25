@@ -20,7 +20,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press enter to continue!"
+read -p "Press enter to continue!"
 printf "\033[1A\033[2K"
 fi
 
@@ -667,6 +667,7 @@ exit
 menuadvanced() {
 until [ "$selection" = "0" ]; do
 clear
+printf "${normal}"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -778,6 +779,7 @@ done
 menu() {
 until [ "$selection" = "0" ]; do
 clear
+printf "${normal}"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -853,5 +855,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
-version="1.1 dev2"
+version="1.1 dev3"
 menu
