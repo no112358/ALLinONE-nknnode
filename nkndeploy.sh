@@ -113,7 +113,7 @@ printf "Pruning ChainDB folder..................................................
 printf "DONE!\n"
 
 printf "Creating ChainDB archive................................................ \n"
-tar cf - ./ChainDB -P | pv -s $(du -sb ./ChainDB | awk '{print $1}') | gzip > /var/www/html/ChainDB.tar.gz
+tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
 printf "Create ChainDB archive.................................................. DONE!\n"
 
 printf "Starting NKN node software.............................................. "
@@ -215,7 +215,7 @@ printf "\nWe will now connect to the HOST server again and upload the ChainDB fi
 
 printf "You will be asked for the host server user password for the SSH connection\n\n"
 
-tar zcf - ./ChainDB/ -P | pv -s $(du -sb ./ChainDB | awk '{print $1}') | ssh "$sshusername"@"$sship" "cat > /var/www/html/ChainDB.tar.gz"
+tar zcf - ./ChainDB/ -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | ssh "$sshusername"@"$sship" "cat > /var/www/html/ChainDB.tar.gz"
 printf "Upload complete......................................................... DONE!\n"
 
 printf "Starting NKN node software.............................................. "
@@ -272,7 +272,7 @@ rm -f /var/www/html/Chain*.tar.gz > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Creating NEW ChainDB archive............................................ \n"
-tar cf - ./ChainDB -P | pv -s $(du -sb ./ChainDB | awk '{print $1}') | gzip > /var/www/html/ChainDB.tar.gz
+tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
 printf "Create NEW ChainDB archive.............................................. DONE!\n"
 
 printf "Starting NKN node software.............................................. "
