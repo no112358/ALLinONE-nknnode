@@ -375,10 +375,10 @@ cat << "EOF"
 ================================================================================
 Setup: necessary data input
 To force exit this script press CTRL+C.
-================================================================================
 
 Enter the MAINNET! NKN address where you want to receive payments.
 Example address: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+================================================================================
 
 NKN Wallet address:
 EOF
@@ -395,8 +395,8 @@ else
 	# restarts function F1
 cat << "EOF"
 
-NKN address you entered is wrong. Use mainnet NKN wallet,
-not ERC-20. NKN mainnet address starts with NKN*
+NKN wallet address you entered is wrong. Use mainnet NKN wallet,
+not ERC-20 wallet. NKN mainnet address starts with NKN*
 
 EOF
 	read -sp "Press enter to continue!"
@@ -410,10 +410,12 @@ cat << "EOF"
 ================================================================================
 Setup: necessary data input
 To force exit this script press CTRL+C.
+
+A new user will be created for security reasons.
+Please use a strong password of choice.
 ================================================================================
 
-A new user will be created for security reasons. Please input any password.
-
+Enter password:
 EOF
 printf "Pre-set Username: %s\n\n" "$username"
 
