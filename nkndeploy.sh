@@ -387,7 +387,7 @@ EOF
 read -r benaddress
 
 # check wallet address lengh
-walletlenght=`expr length "$benaddress"`
+walletlenght=${#benaddress}
 
 if [ "$walletlenght" == "36" ]; then
 	# Continues script
@@ -568,7 +568,7 @@ else
 	printf "Waiting for NKN node software to start.................................. "
 
 	timestart=$(date +%s)
-	while [[ $(($(date +%s) - $timestart)) -lt 300 ]]; do # 300sec 5 min
+	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
 		if [ ! -d "$DIR"ChainDB ] && [ ! -f "$DIR"wallet.json ]; then
 			# if folder and file don't exist wait and repeat check
 			sleep 5
@@ -593,7 +593,7 @@ rm -rf ChainDB/ > /dev/null 2>&1
 
 # if from beginner menu, extract locally, if not download from websource
 if [ $installation == "local" ]; then
-	cd /var/www/html/
+	cd /var/www/html/ || exit
 	#printf "LOCAL!\n"
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
