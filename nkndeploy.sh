@@ -20,7 +20,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -spr "Press Enter to continue!" #; printf "\n"
+read -sp "Press Enter to continue!"; printf "\n"
 printf "\033[1A\033[2K"
 fi
 
