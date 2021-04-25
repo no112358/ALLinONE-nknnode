@@ -10,7 +10,7 @@ To force exit this script press CTRL+C.
 ================================================================================
 
 EOF
-if [ $mode == "advanced" ]; then
+if [ "$mode" == "advanced" ]; then
 printf "\033[2A\033[2K"
 cat << "EOF"
 
@@ -20,7 +20,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -sp "Press Enter to continue!"; printf "\n"
+read -spr "Press Enter to continue!" #; printf "\n"
 printf "\033[1A\033[2K"
 fi
 
@@ -36,7 +36,7 @@ ufw allow 443 > /dev/null 2>&1
 ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
-cd /var/www/html/ > /dev/null 2>&1
+cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
 websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
@@ -49,21 +49,21 @@ mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
 rm -f index.html > /dev/null 2>&1
 
 # NEW websource for the install
-websource="http://"$PUBLIC_IP"/ChainDB.tar.gz"
+websource="http://$PUBLIC_IP/ChainDB.tar.gz"
 
 printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "${red}"
+printf "%s" "$red"
 printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "${red}"
+printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
-printf "${normal}"
+printf "%s" "$normal"
 
 # if from beginner menu, then also install a node on this server
-if [ $mode == "beginner" ]; then
+if [ "$mode" == "beginner" ]; then
 	# Question
 	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
 	case "$response" in
@@ -106,7 +106,7 @@ sleep 5
 printf "DONE!\n"
 
 # find directory and change dir to it
-cd "$(find / -type d -name "nkn-node" 2>/dev/null)"
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
 
 printf "Pruning ChainDB folder.................................................. "
 ./nknc pruning --pruning --lowmem > /dev/null 2>&1
@@ -124,14 +124,14 @@ rm -f /var/www/html/index.html > /dev/null 2>&1
 
 printf "\nYou can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "${red}"
+printf "%s" "$red"
 printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "${red}"
+printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
-printf "${normal}"
+printf "%s" "$normal"
 read -sp "Press Enter to continue!"
 }
 
@@ -205,7 +205,7 @@ sleep 5
 printf "DONE!\n"
 
 # find directory and change dir to it
-cd "$(find / -type d -name "nkn-node" 2>/dev/null)"
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
 
 printf "Pruning ChainDB folder.................................................. "
 ./nknc pruning --pruning --lowmem > /dev/null 2>&1
@@ -224,14 +224,14 @@ printf "DONE!\n"
 
 printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "${red}"
+printf "%s" "$red"
 printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "${red}"
+printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$sship"
-printf "${normal}"
+printf "%s" "$normal"
 
 read -sp "Press enter to continue!"
 menu
@@ -260,7 +260,7 @@ sleep 5
 printf "DONE!\n"
 
 # find directory and change dir to it
-cd "$(find / -type d -name "nkn-node" 2>/dev/null)"
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
 
 printf "Pruning ChainDB folder.................................................. "
 ./nknc pruning --pruning --lowmem > /dev/null 2>&1
@@ -331,10 +331,10 @@ ufw allow 443 > /dev/null 2>&1
 ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
-cd /var/www/html/ > /dev/null 2>&1
+cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
-wget --quiet --continue --show-progress $websource
+wget --quiet --continue --show-progress "$websource"
 printf "Downloading ChainDB archive............................................. DONE!\n\n"
 
 # cleanup
@@ -343,18 +343,18 @@ mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
 rm -f index.html > /dev/null 2>&1
 
 # NEW websource for the install
-websource="http://"$PUBLIC_IP"/ChainDB.tar.gz"
+websource="http://$PUBLIC_IP/ChainDB.tar.gz"
 
 printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "${red}"
+printf "%s" "$red"
 printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "${red}"
+printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
-printf "${normal}"
+printf "%s" "$normal"
 
 # Question
 read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
@@ -389,7 +389,7 @@ read -r benaddress
 # check wallet address lengh
 walletlenght=`expr length "$benaddress"`
 
-if [ $walletlenght == "36" ]; then
+if [ "$walletlenght" == "36" ]; then
 	# Continues script
 	userdata2
 else
@@ -426,7 +426,7 @@ userdata3
 }
 
 function userdata3(){
-if [ $installtype == "custom" ]; then
+if [ "$installtype" == "custom" ]; then
 	clear
 cat << "EOF"
 ================================================================================
@@ -486,12 +486,12 @@ esac
 function firewallwarn(){
 clear
 # revert all changes
-/home/$username/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
+/home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
 cd / > /dev/null 2>&1
 pkill -KILL -u "$username" > /dev/null 2>&1
 deluser --remove-home "$username" > /dev/null 2>&1
 
-printf "${red}"
+printf "%s" "$red"
 cat << "EOF"
 A modem/router or VPS provided firewall is prohobiting access to the internet!
 Please disable the firewall and allow all internet through.
@@ -503,7 +503,7 @@ For info on how to do that visit:
 https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-one-script-your-own-chaindb-no-donation/2753
 
 EOF
-printf "${normal}"
+printf "%s" "$normal"
 
 read -sp "Press enter to continue!"
 exit
@@ -537,14 +537,14 @@ ufw --force disable > /dev/null 2>&1
 
 # Create a new SUDO user
 printf "Creating a new Super User account....................................... "
-pass=$(perl -e 'print crypt($ARGV[0], "password")' $userpassword) > /dev/null 2>&1
+pass=$(perl -e 'print crypt($ARGV[0], "password")' "$userpassword") > /dev/null 2>&1
 useradd -m -p "$pass" -s /bin/bash "$username" > /dev/null 2>&1
-usermod -a -G sudo $username > /dev/null 2>&1
+usermod -a -G sudo "$username" > /dev/null 2>&1
 printf "DONE!\n"
 
 # Install NKN node miner software
 printf "Downloading NKN node software........................................... "
-cd /home/$username > /dev/null 2>&1
+cd /home/"$username" > /dev/null 2>&1 || exit
 wget --quiet --continue https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip > /dev/null 2>&1
 printf "DONE!\n"
 
@@ -553,15 +553,15 @@ unzip linux-amd64.zip > /dev/null 2>&1
 rm -f linux-amd64.zip > /dev/null 2>&1
 mv linux-amd64 nkn-commercial > /dev/null 2>&1
 
-chown -R $username:$username /home/$username > /dev/null 2>&1
-chmod -R 755 /home/$username > /dev/null 2>&1
+chown -R "$username":"$username" /home/"$username" > /dev/null 2>&1
+chmod -R 755 /home/"$username" > /dev/null 2>&1
 
-/home/$username/nkn-commercial/nkn-commercial -b $benaddress -d /home/$username/nkn-commercial/ -u $username install > /dev/null 2>&1
+/home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install > /dev/null 2>&1
 printf "DONE!\n"
 
 # Wait for DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
-if [ $database == "no" ]; then
+if [ "$database" == "no" ]; then
 	# script skips DB download and continues
     install3
 else
@@ -588,7 +588,7 @@ fi
 
 function install2(){
 printf "Downloading / Extracting NKN Chain database.............................\n"
-cd "$DIR" > /dev/null 2>&1
+cd "$DIR" > /dev/null 2>&1 || exit
 rm -rf ChainDB/ > /dev/null 2>&1
 
 # if from beginner menu, extract locally, if not download from websource
@@ -601,8 +601,8 @@ else
 	wget -O - "$websource" -q --show-progress | tar -xzf -
 fi
 
-chown -R $username:$username /home/$username > /dev/null 2>&1
-chmod -R 755 /home/$username > /dev/null 2>&1
+chown -R "$username":"$username" /home/"$username" > /dev/null 2>&1
+chmod -R 755 /home/"$username" > /dev/null 2>&1
 
 printf "Downloading / Extracting NKN Chain database............................. DONE!\n"
 install3
@@ -668,7 +668,7 @@ exit
 menuadvanced() {
 until [ "$selection" = "0" ]; do
 clear
-printf "${normal}"
+printf "%s" "$normal"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -701,7 +701,7 @@ NKN Node server install
 
 EOF
 printf "Enter selection: "
-read selection
+read -r selection
 printf "\n"
 
 case $selection in
@@ -724,7 +724,7 @@ done
 menubeginner() {
 until [ "$selection" = "0" ]; do
 clear
-printf "${blue}"
+printf "%s" "$blue"
 cat << "EOF"
 STEP 1: I have no NKN nodes / servers:
 
@@ -740,8 +740,8 @@ If THIS server already has enough storage space, then you don't
 need to create a new one you can just continue by selecting STEP 1.
 
 EOF
-printf "${normal}"
-printf "${magenta}"
+printf "%s" "$normal"
+printf "%s" "$magenta"
 cat << "EOF"
 STEP 2: Deploy new nodes:
 
@@ -751,7 +751,7 @@ and use the custom URL address provided to you in the first part of the
 script to deploy new node servers.
 
 EOF
-printf "${normal}"
+printf "%s" "$normal"
 
 cat << "EOF"
 1) STEP 1: I have no NKN nodes / servers
@@ -762,7 +762,7 @@ cat << "EOF"
 
 EOF
 printf "Enter selection: "
-read selection
+read -r selection
 printf "\n"
 
 case $selection in
@@ -780,7 +780,7 @@ done
 menu() {
 until [ "$selection" = "0" ]; do
 clear
-printf "${normal}"
+printf "%s" "$normal"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -802,18 +802,18 @@ printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n
 
 printf "READ CAREFULLY!\n\n"
 
-printf "${blue}"
+printf "%s" "$blue"
 printf "1) BEGINNERS SELECT 1!\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
-printf "${red}"
+printf "%s" "$red"
 printf "3) ADVANCED USER!\n\n"
-printf "${normal}"
+printf "%s" "$normal"
 
 printf "0) Exit\n\n"
 
 printf "Enter selection: "
-read selection
+read -r selection
 printf "\n"
 
 case $selection in
@@ -834,7 +834,7 @@ magenta=$(tput setaf 5)
 normal=$(tput sgr0)
 
 if [[ $EUID > 0 ]]; then
-printf "${red}"
+printf "%s" "$red"
 cat << "EOF"
 =================================
 PLEASE RUN AS ROOT USER! Type in:
@@ -844,7 +844,7 @@ sudo su -
 and then run the script again.
 =================================
 EOF
-printf "${normal}"
+printf "%s" "$normal"
 exit
 fi
 
@@ -855,6 +855,6 @@ username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
-PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
-version="1.1 dev6"
+PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
+version="1.1 dev7"
 menu
