@@ -20,7 +20,7 @@ Requirements:
 ================================================================================
 
 EOF
-read -rp "Press enter to continue!"
+read -sp "Press Enter to continue!"; printf "\n"
 printf "\033[1A\033[2K"
 fi
 
@@ -855,5 +855,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=`wget http://ipecho.net/plain -O - -q ; echo`
-version="1.1 dev4"
+version="1.1 dev5"
 menu
