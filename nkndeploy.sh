@@ -376,7 +376,7 @@ To force exit this script press CTRL+C.
 Enter the MAINNET! NKN address where you want to receive payments.
 Example address: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 
-"NKN Wallet address:
+NKN Wallet address:
 EOF
 # Input beneficiary wallet adddress
 read -r benaddress
@@ -391,9 +391,8 @@ else
 	# restarts function F1
 cat << "EOF"
 
-nNKN address you entered is wrong.
-Use mainnet NKN wallet, NOT ERC-20.
-Address starts with NKN*
+NKN address you entered is wrong. Use mainnet NKN wallet,
+not ERC-20. NKN mainnet address starts with NKN*
 
 EOF
 	read -sp "Press enter to continue!"
