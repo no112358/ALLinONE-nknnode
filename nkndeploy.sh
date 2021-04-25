@@ -591,10 +591,9 @@ printf "Downloading / Extracting NKN Chain database.............................
 cd "$DIR" > /dev/null 2>&1 || exit
 rm -rf ChainDB/ > /dev/null 2>&1
 
-# if from beginner menu, extract locally, if not download from websource
+# extract locally or download from websource
 if [ $installation == "local" ]; then
 	cd /var/www/html/ || exit
-	#printf "LOCAL!\n"
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
     # internet download
@@ -644,7 +643,14 @@ printf "========================================================================
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
-printf "NKN wallet address: %s\n\n" "$benaddress"
+printf "NKN wallet (beneficiary adddress) where you get paid:\n"
+printf "%s\n\n" "$benaddress"
+
+# Get node wallet address
+nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
+printf "NKN NODE wallet this is the address where you have to send 10 NKN.\n"
+printf "If you don't send 10 NKN to this address, the node won't start mining.\n"
+printf "%s\n\n" "$nodewallet"
 
 printf "From now on use these settings to connect to your server:\n"
 printf "If you're using AWS, Google Cloud, Azure... use the provided keys to login.\n\n"
@@ -850,11 +856,11 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw pv -y
+apt-get install unzip glances vnstat ufw sed pv -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev9"
+version="1.1 dev10"
 menu
