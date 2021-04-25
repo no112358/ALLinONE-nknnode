@@ -610,20 +610,15 @@ install3
 function install3(){
 # Configure Firewall / ports
 printf "Configuring firewall.................................................... "
-ufw allow 30001 > /dev/null 2>&1
-ufw allow 30002 > /dev/null 2>&1
-ufw allow 30003 > /dev/null 2>&1
-ufw allow 30004 > /dev/null 2>&1
-ufw allow 30005 > /dev/null 2>&1
-ufw allow 30010/tcp > /dev/null 2>&1
-ufw allow 30011/udp > /dev/null 2>&1
-ufw allow 30020/tcp > /dev/null 2>&1
-ufw allow 30021/udp > /dev/null 2>&1
-ufw allow 32768:65535/tcp > /dev/null 2>&1
-ufw allow 32768:65535/udp > /dev/null 2>&1
-ufw allow 22 > /dev/null 2>&1
-ufw allow 80 > /dev/null 2>&1
-ufw allow 443 > /dev/null 2>&1
+ufw allow 30001:30005/tcp > /dev/null 2>&1 # NKN node
+ufw allow 30010/tcp > /dev/null 2>&1 # Tuna exit
+ufw allow 30011/udp > /dev/null 2>&1 # Tuna exit
+ufw allow 30020/tcp > /dev/null 2>&1 # Tuna reverse entry
+ufw allow 30021/udp > /dev/null 2>&1 # Tuna reverse entry
+ufw allow 32768:65535 > /dev/null 2>&1 # Tuna reverse entry
+ufw allow 22 > /dev/null 2>&1 # SSH
+ufw allow 80 > /dev/null 2>&1 # HTTP
+ufw allow 443 > /dev/null 2>&1 # HTTPS
 ufw --force enable > /dev/null 2>&1
 
 systemctl start nkn-commercial.service > /dev/null 2>&1
@@ -674,7 +669,6 @@ exit
 menuadvanced() {
 until [ "$selection" = "0" ]; do
 clear
-printf "%s" "$normal"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -786,7 +780,6 @@ done
 menu() {
 until [ "$selection" = "0" ]; do
 clear
-printf "%s" "$normal"
 cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -862,5 +855,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev10"
+version="1.1 dev11"
 menu
