@@ -389,10 +389,12 @@ if [ $walletlenght == "36" ]; then
 	userdata2
 else
 	# restarts function F1
-	cat << "EOF"
-	nNKN address you entered is wrong.
-	Use mainnet NKN wallet, NOT ERC-20.
-	Address starts with NKN*
+cat << "EOF"
+
+nNKN address you entered is wrong.
+Use mainnet NKN wallet, NOT ERC-20.
+Address starts with NKN*
+
 EOF
 	read -sp "Press enter to continue!"
 	userdata1
@@ -748,7 +750,7 @@ cat << "EOF"
 1) STEP 1: I have no NKN nodes / servers
 3) STEP 2: Deploy new nodes
 
-5) Go back to first menu
+10) Go back to first menu
 0) Exit
 
 EOF
@@ -761,7 +763,7 @@ case $selection in
 	2 ) read -sp "Put on your glasses and press enter to continue :D " ; menubeginner ;;
 	3 ) installtype="custom" ; database="yes" ; userdata1 ;;
 
-	5 ) menu ;;
+	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -sp "Wrong selection press enter to continue!" ;;
 esac
