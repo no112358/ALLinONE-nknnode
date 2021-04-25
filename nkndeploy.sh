@@ -643,17 +643,20 @@ printf "%s\n\n" "$benaddress"
 
 # Get node wallet address
 nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
+printf "%s" "$red"
 printf "NKN NODE wallet this is the address where you have to send 10 NKN.\n"
-printf "If you don't send 10 NKN to this address, the node won't start mining.\n"
+printf "If you don't send 10 NKN to this address, the node won't start mining.\n\n"
+
 printf "%s\n\n" "$nodewallet"
+printf "%s" "$normal"
 
 printf "From now on use these settings to connect to your server:\n"
 printf "If you're using AWS, Google Cloud, Azure... use the provided keys to login.\n\n"
 
 printf "Server IP: %s\n" "$PUBLIC_IP"
+printf "SSH login: ssh %s@%s\n" "$username" "$PUBLIC_IP"
 printf "Server username: %s\n" "$username"
-printf "Server password: %s\n" "$userpassword"
-printf "SSH login: ssh %s@%s\n\n" "$username" "$PUBLIC_IP"
+printf "Server password: %s\n\n" "$userpassword"
 
 printf "The server should be visible on nstatus.org in a few minutes.\n"
 printf "Enter the Server IP provided here!\n"
@@ -855,5 +858,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev11"
+version="1.1 dev12"
 menu
