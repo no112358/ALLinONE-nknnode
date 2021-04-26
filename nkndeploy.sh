@@ -6,7 +6,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Download ChainDB from NKN.org and host it on THIS server
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 ================================================================================
 
 EOF
@@ -85,7 +85,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Create ChainDB from own NKN node and host on the SAME server
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 
 Requirements:
 1. NKN node syncState: "PERSIST_FINISHED"
@@ -140,7 +140,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Create ChainDB from own node and host it on another server
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 ================================================================================
 
   ________________                         ________________
@@ -175,7 +175,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Create ChainDB and host it on another server.
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 ================================================================================
 
 We will now connect to the HOST server and configure it from this script.
@@ -242,7 +242,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Update existing ChainDB on THIS server
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 
 Requirement:
 1. NKN node syncState: "PERSIST_FINISHED"
@@ -292,7 +292,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Download ChainDB from custom URL and host it on this server
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 
 Requirements:
 1. Fresh Server only!
@@ -368,6 +368,46 @@ case "$response" in
 esac
 }
 
+function nodewalletbackup(){
+clear
+cat << "EOF"
+================================================================================
+Setup: Backup NODE wallet (NOT beneficiary wallet where you get paid)
+To force exit this script press CTRL+C
+================================================================================
+
+This will PULL the wallet files from the REMOTE server to THIS server!
+
+Requirement:
+- NKN node installed on this server!
+
+EOF
+printf "REMOTE NKN server IP address:\n"
+read -r remoteIP
+
+printf "\nREMOTE NKN server username (NKN if installed with this script):\n"
+read -r remoteUsername
+
+printf "\nLOCAL NKN server username (NKN if installed with this script):\n"
+read -r localUsername
+
+printf "\nYou will be asked for the REMOTE user password so the connection\n"
+printf "can get established.\n\n"
+
+rsync -a -I --dry-run "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
+
+printf "Copied!\n"
+
+#systemctl restart nkn-commercial.service
+printf "NKN node restarted!\n"
+
+read -s -r -p "Press Enter to continue!"
+menu
+
+#rsync -a username@remote_host:/home/username/dir1 place_to_sync_on_local_machine
+
+}
+
 ################################ user input ####################################
 
 function userdata1(){
@@ -375,7 +415,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: necessary data input
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 
 Enter the MAINNET! NKN address where you want to receive payments.
 Example address: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
@@ -410,7 +450,7 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: necessary data input
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 
 A new user will be created for security reasons.
 Please use a strong password of choice.
@@ -431,7 +471,7 @@ if [ "$installtype" == "custom" ]; then
 cat << "EOF"
 ================================================================================
 Setup: necessary data input
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 ================================================================================
 
 Enter the custom URL address where the ChainDB*.tar.gz is located at:
@@ -528,7 +568,7 @@ cat << "EOF"
 
 ================================================================================
 This will take some time. Please be patient.
-To force exit this script press CTRL+C.
+To force exit this script press CTRL+C
 ================================================================================
 
 EOF
@@ -699,6 +739,9 @@ NKN Node server install
 6) via custom server (requires URL to ChainDB*.tar.gz)
 7) no ChainDB install, sync starts from 0 (takes a long time)
 
+NKN NODE WALLET BACKUP
+8) Backup wallet
+
 10) Go back to first menu
 0) Exit
 
@@ -716,7 +759,9 @@ case $selection in
 
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
-
+	
+	8 ) nodewalletbackup ;;
+	
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
@@ -858,5 +903,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev12"
+version="1.1 dev13"
 menu
