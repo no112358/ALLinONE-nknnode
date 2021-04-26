@@ -394,6 +394,8 @@ read -r localUsername
 printf "\nYou will be asked for the REMOTE user password so the connection\n"
 printf "can get established.\n\n"
 
+read -s -r -p "Press Enter to continue!"
+
 rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/test/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
 
 printf "\nWallet files copied!\n"
@@ -903,5 +905,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev14"
+version="1.1 dev15"
 menu
