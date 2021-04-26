@@ -376,7 +376,8 @@ Setup: Backup NODE wallet (NOT beneficiary wallet where you get paid)
 To force exit this script press CTRL+C
 ================================================================================
 
-This will PULL the wallet files from the REMOTE server to THIS server!
+This will copy the wallet files from the REMOTE server to THIS server!
+Run this script on the NEW NKN server where you wanna restore the node ID to.
 
 Requirement:
 - NKN node installed on this server!
@@ -396,11 +397,11 @@ printf "can get established.\n\n"
 
 read -s -r -p "Press Enter to continue!"
 
-rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/test/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
+rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
 
 printf "\nWallet files copied!\n"
 
-#systemctl restart nkn-commercial.service
+systemctl restart nkn-commercial.service
 printf "Local NKN node restarted!\n\n"
 
 read -s -r -p "Press Enter to continue!"
@@ -905,5 +906,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev15"
+version="1.1 dev16"
 menu
