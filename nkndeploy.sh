@@ -403,14 +403,14 @@ read -s -r -p "Press Enter to continue!"
 # check if rsync did it's job
 if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/test/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
 then
-#if [ "$?" -eq "0" ]; then
 	printf "\nWallet files copied!\n"
 	#systemctl restart nkn-commercial.service
-	#printf "Local NKN node restarted!\n\n"
+	printf "Local NKN node restarted!\n\n"
 else
 	printf "\nError while running rsync\n\n"
 fi
 
+printf "\n"
 read -s -r -p "Press Enter to continue!"
 menu
 }
@@ -910,5 +910,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev17"
+version="1.1 dev18"
 menu
