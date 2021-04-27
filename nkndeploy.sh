@@ -368,11 +368,11 @@ case "$response" in
 esac
 }
 
-function nodewalletbackup(){
+function nodeWalletTransfer(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Backup NODE wallet (NOT beneficiary wallet where you get paid)
+Setup: Transfer NODE ID / wallet (NOT beneficiary wallet where you get paid)
 To force exit this script press CTRL+C
 ================================================================================
 
@@ -398,19 +398,17 @@ printf "can get established.\n\n"
 
 read -s -r -p "Press Enter to continue!"
 
-#rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
-
-# check if rsync did it's job
-if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/test/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
+# check if rsync works or not
+if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
 then
 	printf "\nWallet files copied!\n"
-	#systemctl restart nkn-commercial.service
-	printf "Local NKN node restarted!\n\n"
+	systemctl restart nkn-commercial.service
+	printf "Local NKN node restarted!\n"
+	printf "Local NKN noded should start with the new ID.\n\n"
 else
 	printf "\nError while running rsync\n\n"
 fi
 
-printf "\n"
 read -s -r -p "Press Enter to continue!"
 menu
 }
@@ -746,8 +744,8 @@ NKN Node server install
 6) via custom server (requires URL to ChainDB*.tar.gz)
 7) no ChainDB install, sync starts from 0 (takes a long time)
 
-NKN NODE WALLET BACKUP
-8) Backup wallet
+NKN NODE ID / WALLET TRANSFER
+8) Transfer NODE ID / wallet
 
 10) Go back to first menu
 0) Exit
@@ -767,7 +765,7 @@ case $selection in
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
 	
-	8 ) nodewalletbackup ;;
+	8 ) nodeWalletTransfer ;;
 	
 	10 ) menu ;;
 	0 ) clear ; exit ;;
@@ -910,5 +908,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev18"
+version="1.1 dev19"
 menu
