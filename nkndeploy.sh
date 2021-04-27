@@ -387,6 +387,7 @@ printf "REMOTE NKN server IP address:\n"
 read -r remoteIP
 
 printf "\nREMOTE NKN server username (NKN if installed with this script):\n"
+printf "\n"
 read -r remoteUsername
 
 printf "\nLOCAL NKN server username (NKN if installed with this script):\n"
@@ -397,18 +398,20 @@ printf "can get established.\n\n"
 
 read -s -r -p "Press Enter to continue!"
 
-rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
+#rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
 
-printf "\nWallet files copied!\n"
-
-systemctl restart nkn-commercial.service
-printf "Local NKN node restarted!\n\n"
+# check if rsync did it's job
+if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/ ; then
+#if [ "$?" -eq "0" ]; then
+	printf "\nWallet files copied!\n"
+	systemctl restart nkn-commercial.service
+	printf "Local NKN node restarted!\n\n"
+else
+	printf "\nError while running rsync\n\n"
+fi
 
 read -s -r -p "Press Enter to continue!"
 menu
-
-#rsync -a username@remote_host:/home/username/dir1 place_to_sync_on_local_machine
-
 }
 
 ################################ user input ####################################
@@ -906,5 +909,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev16"
+version="1.1 dev17"
 menu
