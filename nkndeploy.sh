@@ -401,11 +401,12 @@ read -s -r -p "Press Enter to continue!"
 #rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/
 
 # check if rsync did it's job
-if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/nkn-commercial/services/nkn-node/ ; then
+if rsync -a -I "$remoteUsername"@"$remoteIP":/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.json :/home/"$remoteUsername"/nkn-commercial/services/nkn-node/wallet.pswd /home/"$localUsername"/test/ #/home/"$localUsername"/nkn-commercial/services/nkn-node/
+then
 #if [ "$?" -eq "0" ]; then
 	printf "\nWallet files copied!\n"
-	systemctl restart nkn-commercial.service
-	printf "Local NKN node restarted!\n\n"
+	#systemctl restart nkn-commercial.service
+	#printf "Local NKN node restarted!\n\n"
 else
 	printf "\nError while running rsync\n\n"
 fi
