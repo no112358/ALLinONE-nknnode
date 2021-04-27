@@ -1,5 +1,6 @@
 #!/bin/bash
 #v1.1 Added method 5
+#v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
 
 method1(){
 clear
@@ -908,5 +909,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.1 dev19"
+version="1.2"
 menu
