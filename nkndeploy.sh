@@ -801,6 +801,9 @@ cat << "EOF"
 
 ================================================================================
 
+Add your NKN node IP addresses to the IP database and check on your node status.
+It will show the node status.
+
 1) Add NKN NODE IP address
 2) Remove NKN NODE IP address
 3) Show stored IP addresess
@@ -1024,5 +1027,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3 dev 2"
+version="1.3 dev 3"
 menu
