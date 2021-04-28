@@ -1,6 +1,7 @@
 #!/bin/bash
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
+#v1.3 added Basic Node checker so people can see their node status
 
 method1(){
 clear
@@ -1017,7 +1018,7 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed pv -y
+apt-get install unzip glances vnstat ufw sed grep pv -y
 username="nkn"
 mode="whatever"
 database="whatever"
