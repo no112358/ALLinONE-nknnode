@@ -801,10 +801,10 @@ cat << "EOF"
 
 ================================================================================
 
-1) Add NKN NODE IP!
-2) Remove NKN NODE IP!
-3) Show IPs stored in file
-4) Check nodes
+1) Add NKN NODE IP address
+2) Remove NKN NODE IP address
+3) Show stored IP addresess
+4) Check node status
 
 10) Go back to first menu
 0) Exit
