@@ -710,10 +710,119 @@ printf "The node will take an hour or two do it's thing, so dont' worry.\n\n"
 
 printf "Thanks for using this script!\n\n"
 
-exit
+read -s -r -p "Press enter to continue!"
+menu
+}
+
+################################# NODE CHECKER #################################
+
+addip(){
+clear
+printf "Enter NODE IP address to ADD:\n"
+read -r addipaddress
+printf "%s\n" >> IPs.txt "$addipaddress"
+}
+
+removeip(){
+clear
+FILE="IPs.txt"
+printf "Enter NODE IP address to REMOVE:\n"
+read -r removeipaddress
+
+if grep -Fxq "$removeipaddress" "$FILE"
+then
+    # code if found
+    sed -i /"$removeipaddress"/d "$FILE"
+    printf "\nIP address removed!\n\n"
+    read -s -r -p "Press enter to continue!"
+else
+    # code if not found
+    printf "\nERROR IP address not found!\n\n"
+    read -s -r -p "Press enter to continue!"
+fi
+}
+
+showips(){
+clear
+
+FILE="IPs.txt"
+printf "%s server IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+
+printf "*** File - %s contents ***\n\n" "$FILE"
+cat $FILE
+
+printf "\n"
+read -s -r -p "Press enter to continue!"
+}
+
+checknodes(){
+clear
+input="IPs.txt"
+
+printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+printf "Status of IP:\n"
+
+while IFS= read -r file; do
+	string=$(./nknc --ip "$file" info -s)
+	if [[ $string == *"error"* ]]
+	then
+		getinfo=$(./nknc --ip "$file" info -s | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
+		printf "%s " "$file" && printf "%s\n" "$getinfo"
+	else
+		getinfo=$(./nknc --ip "$file" info -s | sed -n -r 's/(^.*syncState": ")([^"]+)".*/\2/p')
+		printf "%s " "$file" && printf "%s\n" "$getinfo"
+	fi
+done < "$input"
+
+printf "\n"
+read -s -r -p "Press enter to continue!"
 }
 
 ################################## Menu stuff ##################################
+
+menunodechecker() {
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
+until [ "$selection" = "0" ]; do
+clear
+cat << "EOF"
+         _          __________                              __
+     _.-(_)._     ."          ".      .--""--.          _.-{__}-._
+   .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
+  [____________] /` |________| `\  /   .'``'.   \    /_.-"`_  _`"-._\
+  /  / .\/. \  \|  / / .\/. \ \  ||  .'/.\/.\'.  |  /`   / .\/. \   `\
+  |  \__/\__/  |\_/  \__/\__/  \_/|  : |_/\_| ;  |  |    \__/\__/    |
+  \            /  \            /   \ '.\    /.' / .-\                /-.
+  /'._  --  _.'\  /'._  --  _.'\   /'. `'--'` .'\/   '._-.__--__.-_.'   \
+ /_   `""""`   _\/_   `""""`   _\ /_  `-./\.-'  _\'.    `""""""""`    .'`\
+(__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
+  |_____'|_____|   \__________/   |              |;`_________'________`;-'
+   '----------'    '----------'   '--------------'`--------------------`
+
+================================================================================
+
+1) Add NKN NODE IP!
+2) Remove NKN NODE IP!
+3) Show IPs stored in file
+4) Check nodes
+
+10) Go back to first menu
+0) Exit
+
+EOF
+printf "Enter selection: "
+read -r selection
+printf "\n"
+case $selection in
+	1 ) addip ;;
+	2 ) removeip ;;
+	3 ) showips ;;
+	4 ) checknodes ;;
+	10 ) menu ;;
+	0 ) clear ; exit ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
+esac
+done
+}
 
 menuadvanced() {
 until [ "$selection" = "0" ]; do
@@ -863,6 +972,10 @@ printf "%s" "$red"
 printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
+printf "%s" "$magenta"
+printf "5) NKN NODE CHECKER!\n\n"
+printf "%s" "$normal"
+
 printf "0) Exit\n\n"
 
 printf "Enter selection: "
@@ -872,6 +985,7 @@ printf "\n"
 case $selection in
 	1 ) menubeginner ;;
 	3 ) menuadvanced ;;
+	5 ) menunodechecker ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
@@ -909,5 +1023,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.2"
+version="1.3 dev 1"
 menu
