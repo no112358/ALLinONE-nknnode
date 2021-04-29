@@ -777,7 +777,7 @@ while IFS= read -r file; do
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
 
-                printf "%-17s%-20s%-10s%-11s%s days %s hours\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
+                printf "%-17s%-18s%-9s%-10s%sD %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
         fi
 done < "$input"
 
@@ -1030,5 +1030,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3"
+version="1.3.1 dev 1"
 menu
