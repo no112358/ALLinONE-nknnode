@@ -1,7 +1,7 @@
 #!/bin/bash
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
-#v1.3 added Basic Node checker so people can see their node status
+#v1.3 added Node checker so people can see their node status
 
 method1(){
 clear
@@ -1030,5 +1030,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3 dev 4"
+version="1.3 dev 5"
 menu
