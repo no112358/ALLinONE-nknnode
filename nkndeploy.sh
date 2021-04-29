@@ -1,6 +1,7 @@
 #!/bin/bash
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
+#v1.3 added Node checker so people can see their node status
 
 method1(){
 clear
@@ -710,10 +711,128 @@ printf "The node will take an hour or two do it's thing, so dont' worry.\n\n"
 
 printf "Thanks for using this script!\n\n"
 
-exit
+read -s -r -p "Press enter to continue!"
+menu
+}
+
+################################# NODE CHECKER #################################
+
+addip(){
+clear
+printf "Enter NODE IP address to ADD:\n"
+read -r addipaddress
+printf "%s\n" >> IPs.txt "$addipaddress"
+}
+
+removeip(){
+clear
+FILE="IPs.txt"
+printf "Enter NODE IP address to REMOVE:\n"
+read -r removeipaddress
+
+if grep -Fxq "$removeipaddress" "$FILE"
+then
+    # code if found
+    sed -i /"$removeipaddress"/d "$FILE"
+    printf "\nIP address removed!\n\n"
+    read -s -r -p "Press enter to continue!"
+else
+    # code if not found
+    printf "\nERROR IP address not found!\n\n"
+    read -s -r -p "Press enter to continue!"
+fi
+}
+
+showips(){
+clear
+
+FILE="IPs.txt"
+printf "%s server IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+
+printf "*** File - %s contents ***\n\n" "$FILE"
+cat $FILE
+
+printf "\n"
+read -s -r -p "Press enter to continue!"
+}
+
+checknodes(){
+clear
+input="IPs.txt"
+
+printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+printf "IP:              Status:             Height:   Version:   Uptime:\n"
+
+while IFS= read -r file; do
+        nkncOutput=$(./nknc --ip "$file" info -s)
+        if [[ $nkncOutput == *"error"* ]]
+        then
+                output1=$(printf "%s" "$nkncOutput" | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
+                printf "%-17s%s\n" "$file" "$output1"
+        else
+                output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                outputDays=$((uptimeSec / 86400))
+                outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
+
+                printf "%-17s%-20s%-10s%-11s%s days %s hours\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
+        fi
+done < "$input"
+
+printf "\n"
+read -s -r -p "Press enter to continue!"
 }
 
 ################################## Menu stuff ##################################
+
+menunodechecker() {
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
+until [ "$selection" = "0" ]; do
+clear
+cat << "EOF"
+         _          __________                              __
+     _.-(_)._     ."          ".      .--""--.          _.-{__}-._
+   .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
+  [____________] /` |________| `\  /   .'``'.   \    /_.-"`_  _`"-._\
+  /  / .\/. \  \|  / / .\/. \ \  ||  .'/.\/.\'.  |  /`   / .\/. \   `\
+  |  \__/\__/  |\_/  \__/\__/  \_/|  : |_/\_| ;  |  |    \__/\__/    |
+  \            /  \            /   \ '.\    /.' / .-\                /-.
+  /'._  --  _.'\  /'._  --  _.'\   /'. `'--'` .'\/   '._-.__--__.-_.'   \
+ /_   `""""`   _\/_   `""""`   _\ /_  `-./\.-'  _\'.    `""""""""`    .'`\
+(__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
+  |_____'|_____|   \__________/   |              |;`_________'________`;-'
+   '----------'    '----------'   '--------------'`--------------------`
+
+================================================================================
+
+Add your NKN node IP addresses to the IP database and check on your node status.
+It will show the node status.
+
+1) Add NKN NODE IP address
+2) Remove NKN NODE IP address
+3) Show stored IP addresess
+4) Check node status
+
+10) Go back to first menu
+0) Exit
+
+EOF
+printf "Enter selection: "
+read -r selection
+printf "\n"
+case $selection in
+	1 ) addip ;;
+	2 ) removeip ;;
+	3 ) showips ;;
+	4 ) checknodes ;;
+	10 ) menu ;;
+	0 ) clear ; exit ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
+esac
+done
+}
 
 menuadvanced() {
 until [ "$selection" = "0" ]; do
@@ -762,12 +881,9 @@ case $selection in
 	3 ) method2 ;;
 	4 ) method3 ;;
 	5 ) method4 ;;
-
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
-	
 	8 ) nodeWalletTransfer ;;
-	
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
@@ -863,6 +979,10 @@ printf "%s" "$red"
 printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
+printf "%s" "$magenta"
+printf "5) NKN NODE CHECKER!\n\n"
+printf "%s" "$normal"
+
 printf "0) Exit\n\n"
 
 printf "Enter selection: "
@@ -872,6 +992,7 @@ printf "\n"
 case $selection in
 	1 ) menubeginner ;;
 	3 ) menuadvanced ;;
+	5 ) menunodechecker ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
@@ -903,11 +1024,11 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed pv -y
+apt-get install unzip glances vnstat ufw sed grep pv -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.2"
+version="1.3"
 menu
