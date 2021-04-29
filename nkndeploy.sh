@@ -761,18 +761,24 @@ clear
 input="IPs.txt"
 
 printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-printf "Status of IP:\n"
+printf "IP:              Status:             Height:   Version:   Uptime:\n"
 
 while IFS= read -r file; do
-	string=$(./nknc --ip "$file" info -s)
-	if [[ $string == *"error"* ]]
-	then
-		getinfo=$(./nknc --ip "$file" info -s | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
-		printf "%s " "$file" && printf "%s\n" "$getinfo"
-	else
-		getinfo=$(./nknc --ip "$file" info -s | sed -n -r 's/(^.*syncState": ")([^"]+)".*/\2/p')
-		printf "%s " "$file" && printf "%s\n" "$getinfo"
-	fi
+        nkncOutput=$(./nknc --ip "$file" info -s)
+        if [[ $nkncOutput == *"error"* ]]
+        then
+                output1=$(printf "%s" "$nkncOutput" | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
+                printf "%-17s%s\n" "$file" "$output1"
+        else
+                output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                outputDays=$((uptimeSec / 86400))
+                outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
+
+                printf "%-17s%-20s%-10s%-11s%s days %s hours\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
+        fi
 done < "$input"
 
 printf "\n"
@@ -875,12 +881,9 @@ case $selection in
 	3 ) method2 ;;
 	4 ) method3 ;;
 	5 ) method4 ;;
-
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
-	
 	8 ) nodeWalletTransfer ;;
-	
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
@@ -1027,5 +1030,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3 dev 3"
+version="1.3 dev 4"
 menu
