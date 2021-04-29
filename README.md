@@ -1,8 +1,9 @@
 # ALL-in-ONE-nknnode
+https://forum.nkn.org/t/allinone-nknnode-script-deploy-nodes-faster-with-your-own-chaindb/2753
 NKN network miners need a blockchain database to operate, where every new miner synchronizes the ChainDB directly from other miners, but that takes up to several days. BUT, if you already have a fully synchronized miner, there's a way to compress the data into an archive, copy it and use it to "fast deploy" miners very fast.
 
-# Script features:
-- NO donation & NO spyware etc.
+# ALLinONE-nknnode 1.3.1 - Script features:
+- NO spyware etc.
 - Beginner mode: download/host ChainDB and install first NKN node
 - Download ChainDB from NKN org and host it on THIS server
 - Download ChainDB from known custom URL and host it on THIS server
@@ -11,6 +12,8 @@ NKN network miners need a blockchain database to operate, where every new miner 
 - Update old ChainDB file (only for chaindb hosts that also have a node installed)
 - Custom URL for ChainDB node deploy (fast)
 - no ChainDB deploy (starts syncing from 0, takes up to 5 days)
+- Transfer NODE ID / wallet
+- Node Status checker / “manager”
 
 This script was tested on Ubuntu 20.04 server.
 If you come across any bugs please let me know. Thank you!
@@ -22,16 +25,12 @@ https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-on
 
 # PREPARATION:
 **VPS server size:**
-To deploy a ChainDB and node: 35+ GB min
-
-To deploy ChainDB only: 25 GB min
-
-To deploy NKN nodes: 25 GB min
+- To deploy a ChainDB and node: 35+ GB min
+- To deploy ChainDB only: 25 GB min
+- To deploy NKN nodes: 25 GB min
 
 **Operating system:** Ubuntu 20.04+
-
 **Private IP check (Linode)**
-
 **Be sure to "disable" VPS provider firewalls!**
 
 # STARTING THE SCRIPT:
@@ -42,7 +41,6 @@ To deploy NKN nodes: 25 GB min
 2. **Start the script in terminal with this command:**
 
    `wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh `
-
 
 ## Debugging after installation:
 
