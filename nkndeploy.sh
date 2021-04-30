@@ -816,8 +816,7 @@ menunwatch
 nWatchRemove(){
 clear
 cd /var/www/html/ || exit
-dontremove="ChainDB.tar.gz"
-rm -rf !("$dontremove") > /dev/null 2>&1
+find . ! -name ChainDB.tar.gz -delete
 printf "nWatch removed!\n\n"
 
 read -s -r -p "Press enter to continue!"
@@ -1122,5 +1121,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 10"
+version="1.4 dev 11"
 menu
