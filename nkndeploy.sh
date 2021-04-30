@@ -804,7 +804,7 @@ printf "DONE!\n"
 printf "Unzipping files......................................................... "
 unzip -u main.zip > /dev/null 2>&1
 mv nWatch-main/* . ; rm -r nWatch-main/ ; rm main.zip
-printf "DONE\n\n"
+printf "DONE!\n\n"
 
 printf "Try accessing the nWatch website on this address:\n"
 printf "http://%s\n\n" "$PUBLIC_IP"
@@ -847,11 +847,11 @@ cat << "EOF"
    =@@@= 
 ================================================================================
 
-Install nWatch an external Github project:
+Install nWatch node monitor website, an external Github project. You'll be able
+to monitor your nodes, add / remove server IPs etc.
 https://github.com/AL-dot-debug/nWatch
 
 1) Install
-3) REMOVE
 
 10) Go back to first menu
 0) Exit
@@ -1115,5 +1115,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 5"
+version="1.4 dev 6"
 menu
