@@ -803,7 +803,7 @@ printf "DONE!\n"
 
 printf "Unzipping files......................................................... "
 unzip -u main.zip > /dev/null 2>&1
-mv nWatch-main/* . ; rm -r nWatch-main/ ; rm main.zip
+mv -f nWatch-main/* . ; rm -rf nWatch-main/ ; rm -f main.zip
 printf "DONE!\n\n"
 
 printf "Try accessing the nWatch website on this address:\n"
@@ -1121,5 +1121,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 11"
+version="1.4 dev 12"
 menu
