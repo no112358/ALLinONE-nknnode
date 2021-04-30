@@ -815,7 +815,12 @@ menunwatch
 
 nWatchRemove(){
 clear
+cd /var/www/html/ || exit
+rm -rf !(ChainDB.tar.gz) > /dev/null 2>&1
+printf "nWatch removed!\n\n"
 
+read -s -r -p "Press enter to continue!"
+menunwatch
 }
 
 ################################## Menu stuff ##################################
@@ -851,7 +856,8 @@ Install nWatch node monitor website, an external Github project. You'll be able
 to monitor your nodes, add / remove server IPs etc.
 https://github.com/AL-dot-debug/nWatch
 
-1) Install
+1) Install / Update (don't install on servers with websites already on them)
+3) REMOVE nWatch
 
 10) Go back to first menu
 0) Exit
@@ -1115,5 +1121,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 6"
+version="1.4 dev 7"
 menu
