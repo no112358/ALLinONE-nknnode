@@ -793,7 +793,7 @@ clear
 
 printf "Installing necessary programs........................................... "
 apt-get install apache2 php php-curl -y > /dev/null 2>&1
-apt-get autoremove -y
+apt-get autoremove -y > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Downloading files....................................................... "
@@ -807,7 +807,7 @@ mv nWatch-main/* . ; rm -r nWatch-main/ ; rm main.zip
 printf "DONE\n\n"
 
 printf "Try accessing the nWatch website on this address:\n"
-printf "http://%s\n\n" "$PUBLIC_IP\n\n"
+printf "http://%s\n\n" "$PUBLIC_IP"
 
 read -s -r -p "Press enter to continue!"
 menunwatch
