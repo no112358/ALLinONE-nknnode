@@ -813,11 +813,6 @@ read -s -r -p "Press enter to continue!"
 menunwatch
 }
 
-nWatchUpdate(){
-clear
-
-}
-
 nWatchRemove(){
 clear
 
@@ -856,7 +851,6 @@ Install nWatch an external Github project:
 https://github.com/AL-dot-debug/nWatch
 
 1) Install
-2) Update
 3) REMOVE
 
 10) Go back to first menu
@@ -868,7 +862,6 @@ read -r selection
 printf "\n"
 case $selection in
 	1 ) nWatchInstall ;;
-	2 ) nWatchUpdate ;;
 	3 ) nWatchRemove ;;
 	10 ) menu ;;
 	0 ) clear ; exit ;;
@@ -1122,5 +1115,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 3"
+version="1.4 dev 4"
 menu
