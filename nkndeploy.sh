@@ -816,7 +816,7 @@ menunwatch
 nWatchRemove(){
 clear
 cd /var/www/html/ || exit
-rm -rf !(ChainDB.tar.gz) > /dev/null 2>&1
+#rm -rf !(ChainDB.tar.gz) > /dev/null 2>&1
 printf "nWatch removed!\n\n"
 
 read -s -r -p "Press enter to continue!"
