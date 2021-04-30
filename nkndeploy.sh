@@ -783,9 +783,105 @@ done < "$input"
 
 printf "\n"
 read -s -r -p "Press enter to continue!"
+menunodechecker
+}
+
+################################### nWatch ####################################
+
+nWatchInstall(){
+clear
+
+printf "Installing necessary programs........................................... "
+apt-get install apache2 php php-curl -y > /dev/null 2>&1
+apt-get autoremove -y
+printf "DONE!\n"
+
+printf "Downloading files....................................................... "
+cd /var/www/html/ || exit
+wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/null 2>&1
+printf "DONE!\n"
+
+printf "Unzipping files......................................................... "
+unzip -u main.zip > /dev/null 2>&1
+mv nWatch-main/* . ; rm -r nWatch-main/ ; rm main.zip
+printf "DONE\n\n"
+
+printf "Try accessing the nWatch website on this address:\n"
+printf "http://%s\n\n" "$PUBLIC_IP\n\n"
+
+read -s -r -p "Press enter to continue!"
+menunwatch
+}
+
+nWatchUpdate(){
+clear
+
+}
+
+nWatchRemove(){
+clear
+
 }
 
 ################################## Menu stuff ##################################
+
+menunwatch() {
+until [ "$selection" = "0" ]; do
+clear
+cat << "EOF"
+                         -==@@@@@@@@@@==-
+                    -=@@==--        --==@@=-
+                  -@@=-                  -=@@-
+                -@@=        -@@- =@@=       =@@-
+               -@@           -== -@@@-        @@-
+              -@@        =@@@@@@@=--=          @@-
+              =@-         -=@@@@@=-  ----      -@@
+              @@      -=@@=-     -=@@@@@-      -@@
+              @@-    =@@@=--@@  -@@@@@=-       -@@
+              -@@     -== =@@@@ -==---=@@=     @@-
+               =@=   -@@- @@@@@ -@@@@=        =@=
+                -@@-      =@@@-   ==@=-     -@@-
+                 @@@@-     --             -@@=
+           -=@@- -@@@@@@=-            -=@@@-
+         =@@@@@@@=-    -==@@@@====@@@@==-
+      -=@@@@@@@@@@=
+    -@@@@@@@@@@@=-
+  =@@@@@@@@@@@=
+=@@@@@@@@@@@-
+-=@@@@@@@=-
+   =@@@= 
+================================================================================
+
+Install nWatch an external Github project:
+https://github.com/AL-dot-debug/nWatch
+
+This will install the nWatch website to THIS server.
+EOF 
+
+printf "Website address: http://%s\n\n" "$PUBLIC_IP" 
+
+cat << "EOF"
+1) Install
+2) Update
+3) REMOVE
+
+10) Go back to first menu
+0) Exit
+
+EOF
+printf "Enter selection: "
+read -r selection
+printf "\n"
+case $selection in
+	1 ) nWatchInstall ;;
+	2 ) nWatchUpdate ;;
+	3 ) nWatchRemove ;;
+	10 ) menu ;;
+	0 ) clear ; exit ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
+esac
+done
+}
 
 menunodechecker() {
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
@@ -979,9 +1075,9 @@ printf "%s" "$red"
 printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
-printf "%s" "$magenta"
-printf "5) NKN NODE CHECKER!\n\n"
-printf "%s" "$normal"
+printf "NODE STATUS Checker:\n"
+printf "5) in-script NKN node monitor!\n\n"
+printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
 printf "0) Exit\n\n"
 
@@ -993,6 +1089,7 @@ case $selection in
 	1 ) menubeginner ;;
 	3 ) menuadvanced ;;
 	5 ) menunodechecker ;;
+	6 ) menunwatch ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
@@ -1024,11 +1121,12 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv -y
+apt-get install unzip glances vnstat ufw sed grep pv curl -y
+apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3.1"
+version="1.4 dev 1"
 menu
