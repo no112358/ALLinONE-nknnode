@@ -856,7 +856,7 @@ Install nWatch an external Github project:
 https://github.com/AL-dot-debug/nWatch
 
 This will install the nWatch website to THIS server.
-EOF 
+EOF
 
 printf "Website address: http://%s\n\n" "$PUBLIC_IP" 
 
@@ -867,8 +867,8 @@ cat << "EOF"
 
 10) Go back to first menu
 0) Exit
-
 EOF
+
 printf "Enter selection: "
 read -r selection
 printf "\n"
@@ -1076,7 +1076,7 @@ printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
 printf "NODE STATUS Checker:\n"
-printf "5) in-script NKN node monitor!\n\n"
+printf "5) in-script NKN node monitor!\n"
 printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
 printf "0) Exit\n\n"
