@@ -855,12 +855,6 @@ cat << "EOF"
 Install nWatch an external Github project:
 https://github.com/AL-dot-debug/nWatch
 
-This will install the nWatch website to THIS server.
-EOF
-
-printf "Website address: http://%s\n\n" "$PUBLIC_IP" 
-
-cat << "EOF"
 1) Install
 2) Update
 3) REMOVE
@@ -1128,5 +1122,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 2"
+version="1.4 dev 3"
 menu
