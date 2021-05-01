@@ -803,12 +803,15 @@ printf "DONE!\n"
 
 printf "Unzipping files......................................................... "
 unzip -u main.zip > /dev/null 2>&1
-rm -rf core
+rm -rf core > /dev/null 2>&1
 mv nWatch-main/* . ; rm -rf nWatch-main/ ; rm -f main.zip
+touch nodes.txt > /dev/null 2>&1
+chown www-data:www-data nodes.txt > /dev/null 2>&1
 printf "DONE!\n\n"
 
-printf "Try accessing the nWatch website on this address:\n"
+printf "Access the nWatch website on this address:\n"
 printf "http://%s\n\n" "$PUBLIC_IP"
+printf "where you can set up your server IP list and monitor all your nodes.\n"
 
 read -s -r -p "Press enter to continue!"
 menunwatch
@@ -830,27 +833,24 @@ menunwatch() {
 until [ "$selection" = "0" ]; do
 clear
 cat << "EOF"
-                         -==@@@@@@@@@@==-
-                    -=@@==--        --==@@=-
-                  -@@=-                  -=@@-
-                -@@=        -@@- =@@=       =@@-
-               -@@           -== -@@@-        @@-
-              -@@        =@@@@@@@=--=          @@-
-              =@-         -=@@@@@=-  ----      -@@
-              @@      -=@@=-     -=@@@@@-      -@@
-              @@-    =@@@=--@@  -@@@@@=-       -@@
-              -@@     -== =@@@@ -==---=@@=     @@-
-               =@=   -@@- @@@@@ -@@@@=        =@=
-                -@@-      =@@@-   ==@=-     -@@-
-                 @@@@-     --             -@@=
-           -=@@- -@@@@@@=-            -=@@@-
-         =@@@@@@@=-    -==@@@@====@@@@==-
-      -=@@@@@@@@@@=
-    -@@@@@@@@@@@=-
-  =@@@@@@@@@@@=
-=@@@@@@@@@@@-
--=@@@@@@@=-
-   =@@@= 
+                  `/ohdmmmmmdhs/.
+               `+dms/-`     `./smdo.
+             `oNh:    .:. `o-    -sNs`
+            .dm:      .hN+-MMo     -dm-
+           `dm.     -oyhhy:sNh      `dN.
+           +M:      omNMMMNy.-..`    .My
+           hN    `:ooo://::+hmNN/     mN
+           hM`  `ymmdooy.`hMMMNs`     mm
+           /M+   .oy.dMMh.yhs/shh+   :Ms
+            yN:  odo/MMMd`hmdy/--`  -md`
+            `yNo``` `dMh. ./syo   `+Nh`
+         `.. oMMmo-  `-`        .+dd/`
+       `/dNNh/+hyshds+:--.--:/sdhy:`
+     `+mMMMMMMh`  `.:+syyyyyso/.`
+   `omMMMMMMMNo
+ .oNMMMMMMMNo.
+oNMMMMMMMm+`
++NMMMMMm+`
 ================================================================================
 
 Install nWatch node monitor website, an external Github project. You'll be able
@@ -858,6 +858,7 @@ to monitor your nodes, add / remove server IPs etc.
 https://github.com/AL-dot-debug/nWatch
 
 1) Install / Update (don't install on servers with websites already on them)
+
 3) REMOVE nWatch
 
 10) Go back to first menu
@@ -897,8 +898,8 @@ cat << "EOF"
 
 ================================================================================
 
-Add your NKN node IP addresses to the IP database and check on your node status.
-It will show the node status.
+WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
+to the IP database and check on your node status. It will show the node status.
 
 1) Add NKN NODE IP address
 2) Remove NKN NODE IP address
@@ -1122,5 +1123,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 13"
+version="1.4 dev 14"
 menu
