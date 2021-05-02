@@ -762,37 +762,29 @@ clear
 input="IPs.txt"
 inputwallet="walletaddress.txt"
 
+if [ ! -f walletaddress.txt ]; then
+    printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+else
+	while IFS= read -r file; do
+		walletaddress="$file"
+		#printf "%s" "$walletaddress"
+		
+		getwalletinfo=$(curl -s -X GET \
+		-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
+		-H "Content-Type: application/json" \
+		-H "Accept: application/json")
 
+		walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
+		walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+	done < "$inputwallet"
 
-# getwalletinfo=$(curl -s -X GET \
-    # -G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
-    # -H "Content-Type: application/json" \
-    # -H "Accept: application/json")
-
-# walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
-# walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
-
-while IFS= read -r file; do
-	walletaddress="$file"
-	printf "%s" "$walletaddress"
-done < "$inputwallet"
-
-
-
-# #if [ "$walletoutput1" == "" ]; then
-	# printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	# printf "IP:              Status:           Height:  Version:  Uptime:\n"
-# else
-	# printf "Wallet address: %s\n" "$walletoutput1"
-	# printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
+	printf "Wallet address: %s\n" "$walletoutput1"
+	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
 	
-	# printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	# printf "IP:              Status:           Height:  Version:  Uptime:\n"
-# fi
-
-
-
-
+	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+fi
 
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
@@ -1187,5 +1179,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 20"
+version="1.4 dev 21"
 menu
