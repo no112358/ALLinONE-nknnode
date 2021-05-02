@@ -1,7 +1,8 @@
 #!/bin/bash
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
-#v1.3 added Node checker so people can see their node status
+#v1.3 added in-script node monitor (no112358)
+#v1.4 added nWatch node monitor (AL-dot-debug) & added wallet balance in-script node monitor
 
 method1(){
 clear
@@ -721,7 +722,7 @@ addip(){
 clear
 printf "Enter NODE IP address to ADD:\n"
 read -r addipaddress
-printf "%s\n" >> IPs.txt "$addipaddress"
+printf "%s\n" >> IPs.txt "$addipaddress" # create/write file IPs.txt
 }
 
 removeip(){
@@ -730,14 +731,15 @@ FILE="IPs.txt"
 printf "Enter NODE IP address to REMOVE:\n"
 read -r removeipaddress
 
+# remove information from the file IPs.txt
 if grep -Fxq "$removeipaddress" "$FILE"
 then
-    # code if found
+    # if found
     sed -i /"$removeipaddress"/d "$FILE"
     printf "\nIP address removed!\n\n"
     read -s -r -p "Press enter to continue!"
 else
-    # code if not found
+    # if not found
     printf "\nERROR IP address not found!\n\n"
     read -s -r -p "Press enter to continue!"
 fi
@@ -745,8 +747,9 @@ fi
 
 showips(){
 clear
-
 FILE="IPs.txt"
+
+# read file IPs.txt and print it out in terminal
 printf "%s server IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 
 printf "*** File - %s contents ***\n\n" "$FILE"
@@ -759,10 +762,34 @@ read -s -r -p "Press enter to continue!"
 checknodes(){
 clear
 input="IPs.txt"
+inputwallet="walletaddress.txt"
 
-printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-printf "IP:              Status:           Height:  Version:  Uptime:\n"
+# check if file exists, if not skip the wallet part
+if [ ! -f walletaddress.txt ]; then
+    printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+else
+	while IFS= read -r file; do # read the NKN wallet address from the walletaddress.txt file
+		walletaddress="$file"
+		
+		# fetch wallet balance from nkn.org
+		getwalletinfo=$(curl -s -X GET \
+		-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
+		-H "Content-Type: application/json" \
+		-H "Accept: application/json")
 
+		walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
+		walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+	done < "$inputwallet"
+
+	printf "Wallet address: %s\n" "$walletoutput1"
+	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
+	
+	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+fi
+
+# fetch the node data and process it
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
         if [[ $nkncOutput == *"error"* ]]
@@ -776,16 +803,137 @@ while IFS= read -r file; do
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
-
-                printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
+				# print out in colums
+                printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours" 
         fi
 done < "$input"
 
 printf "\n"
 read -s -r -p "Press enter to continue!"
+menunodechecker
+}
+
+walletbalance(){
+clear
+printf "Enter beneficiary wallet address:\n"
+read -r walletaddress
+
+# check wallet address lengh
+walletlenght=${#walletaddress}
+
+if [ "$walletlenght" == "36" ]; then
+	# Continues script
+	rm -f walletaddress.txt > /dev/null 2>&1
+	printf "%s\n" >> walletaddress.txt "$walletaddress" # write wallet address to file
+else
+	# error wrong lenght of NKN address go back
+cat << "EOF"
+
+NKN wallet address you entered is wrong. Use mainnet NKN wallet,
+not ERC-20 wallet. NKN mainnet address starts with NKN*
+
+EOF
+	read -s -r -p "Press Enter to continue!"
+	walletbalance
+fi
+
+menunodechecker
+}
+
+################################### nWatch ####################################
+
+nWatchInstall(){
+clear
+
+printf "Installing necessary programs........................................... "
+apt-get install apache2 php php-curl -y > /dev/null 2>&1
+apt-get autoremove -y > /dev/null 2>&1
+printf "DONE!\n"
+
+printf "Downloading files....................................................... "
+cd /var/www/html/ || exit
+wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/null 2>&1
+printf "DONE!\n"
+
+printf "Unzipping files......................................................... "
+unzip -u main.zip > /dev/null 2>&1
+rm -rf core > /dev/null 2>&1 # update workaround
+rm -rf pages > /dev/null 2>&1 # update workaround
+mv nWatch-main/* . > /dev/null 2>&1
+rm -rf nWatch-main/ > /dev/null 2>&1
+rm -f main.zip > /dev/null 2>&1
+rm -f *.png > /dev/null 2>&1
+chown -R www-data:www-data * > /dev/null 2>&1
+printf "DONE!\n\n"
+
+printf "Access the nWatch website on this address, where you can set up your\n"
+printf "server IP list and monitor all your nodes.\n"
+printf "http://%s\n\n" "$PUBLIC_IP"
+
+read -s -r -p "Press enter to continue!"
+menunwatch
+}
+
+nWatchRemove(){
+clear
+cd /var/www/html/ || exit
+find . ! -name ChainDB.tar.gz -delete # delete all files except ChainDB.tar.gz
+printf "nWatch removed!\n\n"
+
+read -s -r -p "Press enter to continue!"
+menunwatch
 }
 
 ################################## Menu stuff ##################################
+
+menunwatch() {
+until [ "$selection" = "0" ]; do
+clear
+cat << "EOF"
+                  `/ohdmmmmmdhs/.
+               `+dms/-`     `./smdo.
+             `oNh:    .:. `o-    -sNs`
+            .dm:      .hN+-MMo     -dm-
+           `dm.     -oyhhy:sNh      `dN.
+           +M:      omNMMMNy.-..`    .My
+           hN    `:ooo://::+hmNN/     mN
+           hM`  `ymmdooy.`hMMMNs`     mm
+           /M+   .oy.dMMh.yhs/shh+   :Ms
+            yN:  odo/MMMd`hmdy/--`  -md`
+            `yNo``` `dMh. ./syo   `+Nh`
+         `.. oMMmo-  `-`        .+dd/`
+       `/dNNh/+hyshds+:--.--:/sdhy:`
+     `+mMMMMMMh`  `.:+syyyyyso/.`
+   `omMMMMMMMNo
+ .oNMMMMMMMNo.
+oNMMMMMMMm+`
++NMMMMMm+`
+================================================================================
+
+Install nWatch node monitor website, an external Github project. You'll be able
+to monitor your nodes, add / remove server IPs etc.
+https://github.com/AL-dot-debug/nWatch
+
+1) Install / Update (don't install on servers with websites already on them)
+
+3) REMOVE nWatch
+
+10) Go back to first menu
+0) Exit
+EOF
+
+printf "Enter selection: "
+read -r selection
+printf "\n"
+case $selection in
+	1 ) nWatchInstall ;;
+	3 ) nWatchRemove ;;
+	10 ) menu ;;
+	0 ) clear ; exit ;;
+	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
+esac
+done
+}
 
 menunodechecker() {
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
@@ -807,13 +955,15 @@ cat << "EOF"
 
 ================================================================================
 
-Add your NKN node IP addresses to the IP database and check on your node status.
-It will show the node status.
+WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
+to the IP database and check on your node status. It will show the node status.
 
 1) Add NKN NODE IP address
 2) Remove NKN NODE IP address
 3) Show stored IP addresess
-4) Check node status
+4) Check node / wallet status
+
+5) Add beneficiary wallet to display current balance
 
 10) Go back to first menu
 0) Exit
@@ -827,6 +977,7 @@ case $selection in
 	2 ) removeip ;;
 	3 ) showips ;;
 	4 ) checknodes ;;
+	5 ) walletbalance ;;
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
@@ -979,9 +1130,9 @@ printf "%s" "$red"
 printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
-printf "%s" "$magenta"
-printf "5) NKN NODE CHECKER!\n\n"
-printf "%s" "$normal"
+printf "NODE STATUS Checker:\n"
+printf "5) in-script NKN node monitor (no112358)\n"
+printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
 printf "0) Exit\n\n"
 
@@ -993,6 +1144,7 @@ case $selection in
 	1 ) menubeginner ;;
 	3 ) menuadvanced ;;
 	5 ) menunodechecker ;;
+	6 ) menunwatch ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
 esac
@@ -1024,11 +1176,12 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv -y
+apt-get install unzip glances vnstat ufw sed grep pv curl sudo -y
+apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.3.1"
+version="1.4"
 menu
