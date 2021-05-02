@@ -2,7 +2,7 @@
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
 #v1.3 added in-script node monitor (no112358)
-#v1.4 added nWatch node monitor (AL-dot-debug)
+#v1.4 added nWatch node monitor (AL-dot-debug) & added wallet balance in-script node monitor
 
 method1(){
 clear
@@ -803,8 +803,8 @@ while IFS= read -r file; do
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
-
-                printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
+				# print out in colums
+                printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours" 
         fi
 done < "$input"
 
@@ -824,9 +824,9 @@ walletlenght=${#walletaddress}
 if [ "$walletlenght" == "36" ]; then
 	# Continues script
 	rm -f walletaddress.txt > /dev/null 2>&1
-	printf "%s\n" >> walletaddress.txt "$walletaddress"
+	printf "%s\n" >> walletaddress.txt "$walletaddress" # write wallet address to file
 else
-	# goes back to walletbalance
+	# error wrong lenght of NKN address go back
 cat << "EOF"
 
 NKN wallet address you entered is wrong. Use mainnet NKN wallet,
@@ -1183,5 +1183,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 22"
+version="1.4"
 menu
