@@ -804,7 +804,11 @@ printf "DONE!\n"
 printf "Unzipping files......................................................... "
 unzip -u main.zip > /dev/null 2>&1
 rm -rf core > /dev/null 2>&1
-mv nWatch-main/* . ; rm -rf nWatch-main/ ; rm -f main.zip
+rm -rf pages > /dev/null 2>&1
+mv nWatch-main/* . > /dev/null 2>&1
+rm -rf nWatch-main/ > /dev/null 2>&1
+rm -f main.zip > /dev/null 2>&1
+rm -f *.png > /dev/null 2>&1
 touch nodes.txt > /dev/null 2>&1
 chown www-data:www-data nodes.txt > /dev/null 2>&1
 #chown -R www-data:www-data * > /dev/null 2>&1
@@ -1124,5 +1128,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 15"
+version="1.4 dev 16"
 menu
