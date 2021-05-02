@@ -1,7 +1,8 @@
 #!/bin/bash
 #v1.1 Added method 5
 #v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
-#v1.3 added Node checker so people can see their node status
+#v1.3 added in-script node monitor (no112358)
+#v1.4 added nWatch node monitor (AL-dot-debug)
 
 method1(){
 clear
@@ -760,8 +761,16 @@ checknodes(){
 clear
 input="IPs.txt"
 
-printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-printf "IP:              Status:           Height:  Version:  Uptime:\n"
+if [ "$walletoutput1" == "" ]; then
+	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+else
+	printf "Wallet address: %s\n" "$walletoutput1"
+	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
+	
+	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+fi
 
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
@@ -783,6 +792,43 @@ done < "$input"
 
 printf "\n"
 read -s -r -p "Press enter to continue!"
+menunodechecker
+}
+
+walletbalance(){
+clear
+printf "Enter beneficiary wallet address:\n"
+read -r walletaddress
+
+# check wallet address lengh
+walletlenght=${#walletaddress}
+
+if [ "$walletlenght" == "36" ]; then
+	# Continues script
+	rm -f walletaddress.txt > /dev/null 2>&1
+	printf "%s\n" >> walletaddress.txt "$walletaddress"
+else
+	# goes back to walletbalance
+cat << "EOF"
+
+NKN wallet address you entered is wrong. Use mainnet NKN wallet,
+not ERC-20 wallet. NKN mainnet address starts with NKN*
+
+EOF
+	read -s -r -p "Press Enter to continue!"
+	walletbalance
+fi
+
+#printf "%s\n" >> walletaddress.txt "$walletaddress"
+
+getwalletinfo=$(curl -s -X GET \
+    -G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json")
+
+walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
+walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+
 menunodechecker
 }
 
@@ -907,7 +953,9 @@ to the IP database and check on your node status. It will show the node status.
 1) Add NKN NODE IP address
 2) Remove NKN NODE IP address
 3) Show stored IP addresess
-4) Check node status
+4) Check node / wallet status
+
+5) Add beneficiary wallet to display current balance
 
 10) Go back to first menu
 0) Exit
@@ -921,6 +969,7 @@ case $selection in
 	2 ) removeip ;;
 	3 ) showips ;;
 	4 ) checknodes ;;
+	5 ) walletbalance ;;
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press enter to continue!" ;;
@@ -1126,5 +1175,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 18"
+version="1.4 dev 19"
 menu
