@@ -1131,7 +1131,7 @@ printf "3) ADVANCED USER!\n\n"
 printf "%s" "$normal"
 
 printf "NODE STATUS Checker:\n"
-printf "5) in-script NKN node monitor!\n"
+printf "5) in-script NKN node monitor (no112358)\n"
 printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
 printf "0) Exit\n\n"
