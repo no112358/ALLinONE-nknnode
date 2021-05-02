@@ -722,7 +722,7 @@ addip(){
 clear
 printf "Enter NODE IP address to ADD:\n"
 read -r addipaddress
-printf "%s\n" >> IPs.txt "$addipaddress"
+printf "%s\n" >> IPs.txt "$addipaddress" # create/write file IPs.txt
 }
 
 removeip(){
@@ -731,14 +731,15 @@ FILE="IPs.txt"
 printf "Enter NODE IP address to REMOVE:\n"
 read -r removeipaddress
 
+# remove information from the file IPs.txt
 if grep -Fxq "$removeipaddress" "$FILE"
 then
-    # code if found
+    # if found
     sed -i /"$removeipaddress"/d "$FILE"
     printf "\nIP address removed!\n\n"
     read -s -r -p "Press enter to continue!"
 else
-    # code if not found
+    # if not found
     printf "\nERROR IP address not found!\n\n"
     read -s -r -p "Press enter to continue!"
 fi
@@ -746,8 +747,9 @@ fi
 
 showips(){
 clear
-
 FILE="IPs.txt"
+
+# read file IPs.txt and print it out in terminal
 printf "%s server IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 
 printf "*** File - %s contents ***\n\n" "$FILE"
@@ -762,14 +764,15 @@ clear
 input="IPs.txt"
 inputwallet="walletaddress.txt"
 
+# check if file exists, if not skip the wallet part
 if [ ! -f walletaddress.txt ]; then
     printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 	printf "IP:              Status:           Height:  Version:  Uptime:\n"
 else
-	while IFS= read -r file; do
+	while IFS= read -r file; do # read the NKN wallet address from the walletaddress.txt file
 		walletaddress="$file"
-		#printf "%s" "$walletaddress"
 		
+		# fetch wallet balance from nkn.org
 		getwalletinfo=$(curl -s -X GET \
 		-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
 		-H "Content-Type: application/json" \
@@ -786,6 +789,7 @@ else
 	printf "IP:              Status:           Height:  Version:  Uptime:\n"
 fi
 
+# fetch the node data and process it
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
         if [[ $nkncOutput == *"error"* ]]
@@ -873,7 +877,7 @@ menunwatch
 nWatchRemove(){
 clear
 cd /var/www/html/ || exit
-find . ! -name ChainDB.tar.gz -delete
+find . ! -name ChainDB.tar.gz -delete # delete all files except ChainDB.tar.gz
 printf "nWatch removed!\n\n"
 
 read -s -r -p "Press enter to continue!"
@@ -1179,5 +1183,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 21"
+version="1.4 dev 22"
 menu
