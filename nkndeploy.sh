@@ -807,11 +807,12 @@ rm -rf core > /dev/null 2>&1
 mv nWatch-main/* . ; rm -rf nWatch-main/ ; rm -f main.zip
 touch nodes.txt > /dev/null 2>&1
 chown www-data:www-data nodes.txt > /dev/null 2>&1
+#chown -R www-data:www-data * > /dev/null 2>&1
 printf "DONE!\n\n"
 
-printf "Access the nWatch website on this address:\n"
+printf "Access the nWatch website on this address, where you can set up your\n"
+printf "server IP list and monitor all your nodes.\n"
 printf "http://%s\n\n" "$PUBLIC_IP"
-printf "where you can set up your server IP list and monitor all your nodes.\n"
 
 read -s -r -p "Press enter to continue!"
 menunwatch
@@ -1116,12 +1117,12 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv curl -y
+apt-get install unzip glances vnstat ufw sed grep pv curl sudo -y
 apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4 dev 14"
+version="1.4 dev 15"
 menu
