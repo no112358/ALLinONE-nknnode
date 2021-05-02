@@ -810,8 +810,8 @@ rm -rf nWatch-main/ > /dev/null 2>&1
 rm -f main.zip > /dev/null 2>&1
 rm -f *.png > /dev/null 2>&1
 touch nodes.txt > /dev/null 2>&1
-chown www-data:www-data nodes.txt > /dev/null 2>&1
-#chown -R www-data:www-data * > /dev/null 2>&1
+#chown www-data:www-data nodes.txt > /dev/null 2>&1
+chown -R www-data:www-data * > /dev/null 2>&1
 printf "DONE!\n\n"
 
 printf "Access the nWatch website on this address, where you can set up your\n"
