@@ -864,9 +864,12 @@ printf "DONE!\n"
 printf "Unzipping files......................................................... "
 rm -f index.html > /dev/null 2>&1
 unzip -u main.zip > /dev/null 2>&1
-rm -rf core > /dev/null 2>&1 # update workaround
-rm -rf pages > /dev/null 2>&1 # update workaround
-mv nWatch-main/* . > /dev/null 2>&1
+
+#rm -rf core > /dev/null 2>&1 # update workaround
+#rm -rf pages > /dev/null 2>&1 # update workaround
+#mv nWatch-main/* . > /dev/null 2>&1
+
+cp -rf nWatch-main/* . > /dev/null 2>&1
 rm -rf nWatch-main/ > /dev/null 2>&1
 rm -f main.zip > /dev/null 2>&1
 rm -f *.png > /dev/null 2>&1
@@ -1190,5 +1193,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1"
+version="1.4.2 dev 1"
 menu
