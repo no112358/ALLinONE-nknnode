@@ -862,6 +862,7 @@ wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/n
 printf "DONE!\n"
 
 printf "Unzipping files......................................................... "
+rm -f index.html > /dev/null 2>&1
 unzip -u main.zip > /dev/null 2>&1
 rm -rf core > /dev/null 2>&1 # update workaround
 rm -rf pages > /dev/null 2>&1 # update workaround
@@ -869,7 +870,7 @@ mv nWatch-main/* . > /dev/null 2>&1
 rm -rf nWatch-main/ > /dev/null 2>&1
 rm -f main.zip > /dev/null 2>&1
 rm -f *.png > /dev/null 2>&1
-chown -R www-data:www-data * > /dev/null 2>&1
+chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 printf "DONE!\n\n"
 
 printf "Access the nWatch website on this address, where you can set up your\n"
