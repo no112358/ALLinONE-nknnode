@@ -786,12 +786,13 @@ else
 	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
 	
 	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:\n"
+	printf "IP:              Status:           Height:  Version:  Uptime:   Blocks mined:\n"
 fi
 
 # fetch the node data and process it
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
+
         if [[ $nkncOutput == *"error"* ]]
         then
                 output1=$(printf "%s" "$nkncOutput" | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
@@ -803,8 +804,13 @@ while IFS= read -r file; do
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
+				days="d "
+				hours="h"
+				output4="$outputDays$days$outputHours$hours"
+				output5=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				
 				# print out in colums
-                printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours" 
+                printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
         fi
 done < "$input"
 
@@ -1183,5 +1189,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4"
+version="1.4.1"
 menu
