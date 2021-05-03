@@ -803,7 +803,9 @@ while IFS= read -r file; do
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
-				output4="$outputDays $outputHours"
+				days="d "
+				hours="h"
+				output4="$outputDays$days$outputHours$hours"
 				output5=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
 				
 				# print out in colums
@@ -1187,5 +1189,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1 dev 10"
+version="1.4.1 dev 11"
 menu
