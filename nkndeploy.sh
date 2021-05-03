@@ -792,7 +792,7 @@ fi
 # fetch the node data and process it
 while IFS= read -r file; do
         nkncOutput=$(./nknc --ip "$file" info -s)
-		blockworth="11.09"
+		blockworth="11,09851671"
 		
         if [[ $nkncOutput == *"error"* ]]
         then
@@ -1192,5 +1192,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1 dev 16"
+version="1.4.1 dev 15"
 menu
