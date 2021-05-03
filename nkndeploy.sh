@@ -800,12 +800,13 @@ while IFS= read -r file; do
                 output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				output4=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				output4=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
 				# print out in colums
                 printf "%-17s%-18s%-9s%-10s%-3sd %-5sh%%s\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours" "$output4"
+				#printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
         fi
 done < "$input"
 
