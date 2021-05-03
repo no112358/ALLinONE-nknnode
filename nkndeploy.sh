@@ -786,7 +786,7 @@ else
 	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
 	
 	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:  Blocks mined:\n"
+	printf "IP:              Status:           Height:  Version:  Uptime:   Blocks mined:\n"
 fi
 
 # fetch the node data and process it
@@ -810,7 +810,6 @@ while IFS= read -r file; do
 				
 				# print out in colums
                 printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
-				#printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
         fi
 done < "$input"
 
@@ -1189,5 +1188,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1 dev 11"
+version="1.4.1 dev 12"
 menu
