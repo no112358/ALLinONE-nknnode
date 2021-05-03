@@ -809,7 +809,8 @@ while IFS= read -r file; do
 				hours="h"
 				output4="$outputDays$days$outputHours$hours"
 				blocksmined=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				output5="$((blocksmined * blockworth)) NKN"
+				nkn="NKN"
+				output5="$((blocksmined * blockworth)) $nkn"
 				
 				# print out in colums
                 printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
@@ -1191,5 +1192,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1 dev 13"
+version="1.4.1 dev 14"
 menu
