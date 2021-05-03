@@ -800,12 +800,14 @@ while IFS= read -r file; do
                 output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				output4=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
+				output4="$outputDays $outputHours"
+				output5=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				
 				# print out in colums
-                printf "%-17s%-18s%-9s%-10s%sd %sh%-5s%s\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours" "" "$output4"
+                printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
 				#printf "%-17s%-18s%-9s%-10s%sd %sh\n" "$file" "$output1" "$output2" "$output3" "$outputDays" "$outputHours"
         fi
 done < "$input"
@@ -1185,5 +1187,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.1 dev 9"
+version="1.4.1 dev 10"
 menu
