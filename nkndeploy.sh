@@ -816,17 +816,18 @@ while IFS= read -r file; do
                 output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				# convert seconds into days and hours 
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                outputDays=$((uptimeSec / 86400))
+				outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
 				days="d "
 				hours="h"
 				output4="$outputDays$days$outputHours$hours"
+				# convert proposal blocks to NKN
 				howmanyblocks=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				plus="+"
 				worth=$(bc <<< "scale=2; $blockworth / 100000000 * $howmanyblocks")
 				nkn=" NKN"
-				output5="$plus$worth$nkn"
+				output5="$worth$nkn"
 				
 				# print out in colums
                 printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
@@ -1205,12 +1206,12 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv curl sudo -y
+apt-get install unzip glances vnstat ufw sed grep pv curl sudo bc -y
 apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.3 dev 1"
+version="1.4.3 dev 2"
 menu
