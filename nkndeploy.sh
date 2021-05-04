@@ -262,10 +262,8 @@ systemctl stop nkn-commercial.service > /dev/null 2>&1
 sleep 5
 printf "DONE!\n"
 
-# find directory and change dir to it
-cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
-
 printf "Pruning ChainDB folder.................................................. "
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit # find directory and change dir
 ./nknc pruning --pruning --lowmem > /dev/null 2>&1
 printf "DONE!\n"
 
@@ -1214,5 +1212,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.3 dev 3"
+version="1.4.3 dev 4"
 menu
