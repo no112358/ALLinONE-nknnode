@@ -785,7 +785,7 @@ else
 	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
 	
 	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:   Blocks mined:\n"
+	printf "IP:              Status:           Height:  Version:  Uptime:   NKN mined:\n"
 fi
 
 # get blockworth from API
@@ -1212,5 +1212,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.3 dev 4"
+version="1.4.3 dev 5"
 menu
