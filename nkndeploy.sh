@@ -262,20 +262,20 @@ systemctl stop nkn-commercial.service > /dev/null 2>&1
 sleep 5
 printf "DONE!\n"
 
-# find directory and change dir to it
-cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
-
 printf "Pruning ChainDB folder.................................................. "
+cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit # find directory and change dir
 ./nknc pruning --pruning --lowmem > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Deleting OLD ChainDB archive............................................ "
-rm -f Chain*.tar.gz > /dev/null 2>&1
+rm -f Chain*.tar.gz > /dev/null 2>&1 # delete old file from previous versions of script
 rm -f /var/www/html/Chain*.tar.gz > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Creating NEW ChainDB archive............................................ \n"
 tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
+# bug somehow the tar process changes ownership of files ?? rechown
+chown -R "$username":"$username" ChainDB/ > /dev/null 2>&1
 printf "Create NEW ChainDB archive.............................................. DONE!\n"
 
 printf "Starting NKN node software.............................................. "
@@ -786,8 +786,23 @@ else
 	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
 	
 	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:   Blocks mined:\n"
+	printf "IP:              Status:           Height:  Version:  Uptime:   NKN mined:\n"
 fi
+
+# get blockworth from API
+getlatestblock=$(curl -s -X GET \
+-G "https://openapi.nkn.org/api/v1/statistics/counts" \
+-H "Content-Type: application/json" \
+-H "Accept: application/json")
+
+latestblock=$(printf "%s" "$getlatestblock" | sed -E 's/(^.*blockCount":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+
+getblockworth=$(curl -s -X GET \
+-G "https://openapi.nkn.org/api/v1/blocks/$latestblock" \
+-H "Content-Type: application/json" \
+-H "Accept: application/json")
+
+blockworth=$(printf "%s" "$getblockworth" | sed -E 's/(^.*reward":)([^",]+).*/\2/; s/[0-9]{8}$/.&/; s/[}]//g')
 
 # fetch the node data and process it
 while IFS= read -r file; do
@@ -801,13 +816,18 @@ while IFS= read -r file; do
                 output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				# convert seconds into days and hours 
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                outputDays=$((uptimeSec / 86400))
+				outputDays=$((uptimeSec / 86400))
                 outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
 				days="d "
 				hours="h"
 				output4="$outputDays$days$outputHours$hours"
-				output5=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				# convert proposal blocks to NKN
+				howmanyblocks=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+				worth=$(bc <<< "scale=2; $blockworth / 100000000 * $howmanyblocks")
+				nkn=" NKN"
+				output5="$worth$nkn"
 				
 				# print out in colums
                 printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
@@ -1186,12 +1206,12 @@ fi
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv curl sudo -y
+apt-get install unzip glances vnstat ufw sed grep pv curl sudo bc -y
 apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.2"
+version="1.4.3"
 menu
