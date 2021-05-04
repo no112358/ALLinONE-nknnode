@@ -274,7 +274,8 @@ printf "DONE!\n"
 
 printf "Creating NEW ChainDB archive............................................ \n"
 tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
-chown -R "$username":"$username" ChainDB/ > /dev/null 2>&1 # bug somehow the tar process changes ownership of files ?? rechown
+# bug somehow the tar process changes ownership of files ?? rechown
+chown -R "$username":"$username" ChainDB/ > /dev/null 2>&1
 printf "Create NEW ChainDB archive.............................................. DONE!\n"
 
 printf "Starting NKN node software.............................................. "
@@ -1212,5 +1213,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.3 dev 5"
+version="1.4.3 dev 6"
 menu
