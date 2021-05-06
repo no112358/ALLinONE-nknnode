@@ -837,8 +837,8 @@ clear
 			fi
 	done < "$input"
 
-printf "\nRefresh every 60 seconds, press [ENTER] to exit to menu!\n"
-read -s -N 1 -t 60 key
+printf "\nRefresh every 2 minutes, press [ENTER] to exit to menu!\n"
+read -s -N 1 -t 120 key
 
 if [[ $key == $'\x0a' ]]; # exit loop if ENTER is pressed
 then
