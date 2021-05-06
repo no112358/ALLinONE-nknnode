@@ -774,7 +774,7 @@ clear
 	else
 		while IFS= read -r file; do # read the NKN wallet address from the walletaddress.txt file
 			walletaddress="$file"
-			
+
 			# fetch wallet balance from nkn.org
 			getwalletinfo=$(curl -s -X GET \
 			-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
@@ -787,7 +787,7 @@ clear
 
 		printf "Wallet address: %s\n" "$walletoutput1"
 		printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
-		
+
 		printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 		printf "IP:              Status:           Height:  Version:  Uptime:   NKN mined:\n"
 	fi
@@ -831,7 +831,7 @@ clear
 					worth=$(bc <<< "scale=2; $blockworth / 100000000 * $howmanyblocks")
 					nkn=" NKN"
 					output5="$worth$nkn"
-					
+
 					# print out in colums
 					printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
 			fi
