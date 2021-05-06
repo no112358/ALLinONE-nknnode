@@ -2,7 +2,7 @@
 https://forum.nkn.org/t/allinone-nknnode-script-deploy-nodes-faster-with-your-own-chaindb/2753
 NKN network miners need a blockchain database to operate, where every new miner synchronizes the ChainDB directly from other miners, but that takes up to several days. BUT, if you already have a fully synchronized miner, there's a way to compress the data into an archive, copy it and use it to "fast deploy" miners very fast.
 
-# ALLinONE-nknnode 1.4.4 - Script features:
+# ALLinONE-nknnode 1.4.5 - Script features:
 - NO spyware etc.
 - Beginner mode: download/host ChainDB and install first NKN node
 - Download ChainDB from NKN org and host it on THIS server

@@ -764,79 +764,87 @@ clear
 input="IPs.txt"
 inputwallet="walletaddress.txt"
 
-# check if file exists, if not skip the wallet part
-if [ ! -f walletaddress.txt ]; then
-    printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:\n"
-else
-	while IFS= read -r file; do # read the NKN wallet address from the walletaddress.txt file
-		walletaddress="$file"
-		
-		# fetch wallet balance from nkn.org
-		getwalletinfo=$(curl -s -X GET \
-		-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
-		-H "Content-Type: application/json" \
-		-H "Accept: application/json")
+while :
+do
+clear
+	# check if file exists, if not skip the wallet part
+	if [ ! -f walletaddress.txt ]; then
+		printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+		printf "IP:              Status:           Height:  Version:  Uptime:\n"
+	else
+		while IFS= read -r file; do # read the NKN wallet address from the walletaddress.txt file
+			walletaddress="$file"
 
-		walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
-		walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
-	done < "$inputwallet"
+			# fetch wallet balance from nkn.org
+			getwalletinfo=$(curl -s -X GET \
+			-G "https://openapi.nkn.org/api/v1/addresses/$walletaddress" \
+			-H "Content-Type: application/json" \
+			-H "Accept: application/json")
 
-	printf "Wallet address: %s\n" "$walletoutput1"
-	printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
-	
-	printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
-	printf "IP:              Status:           Height:  Version:  Uptime:   NKN mined:\n"
+			walletoutput1=$(printf "%s" "$getwalletinfo" | sed -n -r 's/(^.*address":")([^"]+)".*/\2/p' | sed -e 's/[",]//g')
+			walletoutput2=$(printf "%s" "$getwalletinfo" | sed -E 's/(^.*balance":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+		done < "$inputwallet"
+
+		printf "Wallet address: %s\n" "$walletoutput1"
+		printf "Wallet balance: %s NKN\n\n" "$walletoutput2"
+
+		printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
+		printf "IP:              Status:           Height:  Version:  Uptime:   NKN mined:\n"
+	fi
+
+	# get blockworth from API
+	getlatestblock=$(curl -s -X GET \
+	-G "https://openapi.nkn.org/api/v1/statistics/counts" \
+	-H "Content-Type: application/json" \
+	-H "Accept: application/json")
+
+	latestblock=$(printf "%s" "$getlatestblock" | sed -E 's/(^.*blockCount":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
+
+	getblockworth=$(curl -s -X GET \
+	-G "https://openapi.nkn.org/api/v1/blocks/$latestblock" \
+	-H "Content-Type: application/json" \
+	-H "Accept: application/json")
+
+	blockworth=$(printf "%s" "$getblockworth" | sed -E 's/(^.*reward":)([^",]+).*/\2/; s/[0-9]{8}$/.&/; s/[}]//g')
+
+	# fetch the node data and process it
+	while IFS= read -r file; do
+			nkncOutput=$(./nknc --ip "$file" info -s)
+
+			if [[ $nkncOutput == *"error"* ]]
+			then
+					output1=$(printf "%s" "$nkncOutput" | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
+					printf "%-17s%s\n" "$file" "$output1"
+			else
+					output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+					output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+					output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g' | sed 's/[-].*$//')
+					# convert seconds into days and hours 
+					uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+					outputDays=$((uptimeSec / 86400))
+					outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
+					days="d "
+					hours="h"
+					output4="$outputDays$days$outputHours$hours"
+					# convert proposal blocks to NKN
+					howmanyblocks=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+					worth=$(bc <<< "scale=2; $blockworth / 100000000 * $howmanyblocks")
+					nkn=" NKN"
+					output5="$worth$nkn"
+
+					# print out in colums
+					printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
+			fi
+	done < "$input"
+
+printf "\nRefresh every 2 minutes, press [ENTER] to exit to menu!\n"
+read -s -N 1 -t 120 key
+
+if [[ $key == $'\x0a' ]]; # exit loop if ENTER is pressed
+then
+    menunodechecker
 fi
-
-# get blockworth from API
-getlatestblock=$(curl -s -X GET \
--G "https://openapi.nkn.org/api/v1/statistics/counts" \
--H "Content-Type: application/json" \
--H "Accept: application/json")
-
-latestblock=$(printf "%s" "$getlatestblock" | sed -E 's/(^.*blockCount":)([^",]+).*/\2/; s/[0-9]{8}$/.&/')
-
-getblockworth=$(curl -s -X GET \
--G "https://openapi.nkn.org/api/v1/blocks/$latestblock" \
--H "Content-Type: application/json" \
--H "Accept: application/json")
-
-blockworth=$(printf "%s" "$getblockworth" | sed -E 's/(^.*reward":)([^",]+).*/\2/; s/[0-9]{8}$/.&/; s/[}]//g')
-
-# fetch the node data and process it
-while IFS= read -r file; do
-        nkncOutput=$(./nknc --ip "$file" info -s)
-
-        if [[ $nkncOutput == *"error"* ]]
-        then
-                output1=$(printf "%s" "$nkncOutput" | sed -n -r 's/(^.*message": ")([^"]+)".*/\2/p')
-                printf "%-17s%s\n" "$file" "$output1"
-        else
-                output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g' | sed 's/[-].*$//')
-				# convert seconds into days and hours 
-                uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				outputDays=$((uptimeSec / 86400))
-                outputHours=$(((uptimeSec / 3600) - (outputDays * 24)))
-				days="d "
-				hours="h"
-				output4="$outputDays$days$outputHours$hours"
-				# convert proposal blocks to NKN
-				howmanyblocks=$(printf "%s" "$nkncOutput" | sed -n '/proposalSubmitted/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-				worth=$(bc <<< "scale=2; $blockworth / 100000000 * $howmanyblocks")
-				nkn=" NKN"
-				output5="$worth$nkn"
-				
-				# print out in colums
-                printf "%-17s%-18s%-9s%-10s%-10s%-10s\n" "$file" "$output1" "$output2" "$output3" "$output4" "$output5"
-        fi
-done < "$input"
-
-printf "\n"
-read -s -r -p "Press enter to continue!"
-menunodechecker
+done
 }
 
 walletbalance(){
@@ -1215,5 +1223,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.4"
+version="1.4.5"
 menu
