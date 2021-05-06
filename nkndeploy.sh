@@ -815,7 +815,7 @@ while IFS= read -r file; do
         else
                 output1=$(printf "%s" "$nkncOutput" | sed -n '/syncState/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
                 output2=$(printf "%s" "$nkncOutput" | sed -n '/height/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
-                output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
+                output3=$(printf "%s" "$nkncOutput" | sed -n '/version/p' | cut -d' ' -f2 | sed -e 's/[",]//g' | sed 's/[-].*$//')
 				# convert seconds into days and hours 
                 uptimeSec=$(printf "%s" "$nkncOutput" | sed -n '/uptime/p' | cut -d' ' -f2 | sed -e 's/[",]//g')
 				outputDays=$((uptimeSec / 86400))
@@ -871,8 +871,13 @@ menunodechecker
 nWatchInstall(){
 clear
 
-printf "Installing necessary programs........................................... "
-apt-get install apache2 php php-curl -y > /dev/null 2>&1
+printf "Installing necessary software........................................... "
+apt-get install apache2 php php-curl language-pack-en language-pack-fr -y > /dev/null 2>&1
+locale-gen "en_US.utf8" > /dev/null 2>&1
+locale-gen "fr_FR.utf8" > /dev/null 2>&1
+printf "locales locales/locales_to_be_generated multiselect en_US.utf8 fr.FR.utf8\n" | debconf-set-selections > /dev/null 2>&1
+rm "/etc/locale.gen" > /dev/null 2>&1
+dpkg-reconfigure --frontend noninteractive locales > /dev/null 2>&1
 apt-get autoremove -y > /dev/null 2>&1
 printf "DONE!\n"
 
@@ -884,10 +889,6 @@ printf "DONE!\n"
 printf "Unzipping files......................................................... "
 rm -f index.html > /dev/null 2>&1
 unzip -u main.zip > /dev/null 2>&1
-
-#rm -rf core > /dev/null 2>&1 # update workaround
-#rm -rf pages > /dev/null 2>&1 # update workaround
-#mv nWatch-main/* . > /dev/null 2>&1
 
 cp -rf nWatch-main/* . > /dev/null 2>&1
 rm -rf nWatch-main/ > /dev/null 2>&1
@@ -1213,5 +1214,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.3"
+version="1.4.4"
 menu
