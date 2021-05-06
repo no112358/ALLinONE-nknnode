@@ -895,6 +895,7 @@ rm -rf nWatch-main/ > /dev/null 2>&1
 rm -f main.zip > /dev/null 2>&1
 rm -f *.png > /dev/null 2>&1
 chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
+systemctl restart apache2.service > /dev/null 2>&1
 printf "DONE!\n\n"
 
 printf "Access the nWatch website on this address, where you can set up your\n"
