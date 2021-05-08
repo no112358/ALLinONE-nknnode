@@ -904,20 +904,37 @@ if [ ! -f nodes-example.txt ]; then
 
 	printf "Installing nWatch....................................................... "
 	rm -rf index.html
-	
+
 	unzip -u main.zip > /dev/null 2>&1
 	cp -rf nWatch-main/* . > /dev/null 2>&1
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
 	rm -f *.png > /dev/null 2>&1
-	
+
 	chown -R www-data:www-data /var/www/html/
 	service apache2 restart 
 	printf "DONE!\n\n"
+
 else
-	printf "Updating nWatch........................................................ "
-	cd /var/www/html || exit
-	################
+	printf "Installing necessary software........................................... "
+	apt-get install apache2 php php-curl -y
+	apt-get autoremove -y
+	printf "DONE!\n"
+
+	printf "Downloading files....................................................... "
+	cd /var/www/html/ || exit
+	wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/null 2>&1
+	printf "DONE!\n"
+
+	printf "Updating nWatch......................................................... "
+	unzip -u main.zip > /dev/null 2>&1
+	cp -rf nWatch-main/* . > /dev/null 2>&1
+	rm -rf nWatch-main/ > /dev/null 2>&1
+	rm -f main.zip > /dev/null 2>&1
+	rm -f *.png > /dev/null 2>&1
+
+	chown -R www-data:www-data /var/www/html/
+	service apache2 restart 
 	printf "DONE!\n\n"
 fi
 
@@ -1249,5 +1266,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 5"
+version="1.4.6 dev 6"
 menu
