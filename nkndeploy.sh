@@ -873,25 +873,42 @@ menunodechecker
 
 nWatchInstall(){
 clear
+cat << "EOF"
+================================================================================
+Setup: nWatch installaion
+Please be patient
+To force exit this script press CTRL+C
+================================================================================
 
-printf "Installing necessary software........................................... "
-apt-get install apache2 php php-curl git -y > /dev/null 2>&1
-apt-get autoremove -y > /dev/null 2>&1
- 
-dpkg-reconfigure -f noninteractive tzdata > /dev/null 2>&1
-sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
-sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
-printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
-dpkg-reconfigure --frontend=noninteractive locales > /dev/null 2>&1
-update-locale LANG=en_US.UTF-8 > /dev/null 2>&1
-printf "DONE!\n"
+EOF
 
-printf "Installing nWatch....................................................... "
-rm -rf /var/www/html/index.html > /dev/null 2>&1
-git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/ > /dev/null 2>&1
-chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
-service apache2 restart 
-printf "DONE!\n"
+if [ ! -f nodes-example.txt ]; then
+	printf "Installing necessary software........................................... "
+	apt-get install apache2 php php-curl git -y > /dev/null 2>&1
+	apt-get autoremove -y > /dev/null 2>&1
+
+	# Debian workaround to install locales
+	dpkg-reconfigure -f noninteractive tzdata > /dev/null 2>&1
+	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+	printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
+	dpkg-reconfigure --frontend=noninteractive locales > /dev/null 2>&1
+	update-locale LANG=en_US.UTF-8 > /dev/null 2>&1
+	#
+	printf "DONE!\n"
+
+	printf "Installing nWatch....................................................... "
+	rm -rf /var/www/html/index.html > /dev/null 2>&1
+	git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/ > /dev/null 2>&1
+	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
+	service apache2 restart 
+	printf "DONE!\n\n"
+else
+	printf "Updating nWatch........................................................ "
+	cd /var/www/html || exit > /dev/null 2>&1
+	git pull > /dev/null 2>&1
+	printf "DONE!\n\n"
+fi
 
 printf "Access the nWatch website on this address, where you can set up your\n"
 printf "server IP list and monitor all your nodes.\n"
@@ -903,9 +920,20 @@ menunwatch
 
 nWatchRemove(){
 clear
+cat << "EOF"
+================================================================================
+Setup: nWatch removal
+Please be patient
+To force exit this script press CTRL+C
+================================================================================
+
+EOF
+
+printf "Removing nWatch....................................................... "
 cd /var/www/html/ || exit
 find . ! -name ChainDB.tar.gz -delete # delete all files except ChainDB.tar.gz
-printf "nWatch removed!\n\n"
+apt-get remove git php php-curl -y > /dev/null 2>&1
+printf "DONE!\n\n"
 
 read -s -r -p "Press enter to continue!"
 menunwatch
@@ -1210,5 +1238,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6"
+version="1.4.6 dev 1"
 menu
