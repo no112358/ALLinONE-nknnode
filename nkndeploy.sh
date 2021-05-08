@@ -884,10 +884,9 @@ EOF
 
 if [ ! -f nodes-example.txt ]; then
 	printf "Installing necessary software........................................... "
-	apt-get install apache2 php php-curl git -y
+	apt-get install apache2 php php-curl -y
 	apt-get autoremove -y
-	
-	#remove this shit text later
+
 	# Debian workaround to install locales
 	dpkg-reconfigure -f noninteractive tzdata
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -898,16 +897,27 @@ if [ ! -f nodes-example.txt ]; then
 	#
 	printf "DONE!\n"
 
+	printf "Downloading files....................................................... "
+	cd /var/www/html/ || exit
+	wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/null 2>&1
+	printf "DONE!\n"
+
 	printf "Installing nWatch....................................................... "
-	rm -rf /var/www/html/index.html
-	git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/
+	rm -rf index.html
+	
+	unzip -u main.zip > /dev/null 2>&1
+	cp -rf nWatch-main/* . > /dev/null 2>&1
+	rm -rf nWatch-main/ > /dev/null 2>&1
+	rm -f main.zip > /dev/null 2>&1
+	rm -f *.png > /dev/null 2>&1
+	
 	chown -R www-data:www-data /var/www/html/
 	service apache2 restart 
 	printf "DONE!\n\n"
 else
 	printf "Updating nWatch........................................................ "
 	cd /var/www/html || exit
-	git pull
+	################
 	printf "DONE!\n\n"
 fi
 
@@ -1239,5 +1249,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 4"
+version="1.4.6 dev 5"
 menu
