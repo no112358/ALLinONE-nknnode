@@ -884,16 +884,16 @@ EOF
 
 if [ ! -f /var/www/html/nodes-example.txt ]; then
 	printf "Installing necessary software........................................... "
-	apt-get install apache2 php php-curl -y
-	apt-get autoremove -y
+	apt-get install apache2 php php-curl -y > /dev/null 2>&1
+	apt-get autoremove -y > /dev/null 2>&1
 
 	# Debian workaround to install locales
 	dpkg-reconfigure -f noninteractive tzdata
-	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
-	printf 'LANG="en_US.UTF-8"'>/etc/default/locale
-	dpkg-reconfigure --frontend=noninteractive locales
-	update-locale LANG=en_US.UTF-8
+	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+	printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
+	dpkg-reconfigure --frontend=noninteractive locales > /dev/null 2>&1
+	update-locale LANG=en_US.UTF-8 > /dev/null 2>&1
 	#
 	printf "DONE!\n"
 
@@ -903,7 +903,7 @@ if [ ! -f /var/www/html/nodes-example.txt ]; then
 	printf "DONE!\n"
 
 	printf "Installing nWatch....................................................... "
-	rm -rf index.html
+	rm -rf index.html > /dev/null 2>&1
 
 	unzip -u main.zip > /dev/null 2>&1
 	cp -rf nWatch-main/* . > /dev/null 2>&1
@@ -911,14 +911,14 @@ if [ ! -f /var/www/html/nodes-example.txt ]; then
 	rm -f main.zip > /dev/null 2>&1
 	rm -f *.png > /dev/null 2>&1
 
-	chown -R www-data:www-data /var/www/html/
-	service apache2 restart 
+	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
+	service apache2 restart > /dev/null 2>&1
 	printf "DONE!\n\n"
 
 else
 	printf "Installing necessary software........................................... "
-	apt-get install apache2 php php-curl -y
-	apt-get autoremove -y
+	apt-get install apache2 php php-curl -y > /dev/null 2>&1
+	apt-get autoremove -y > /dev/null 2>&1
 	printf "DONE!\n"
 
 	printf "Downloading files....................................................... "
@@ -933,8 +933,8 @@ else
 	rm -f main.zip > /dev/null 2>&1
 	rm -f *.png > /dev/null 2>&1
 
-	chown -R www-data:www-data /var/www/html/
-	service apache2 restart 
+	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
+	service apache2 restart > /dev/null 2>&1
 	printf "DONE!\n\n"
 fi
 
@@ -960,7 +960,7 @@ EOF
 printf "Removing nWatch....................................................... "
 cd /var/www/html/ || exit
 find . ! -name ChainDB.tar.gz -delete # delete all files except ChainDB.tar.gz
-apt-get remove git php php-curl -y > /dev/null 2>&1
+apt-get remove php php-curl -y > /dev/null 2>&1
 printf "DONE!\n\n"
 
 read -s -r -p "Press enter to continue!"
@@ -1266,5 +1266,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 7"
+version="1.4.6 dev 8"
 menu
