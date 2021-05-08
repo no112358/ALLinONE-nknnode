@@ -884,29 +884,29 @@ EOF
 
 if [ ! -f nodes-example.txt ]; then
 	printf "Installing necessary software........................................... "
-	apt-get install apache2 php php-curl git -y > /dev/null 2>&1
-	apt-get autoremove -y > /dev/null 2>&1
+	apt-get install apache2 php php-curl git -y
+	apt-get autoremove -y
 
 	# Debian workaround to install locales
-	dpkg-reconfigure -f noninteractive tzdata > /dev/null 2>&1
-	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
-	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
-	printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
-	dpkg-reconfigure --frontend=noninteractive locales > /dev/null 2>&1
-	update-locale LANG=en_US.UTF-8 > /dev/null 2>&1
+	dpkg-reconfigure -f noninteractive tzdata
+	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
+	printf 'LANG="en_US.UTF-8"'>/etc/default/locale
+	dpkg-reconfigure --frontend=noninteractive locales
+	update-locale LANG=en_US.UTF-8
 	#
 	printf "DONE!\n"
 
 	printf "Installing nWatch....................................................... "
-	rm -rf /var/www/html/index.html > /dev/null 2>&1
-	git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/ > /dev/null 2>&1
-	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
+	rm -rf /var/www/html/index.html
+	git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/
+	chown -R www-data:www-data /var/www/html/
 	service apache2 restart 
 	printf "DONE!\n\n"
 else
 	printf "Updating nWatch........................................................ "
-	cd /var/www/html || exit > /dev/null 2>&1
-	git pull > /dev/null 2>&1
+	cd /var/www/html || exit
+	git pull
 	printf "DONE!\n\n"
 fi
 
