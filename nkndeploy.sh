@@ -882,7 +882,7 @@ To force exit this script press CTRL+C
 
 EOF
 
-if [ ! -f nodes-example.txt ]; then
+if [ ! -f /var/www/html/nodes-example.txt ]; then
 	printf "Installing necessary software........................................... "
 	apt-get install apache2 php php-curl -y
 	apt-get autoremove -y
@@ -1266,5 +1266,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 6"
+version="1.4.6 dev 7"
 menu
