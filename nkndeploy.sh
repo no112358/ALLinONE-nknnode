@@ -888,7 +888,7 @@ if [ ! -f /var/www/html/nodes-example.txt ]; then
 	apt-get autoremove -y > /dev/null 2>&1
 
 	# Debian workaround to install locales
-	dpkg-reconfigure -f noninteractive tzdata
+	dpkg-reconfigure -f noninteractive tzdata > /dev/null 2>&1
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
 	sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
 	printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
@@ -1266,5 +1266,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 8"
+version="1.4.6 dev 9"
 menu
