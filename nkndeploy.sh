@@ -886,7 +886,8 @@ if [ ! -f nodes-example.txt ]; then
 	printf "Installing necessary software........................................... "
 	apt-get install apache2 php php-curl git -y
 	apt-get autoremove -y
-
+	
+	#remove this shit text later
 	# Debian workaround to install locales
 	dpkg-reconfigure -f noninteractive tzdata
 	sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
@@ -1238,5 +1239,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6 dev 3"
+version="1.4.6 dev 4"
 menu
