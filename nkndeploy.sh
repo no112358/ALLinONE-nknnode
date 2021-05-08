@@ -1,9 +1,4 @@
 #!/bin/bash
-#v1.1 Added method 5
-#v1.2 rewrote most of the text instructions, code cleanup, added Transfer NODE ID / wallet
-#v1.3 added in-script node monitor (no112358)
-#v1.4 added nWatch node monitor (AL-dot-debug) & added wallet balance in-script node monitor
-
 method1(){
 clear
 cat << "EOF"
@@ -880,31 +875,23 @@ nWatchInstall(){
 clear
 
 printf "Installing necessary software........................................... "
-apt-get install apache2 php php-curl language-pack-en language-pack-fr -y > /dev/null 2>&1
-locale-gen "en_US.utf8" > /dev/null 2>&1
-locale-gen "fr_FR.utf8" > /dev/null 2>&1
-printf "locales locales/locales_to_be_generated multiselect en_US.utf8 fr.FR.utf8\n" | debconf-set-selections > /dev/null 2>&1
-rm "/etc/locale.gen" > /dev/null 2>&1
-dpkg-reconfigure --frontend noninteractive locales > /dev/null 2>&1
+apt-get install apache2 php php-curl git -y > /dev/null 2>&1
 apt-get autoremove -y > /dev/null 2>&1
+ 
+dpkg-reconfigure -f noninteractive tzdata > /dev/null 2>&1
+sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
+printf 'LANG="en_US.UTF-8"'>/etc/default/locale > /dev/null 2>&1
+dpkg-reconfigure --frontend=noninteractive locales > /dev/null 2>&1
+update-locale LANG=en_US.UTF-8 > /dev/null 2>&1
 printf "DONE!\n"
 
-printf "Downloading files....................................................... "
-cd /var/www/html/ || exit
-wget https://github.com/AL-dot-debug/nWatch/archive/refs/heads/main.zip > /dev/null 2>&1
-printf "DONE!\n"
-
-printf "Unzipping files......................................................... "
-rm -f index.html > /dev/null 2>&1
-unzip -u main.zip > /dev/null 2>&1
-
-cp -rf nWatch-main/* . > /dev/null 2>&1
-rm -rf nWatch-main/ > /dev/null 2>&1
-rm -f main.zip > /dev/null 2>&1
-rm -f *.png > /dev/null 2>&1
+printf "Installing nWatch....................................................... "
+rm -rf /var/www/html/index.html > /dev/null 2>&1
+git clone https://github.com/AL-dot-debug/nWatch.git /var/www/html/ > /dev/null 2>&1
 chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
-systemctl restart apache2.service > /dev/null 2>&1
-printf "DONE!\n\n"
+service apache2 restart 
+printf "DONE!\n"
 
 printf "Access the nWatch website on this address, where you can set up your\n"
 printf "server IP list and monitor all your nodes.\n"
@@ -954,7 +941,7 @@ Install nWatch node monitor website, an external Github project. You'll be able
 to monitor your nodes, add / remove server IPs etc.
 https://github.com/AL-dot-debug/nWatch
 
-1) Install / Update (don't install on servers with websites already on them)
+1) Install / Update (don't install on servers with other websites on them)
 
 3) REMOVE nWatch
 
@@ -1223,5 +1210,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.5"
+version="1.4.6"
 menu
