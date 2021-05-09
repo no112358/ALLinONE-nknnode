@@ -1162,7 +1162,6 @@ until [ "$selection" = "0" ]; do
 clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
-printf "%s\n\n" "$PUBLIC_IP"
 
 printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
 
@@ -1247,6 +1246,5 @@ mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-#PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.7 dev 1"
+version="1.4.7"
 menu
