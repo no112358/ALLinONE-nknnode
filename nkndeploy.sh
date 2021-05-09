@@ -1162,7 +1162,7 @@ until [ "$selection" = "0" ]; do
 clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
-printf "http://%s\n\n" "$PUBLIC_IP"
+printf "%s\n\n" "$PUBLIC_IP"
 
 printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
 
