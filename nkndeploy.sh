@@ -1248,5 +1248,5 @@ database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
 #PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.7"
+version="1.4.7 dev 1"
 menu
