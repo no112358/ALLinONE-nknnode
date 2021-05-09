@@ -1205,18 +1205,18 @@ magenta=$(tput setaf 5)
 normal=$(tput sgr0)
 
 if [[ $EUID -gt 0 ]]; then
-printf "%s" "$red"
-cat << "EOF"
-=================================
-PLEASE RUN AS ROOT USER! Type in:
+	printf "%s" "$red"
+	cat << "EOF"
+	=================================
+	PLEASE RUN AS ROOT USER! Type in:
 
-sudo su -
+	sudo su -
 
-and then run the script again.
-=================================
-EOF
-printf "%s" "$normal"
-exit
+	and then run the script again.
+	=================================
+	EOF
+	printf "%s" "$normal"
+	exit
 fi
 
 ascii_sp="$(cat << "EOF"
@@ -1245,6 +1245,7 @@ username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
-PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
+PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
+#PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
 version="1.4.7"
 menu
