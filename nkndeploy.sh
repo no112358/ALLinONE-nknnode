@@ -1026,7 +1026,6 @@ clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
 cat << "EOF"
-
 WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
 to the IP database and check on your node status. It will show the node status.
 
@@ -1064,7 +1063,6 @@ clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
 cat << "EOF"
-
 NKN ChainDB creation:
 1) Download ChainDB from NKN.org and host it on THIS server
 2) Download ChainDB from a custom URL and host it on THIS server
