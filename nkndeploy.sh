@@ -1259,8 +1259,7 @@ ascii_sp="$(cat <<EOF
 
 ================================================================================
 
-EOF
-)"
+EOF)"
 
 # Start point
 apt-get update -y; apt-get upgrade -y
