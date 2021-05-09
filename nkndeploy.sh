@@ -1022,21 +1022,10 @@ menunodechecker() {
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
 until [ "$selection" = "0" ]; do
 clear
-cat << "EOF"
-         _          __________                              __
-     _.-(_)._     ."          ".      .--""--.          _.-{__}-._
-   .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
-  [____________] /` |________| `\  /   .'``'.   \    /_.-"`_  _`"-._\
-  /  / .\/. \  \|  / / .\/. \ \  ||  .'/.\/.\'.  |  /`   / .\/. \   `\
-  |  \__/\__/  |\_/  \__/\__/  \_/|  : |_/\_| ;  |  |    \__/\__/    |
-  \            /  \            /   \ '.\    /.' / .-\                /-.
-  /'._  --  _.'\  /'._  --  _.'\   /'. `'--'` .'\/   '._-.__--__.-_.'   \
- /_   `""""`   _\/_   `""""`   _\ /_  `-./\.-'  _\'.    `""""""""`    .'`\
-(__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
-  |_____'|_____|   \__________/   |              |;`_________'________`;-'
-   '----------'    '----------'   '--------------'`--------------------`
 
-================================================================================
+# ASCII south park
+printf "%s\n\n" "$ascii_sp"
+cat << "EOF"
 
 WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
 to the IP database and check on your node status. It will show the node status.
@@ -1071,21 +1060,10 @@ done
 menuadvanced() {
 until [ "$selection" = "0" ]; do
 clear
-cat << "EOF"
-         _          __________                              __
-     _.-(_)._     ."          ".      .--""--.          _.-{__}-._
-   .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
-  [____________] /` |________| `\  /   .'``'.   \    /_.-"`_  _`"-._\
-  /  / .\/. \  \|  / / .\/. \ \  ||  .'/.\/.\'.  |  /`   / .\/. \   `\
-  |  \__/\__/  |\_/  \__/\__/  \_/|  : |_/\_| ;  |  |    \__/\__/    |
-  \            /  \            /   \ '.\    /.' / .-\                /-.
-  /'._  --  _.'\  /'._  --  _.'\   /'. `'--'` .'\/   '._-.__--__.-_.'   \
- /_   `""""`   _\/_   `""""`   _\ /_  `-./\.-'  _\'.    `""""""""`    .'`\
-(__/    '|    \ _)_|           |_)_/            \__)|        '       |   |
-  |_____'|_____|   \__________/   |              |;`_________'________`;-'
-   '----------'    '----------'   '--------------'`--------------------`
 
-================================================================================
+# ASCII south park
+printf "%s\n\n" "$ascii_sp"
+cat << "EOF"
 
 NKN ChainDB creation:
 1) Download ChainDB from NKN.org and host it on THIS server
@@ -1185,7 +1163,7 @@ menu() {
 until [ "$selection" = "0" ]; do
 clear
 # ASCII south park
-printf "%s\n" "$ascii_sp"
+printf "%s\n\n" "$ascii_sp"
 
 printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
 
@@ -1258,18 +1236,17 @@ ascii_sp="$(cat << "EOF"
    '----------'    '----------'   '--------------'`--------------------`
 
 ================================================================================
-
 EOF
 )"
 
 # Start point
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances vnstat ufw sed grep pv curl sudo bc -y
+apt-get install unzip glances ufw sed grep pv curl sudo bc -y
 apt-get autoremove -y
 username="nkn"
 mode="whatever"
 database="whatever"
 installation="whatever"
 PUBLIC_IP=$(wget http://ipecho.net/plain -O - -q ; echo)
-version="1.4.6"
+version="1.4.7"
 menu
