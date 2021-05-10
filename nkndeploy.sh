@@ -1205,7 +1205,7 @@ done
 
 # Flags help text
 help(){
-printf "no112358 NKN node deploy script version: %s\n\n" "$version"
+printf "\n\nno112358 NKN node deploy script version: %s\n\n" "$version"
 cat << "EOF"
 Flags:
 
@@ -1278,7 +1278,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 4"
+version="1.5 dev 5"
 
 # Flags
 while [ "$1" != "" ]; do
