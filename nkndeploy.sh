@@ -8,7 +8,7 @@ To force exit this script press CTRL+C
 ================================================================================
 
 EOF
-if [ "$mode" == "advanced" ]; then
+if [[ $mode == "advanced" ]]; then
 printf "\033[2A\033[2K"
 cat << "EOF"
 
@@ -61,7 +61,7 @@ printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
 # if from beginner menu, then also install a node on this server
-if [ "$mode" == "beginner" ]; then
+if [[ $mode == "beginner" ]]; then
 	# Question
 	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
 	case "$response" in
@@ -432,7 +432,7 @@ read -r benaddress
 # check wallet address lengh
 walletlenght=${#benaddress}
 
-if [ "$walletlenght" == "36" ]; then
+if [[ $walletlenght == "36" ]]; then
 	# Continues script
 	userdata2
 else
@@ -469,7 +469,7 @@ userdata3
 }
 
 function userdata3(){
-if [ "$installtype" == "custom" ]; then
+if [[ $installtype == "custom" ]]; then
 	clear
 cat << "EOF"
 ================================================================================
@@ -604,7 +604,7 @@ printf "DONE!\n"
 
 # Wait for DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
-if [ "$database" == "no" ]; then
+if [[ $database == "no" ]]; then
 	# script skips DB download and continues
     install3
 else
@@ -612,7 +612,7 @@ else
 
 	timestart=$(date +%s)
 	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
-		if [ ! -d "$DIR"ChainDB ] && [ ! -f "$DIR"wallet.json ]; then
+		if [[ ! -d "$DIR"ChainDB ]] && [[ ! -f "$DIR"wallet.json ]]; then
 			# if folder and file don't exist wait and repeat check
 			sleep 5
 		else
@@ -635,7 +635,7 @@ cd "$DIR" > /dev/null 2>&1 || exit
 rm -rf ChainDB/ > /dev/null 2>&1
 
 # extract locally or download from websource
-if [ $installation == "local" ]; then
+if [[ $installation == "local" ]]; then
 	cd /var/www/html/ || exit
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
@@ -763,7 +763,7 @@ while :
 do
 clear
 	# check if file exists, if not skip the wallet part
-	if [ ! -f walletaddress.txt ]; then
+	if [[ ! -f walletaddress.txt ]]; then
 		printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 		printf "IP:              Status:           Height:  Version:  Uptime:\n"
 	else
@@ -850,7 +850,7 @@ read -r walletaddress
 # check wallet address lengh
 walletlenght=${#walletaddress}
 
-if [ "$walletlenght" == "36" ]; then
+if [[ $walletlenght == "36" ]]; then
 	# Continues script
 	rm -f walletaddress.txt > /dev/null 2>&1
 	printf "%s\n" >> walletaddress.txt "$walletaddress" # write wallet address to file
@@ -882,7 +882,7 @@ To force exit this script press CTRL+C
 
 EOF
 
-if [ ! -f /var/www/html/nodes-example.txt ]; then
+if [[ ! -f /var/www/html/nodes-example.txt ]]; then
 	printf "Installing necessary software........................................... "
 	apt-get install apache2 php php-curl -y > /dev/null 2>&1
 	apt-get autoremove -y > /dev/null 2>&1
@@ -970,7 +970,7 @@ menunwatch
 ################################## Menu stuff ##################################
 
 menunwatch() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 cat << "EOF"
                   `/ohdmmmmmdhs/.
@@ -1020,7 +1020,7 @@ done
 
 menunodechecker() {
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 
 # ASCII south park
@@ -1057,7 +1057,7 @@ done
 }
 
 menuadvanced() {
-until [ "$selection" = "0" ]; do
+until [[ $selection = "0" ]]; do
 clear
 
 # ASCII south park
@@ -1102,7 +1102,7 @@ done
 }
 
 menubeginner() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 printf "%s" "$blue"
 cat << "EOF"
@@ -1158,7 +1158,7 @@ done
 }
 
 menu() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
@@ -1280,10 +1280,10 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 7"
+version="1.5 dev 8"
 
 # Flags
-while [ "$1" != "" ]; do
+while [[ "$1" != "" ]]; do
 flags="1"
 case "$1" in
 	--help | -h)
@@ -1292,7 +1292,7 @@ case "$1" in
 		;;
 	--password | -p)
 		shift
-		if [ $# -gt 0 ]; then
+		if [[ $# -gt 0 ]]; then
 				export userpassword=$1
 				username="nkn"
 				database="yes"
@@ -1304,7 +1304,7 @@ case "$1" in
 		;;
 	--benaddress | -b)
 		shift
-		if [ $# -gt 0 ]; then
+		if [[ $# -gt 0 ]]; then
 				export benaddress=$1
 		else
 				echo "No beneficiary address specified"
@@ -1314,7 +1314,7 @@ case "$1" in
 		;;
 	--websource | -w)
 		shift
-		if [ $# -gt 0 ]; then
+		if [[ $# -gt 0 ]]; then
 				export websource=$1
 		else
 				echo "No ChainDB URL address specified"
@@ -1330,8 +1330,8 @@ esac
 done
 
 # Check if flags present
-if [ $flags == "1" ]; then
-    if [ "$userpassword" == "" ] || [ "$benaddress" == "" ] || [ "$websource" == "" ]; then
+if [[ $flags == "1" ]]; then
+    if [[ $userpassword == "" ]] || [[ $benaddress == "" ]] || [[ $websource == "" ]]; then
 		echo "Provide all three flags: password, benaddress, websource!";
         exit 1;
     else
