@@ -1206,6 +1206,9 @@ done
 # Flags help text
 help(){
 cat << "EOF"
+
+
+
 NKN node install flags:
 
 nkndeploy.sh -flag value
@@ -1277,7 +1280,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 2"
+version="1.5 dev 3"
 
 # Flags
 while [ "$1" != "" ]; do
