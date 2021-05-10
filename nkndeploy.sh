@@ -1179,6 +1179,13 @@ printf "NODE STATUS Checker:\n"
 printf "5) in-script NKN node monitor (no112358)\n"
 printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
+cat << "EOF"
+Donate:
+NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
+NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
+EOF
+
 printf "0) Exit\n\n"
 
 printf "Enter selection: "
@@ -1205,13 +1212,18 @@ nkndeploy.sh -flag value
 
 EXAMPLE:
 
-nkndeploy.sh -p hJs92$1 -b 23sddaas32fd2312k1 -w http://102.12.1.13/ChainDB.tar.gz
+nkndeploy.sh -p password -b beneficiaryaddress -w chaindbURL
 
 -p , --password       Set password
 -b , --benaddress     Set beneficiary address where you get paid
 -w , --websource      Set ChainDB URL address
 
 -h , --help            Display help and exit
+
+Donate:
+NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
+NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
 EOF
 }
 
@@ -1265,7 +1277,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 1"
+version="1.5 dev 2"
 
 # Flags
 while [ "$1" != "" ]; do
