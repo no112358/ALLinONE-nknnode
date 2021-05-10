@@ -543,7 +543,7 @@ The system changes were REVERTED, once you fix the firewall settings
 restart the server and just run the same script again
 
 For info on how to do that visit:
-https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-one-script-your-own-chaindb-no-donation/2753
+https://forum.nkn.org/t/allinone-nknnode-script-deploy-nodes-faster-with-your-own-chaindb/2753
 
 EOF
 printf "%s" "$normal"
@@ -1280,7 +1280,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 6"
+version="1.5 dev 7"
 
 # Flags
 while [ "$1" != "" ]; do
