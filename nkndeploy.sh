@@ -1196,7 +1196,26 @@ esac
 done
 }
 
-###################### Start of the script & Root check ####################
+# Flags help text
+help(){
+cat << "EOF"
+NKN node install flags:
+
+nkndeploy.sh -flag value
+
+EXAMPLE:
+
+nkndeploy.sh -p hJs92$1 -b 23sddaas32fd2312k1 -w http://102.12.1.13/ChainDB.tar.gz
+
+-p , --password       Set password
+-b , --benaddress     Set beneficiary address where you get paid
+-w , --websource      Set ChainDB URL address
+
+-h , --help            Display help and exit
+EOF
+}
+
+###################### Start of the script ####################
 
 # Define colors
 red=$(tput setaf 1)
@@ -1204,6 +1223,7 @@ blue=$(tput setaf 4)
 magenta=$(tput setaf 5)
 normal=$(tput sgr0)
 
+# ROOT check
 if [[ $EUID -gt 0 ]]; then
 printf "%s" "$red"
 cat << "EOF"
@@ -1219,6 +1239,12 @@ printf "%s" "$normal"
 exit
 fi
 
+# Update && upgrade system
+apt-get update -y; apt-get upgrade -y
+apt-get install unzip glances ufw sed grep pv curl sudo bc -y
+apt-get autoremove -y
+
+# ASCII for menus
 ascii_sp="$(cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -1237,14 +1263,71 @@ ascii_sp="$(cat << "EOF"
 EOF
 )"
 
-# Start point
-apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances ufw sed grep pv curl sudo bc -y
-apt-get autoremove -y
-username="nkn"
-mode="whatever"
-database="whatever"
-installation="whatever"
+# Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.4.7"
-menu
+version="1.5 dev 1"
+
+# Flags
+while [ "$1" != "" ]; do
+flags="1"
+case "$1" in
+	--help | -h)
+		help
+		exit 1
+		;;
+	--password | -p)
+		shift
+		if [ $# -gt 0 ]; then
+				export userpassword=$1
+				username="nkn"
+				database="yes"
+		else
+				echo "No password specified"
+				exit 1
+		fi
+		shift
+		;;
+	--benaddress | -b)
+		shift
+		if [ $# -gt 0 ]; then
+				export benaddress=$1
+		else
+				echo "No beneficiary address specified"
+				exit 1
+		fi
+		shift
+		;;
+	--websource | -w)
+		shift
+		if [ $# -gt 0 ]; then
+				export websource=$1
+		else
+				echo "No ChainDB URL address specified"
+				exit 1
+		fi
+		shift
+		;;
+	*)
+		help
+		exit 1
+		;;
+esac
+done
+
+# Check if flags present
+if [ $flags == "1" ]; then
+    if [ "$userpassword" == "" ] || [ "$benaddress" == "" ] || [ "$websource" == "" ]; then
+		echo "Provide all three flags: password, benaddress, websource!";
+        exit 1;
+    else
+		# Flag direct to install start up of the script
+        install1
+    fi
+else
+	# Normal menus start of the script
+	username="nkn"
+	mode="whatever"
+	database="whatever"
+	installation="whatever"
+	menu
+fi

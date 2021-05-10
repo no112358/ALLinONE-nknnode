@@ -2,7 +2,7 @@
 https://forum.nkn.org/t/allinone-nknnode-script-deploy-nodes-faster-with-your-own-chaindb/2753
 NKN network miners need a blockchain database to operate, where every new miner synchronizes the ChainDB directly from other miners, but that takes up to several days. BUT, if you already have a fully synchronized miner, there's a way to compress the data into an archive, copy it and use it to "fast deploy" miners very fast.
 
-# ALLinONE-nknnode 1.4.7 - Script features:
+# ALLinONE-nknnode 1.5.0 - Script features:
 - NO spyware etc.
 - Beginner mode: download/host ChainDB and install first NKN node
 - Download ChainDB from NKN org and host it on THIS server
@@ -15,6 +15,7 @@ NKN network miners need a blockchain database to operate, where every new miner 
 - Transfer old NODE ID / wallet to a new server
 - in-script NKN node & wallet status monitor
 - nWatch website NKN node & wallet status monitor
+- Flags for fast installation
 
 This script was tested on Ubuntu 20.04 server.
 If you come across any bugs please let me know. Thank you!
@@ -50,6 +51,15 @@ Node server runs it's own firewall, so there's no need for VPS provider firewall
 2. **Start the script in terminal with this command:**
 
    `wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh `
+
+## START SCRIPT WITH FLAGS
+1. **Switch to root user if not root yet:**
+
+   `sudo su -`
+
+2. **Start the script in terminal with this command:**
+
+   `wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh -p password -b beneficiaryaddress -w chaindbURL`
 
 ## Debugging after installation:
 
