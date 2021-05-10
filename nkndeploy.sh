@@ -1207,7 +1207,9 @@ done
 help(){
 printf "\n\nno112358 NKN node deploy script version: %s\n\n" "$version"
 cat << "EOF"
-Flags:
+If you give all three flags you can install the node directly without
+messing with any menus. Any mistakes with the values will lead to a
+broken node, which you'll have to reinstall. Enjoy :D
 
 nkndeploy.sh -flag value
 
@@ -1219,7 +1221,7 @@ nkndeploy.sh -p password -b beneficiaryaddress -w chaindbURL
 -b , --benaddress     Set beneficiary address where you get paid
 -w , --websource      Set ChainDB URL address
 
--h , --help            Display help and exit
+-h , --help           Display help and exit
 
 Donate:
 NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
@@ -1278,7 +1280,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 5"
+version="1.5 dev 6"
 
 # Flags
 while [ "$1" != "" ]; do
