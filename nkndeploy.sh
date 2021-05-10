@@ -1209,7 +1209,7 @@ cat << "EOF"
 
 
 
-NKN node install flags:
+NKN node deploy flags:
 
 nkndeploy.sh -flag value
 
