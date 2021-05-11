@@ -8,7 +8,7 @@ To force exit this script press CTRL+C
 ================================================================================
 
 EOF
-if [ "$mode" == "advanced" ]; then
+if [[ $mode == "advanced" ]]; then
 printf "\033[2A\033[2K"
 cat << "EOF"
 
@@ -61,7 +61,7 @@ printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
 # if from beginner menu, then also install a node on this server
-if [ "$mode" == "beginner" ]; then
+if [[ $mode == "beginner" ]]; then
 	# Question
 	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
 	case "$response" in
@@ -432,7 +432,7 @@ read -r benaddress
 # check wallet address lengh
 walletlenght=${#benaddress}
 
-if [ "$walletlenght" == "36" ]; then
+if [[ $walletlenght == "36" ]]; then
 	# Continues script
 	userdata2
 else
@@ -469,7 +469,7 @@ userdata3
 }
 
 function userdata3(){
-if [ "$installtype" == "custom" ]; then
+if [[ $installtype == "custom" ]]; then
 	clear
 cat << "EOF"
 ================================================================================
@@ -537,13 +537,15 @@ deluser --remove-home "$username" > /dev/null 2>&1
 printf "%s" "$red"
 cat << "EOF"
 A modem/router or VPS provided firewall is prohobiting access to the internet!
-Please disable the firewall and allow all internet through.
+
+For home modem, configure the ports correctly.
+For VPS disable the VPS provider firewall and allow all internet through.
 
 The system changes were REVERTED, once you fix the firewall settings
 restart the server and just run the same script again
 
 For info on how to do that visit:
-https://forum.nkn.org/t/deploy-miners-faster-fast-deploy-ubuntu-custom-all-in-one-script-your-own-chaindb-no-donation/2753
+https://forum.nkn.org/t/allinone-nknnode-script-deploy-nodes-faster-with-your-own-chaindb/2753
 
 EOF
 printf "%s" "$normal"
@@ -604,7 +606,7 @@ printf "DONE!\n"
 
 # Wait for DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
-if [ "$database" == "no" ]; then
+if [[ $database == "no" ]]; then
 	# script skips DB download and continues
     install3
 else
@@ -612,7 +614,7 @@ else
 
 	timestart=$(date +%s)
 	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
-		if [ ! -d "$DIR"ChainDB ] && [ ! -f "$DIR"wallet.json ]; then
+		if [[ ! -d "$DIR"ChainDB ]] && [[ ! -f "$DIR"wallet.json ]]; then
 			# if folder and file don't exist wait and repeat check
 			sleep 5
 		else
@@ -635,7 +637,7 @@ cd "$DIR" > /dev/null 2>&1 || exit
 rm -rf ChainDB/ > /dev/null 2>&1
 
 # extract locally or download from websource
-if [ $installation == "local" ]; then
+if [[ $installation == "local" ]]; then
 	cd /var/www/html/ || exit
 	pv ChainDB.tar.gz | tar xzf - -C "$DIR"
 else
@@ -681,8 +683,11 @@ printf "========================================================================
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
-printf "NKN wallet (beneficiary adddress) where you get paid:\n"
+printf "%s" "$blue"
+printf "NKN wallet (beneficiary adddress) where you get paid:\n\n"
+
 printf "%s\n\n" "$benaddress"
+printf "%s" "$normal"
 
 # Get node wallet address
 nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
@@ -694,7 +699,7 @@ printf "%s\n\n" "$nodewallet"
 printf "%s" "$normal"
 
 printf "From now on use these settings to connect to your server:\n"
-printf "If you're using AWS, Google Cloud, Azure... use the provided keys to login.\n\n"
+printf "If you're using AWS, Google Cloud, Azure... use the provided SSH keys to login.\n\n"
 
 printf "Server IP: %s\n" "$PUBLIC_IP"
 printf "SSH login: ssh %s@%s\n" "$username" "$PUBLIC_IP"
@@ -702,8 +707,7 @@ printf "Server username: %s\n" "$username"
 printf "Server password: %s\n\n" "$userpassword"
 
 printf "The server should be visible on nstatus.org in a few minutes.\n"
-printf "Enter the Server IP provided here!\n"
-printf "The node will take an hour or two do it's thing, so dont' worry.\n\n"
+printf "Enter the Server IP provided here!\n\n"
 
 printf "Thanks for using this script!\n\n"
 
@@ -763,7 +767,7 @@ while :
 do
 clear
 	# check if file exists, if not skip the wallet part
-	if [ ! -f walletaddress.txt ]; then
+	if [[ ! -f walletaddress.txt ]]; then
 		printf "%s servers IP addresses found in IPs.txt file.\n\n" "$(grep "" -c IPs.txt)"
 		printf "IP:              Status:           Height:  Version:  Uptime:\n"
 	else
@@ -850,7 +854,7 @@ read -r walletaddress
 # check wallet address lengh
 walletlenght=${#walletaddress}
 
-if [ "$walletlenght" == "36" ]; then
+if [[ $walletlenght == "36" ]]; then
 	# Continues script
 	rm -f walletaddress.txt > /dev/null 2>&1
 	printf "%s\n" >> walletaddress.txt "$walletaddress" # write wallet address to file
@@ -882,7 +886,7 @@ To force exit this script press CTRL+C
 
 EOF
 
-if [ ! -f /var/www/html/nodes-example.txt ]; then
+if [[ ! -f /var/www/html/nodes-example.txt ]]; then
 	printf "Installing necessary software........................................... "
 	apt-get install apache2 php php-curl -y > /dev/null 2>&1
 	apt-get autoremove -y > /dev/null 2>&1
@@ -970,7 +974,7 @@ menunwatch
 ################################## Menu stuff ##################################
 
 menunwatch() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 cat << "EOF"
                   `/ohdmmmmmdhs/.
@@ -1020,7 +1024,7 @@ done
 
 menunodechecker() {
 cd "$(find / -type d -name "nkn-node" 2>/dev/null)" || exit
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 
 # ASCII south park
@@ -1057,7 +1061,7 @@ done
 }
 
 menuadvanced() {
-until [ "$selection" = "0" ]; do
+until [[ $selection = "0" ]]; do
 clear
 
 # ASCII south park
@@ -1102,7 +1106,7 @@ done
 }
 
 menubeginner() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 printf "%s" "$blue"
 cat << "EOF"
@@ -1158,7 +1162,7 @@ done
 }
 
 menu() {
-until [ "$selection" = "0" ]; do
+until [[ $selection == "0" ]]; do
 clear
 # ASCII south park
 printf "%s\n\n" "$ascii_sp"
@@ -1179,7 +1183,14 @@ printf "NODE STATUS Checker:\n"
 printf "5) in-script NKN node monitor (no112358)\n"
 printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
-printf "0) Exit\n\n"
+cat << "EOF"
+Donate to me:
+NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
+NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
+EOF
+
+printf "\n0) Exit\n\n"
 
 printf "Enter selection: "
 read -r selection
@@ -1196,7 +1207,36 @@ esac
 done
 }
 
-###################### Start of the script & Root check ####################
+# Flags help text
+help(){
+printf "\n\nno112358 NKN node deploy script version: %s\n\n" "$version"
+cat << "EOF"
+If you give all three flags you can install the node directly without
+messing with any menus. Any mistakes with the values will lead to a
+broken node, which you'll have to reinstall. Enjoy :D
+
+nkndeploy.sh -flag 'value'
+
+DO NOT REMOVE SINGLE QUOTES FROM FLAG VALUES!!
+
+EXAMPLE:
+
+nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
+
+-p , --password       Set password
+-b , --benaddress     Set beneficiary address where you get paid
+-w , --websource      Set ChainDB URL address
+
+-h , --help           Display help and exit
+
+Donate to me:
+NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
+NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
+EOF
+}
+
+###################### Start of the script ####################
 
 # Define colors
 red=$(tput setaf 1)
@@ -1204,6 +1244,7 @@ blue=$(tput setaf 4)
 magenta=$(tput setaf 5)
 normal=$(tput sgr0)
 
+# ROOT check
 if [[ $EUID -gt 0 ]]; then
 printf "%s" "$red"
 cat << "EOF"
@@ -1219,6 +1260,12 @@ printf "%s" "$normal"
 exit
 fi
 
+# Update && upgrade system
+apt-get update -y; apt-get upgrade -y
+apt-get install unzip glances ufw sed grep pv curl sudo bc -y
+apt-get autoremove -y
+
+# ASCII for menus
 ascii_sp="$(cat << "EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
@@ -1237,14 +1284,72 @@ ascii_sp="$(cat << "EOF"
 EOF
 )"
 
-# Start point
-apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances ufw sed grep pv curl sudo bc -y
-apt-get autoremove -y
-username="nkn"
-mode="whatever"
-database="whatever"
-installation="whatever"
+# Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.4.7"
-menu
+version="1.5.0"
+
+# Flags
+while [[ $1 != "" ]]; do
+flags="1"
+case "$1" in
+	--help | -h)
+		help
+		exit 1
+		;;
+	--password | -p)
+		shift
+		# Check if theres a value for this flag
+		if [[ $# -gt 0 ]]; then
+				export userpassword=$1
+				username="nkn"
+				database="yes"
+		else
+				echo "No password specified"
+				exit 1
+		fi
+		shift
+		;;
+	--benaddress | -b)
+		shift
+		if [[ $# -gt 0 ]]; then
+				export benaddress=$1
+		else
+				echo "No beneficiary address specified"
+				exit 1
+		fi
+		shift
+		;;
+	--websource | -w)
+		shift
+		if [[ $# -gt 0 ]]; then
+				export websource=$1
+		else
+				echo "No ChainDB URL address specified"
+				exit 1
+		fi
+		shift
+		;;
+	*)
+		help
+		exit 1
+		;;
+esac
+done
+
+# Check if flags present
+if [[ $flags == "1" ]]; then
+    if [[ $userpassword == "" ]] || [[ $benaddress == "" ]] || [[ $websource == "" ]]; then
+		echo "Provide all three flags: password, benaddress, websource!";
+        exit 1;
+    else
+		# Flag direct to install start up of the script
+        install1
+    fi
+else
+	# Normal menus start of the script
+	username="nkn"
+	mode="whatever"
+	database="whatever"
+	installation="whatever"
+	menu
+fi
