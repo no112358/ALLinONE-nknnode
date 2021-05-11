@@ -537,7 +537,9 @@ deluser --remove-home "$username" > /dev/null 2>&1
 printf "%s" "$red"
 cat << "EOF"
 A modem/router or VPS provided firewall is prohobiting access to the internet!
-Please disable the firewall and allow all internet through.
+
+For home modem, configure the ports correctly.
+For VPS disable the VPS provider firewall and allow all internet through.
 
 The system changes were REVERTED, once you fix the firewall settings
 restart the server and just run the same script again
@@ -1284,7 +1286,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 14"
+version="1.5 dev 15"
 
 # Flags
 while [[ $1 != "" ]]; do
