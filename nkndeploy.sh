@@ -681,8 +681,11 @@ printf "========================================================================
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
-printf "NKN wallet (beneficiary adddress) where you get paid:\n"
+printf "%s" "$blue"
+printf "NKN wallet (beneficiary adddress) where you get paid:\n\n"
+
 printf "%s\n\n" "$benaddress"
+printf "%s" "$normal"
 
 # Get node wallet address
 nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
@@ -694,7 +697,7 @@ printf "%s\n\n" "$nodewallet"
 printf "%s" "$normal"
 
 printf "From now on use these settings to connect to your server:\n"
-printf "If you're using AWS, Google Cloud, Azure... use the provided keys to login.\n\n"
+printf "If you're using AWS, Google Cloud, Azure... use the provided SSH keys to login.\n\n"
 
 printf "Server IP: %s\n" "$PUBLIC_IP"
 printf "SSH login: ssh %s@%s\n" "$username" "$PUBLIC_IP"
@@ -702,8 +705,7 @@ printf "Server username: %s\n" "$username"
 printf "Server password: %s\n\n" "$userpassword"
 
 printf "The server should be visible on nstatus.org in a few minutes.\n"
-printf "Enter the Server IP provided here!\n"
-printf "The node will take an hour or two do it's thing, so dont' worry.\n\n"
+printf "Enter the Server IP provided here!\n\n"
 
 printf "Thanks for using this script!\n\n"
 
@@ -1180,7 +1182,7 @@ printf "5) in-script NKN node monitor (no112358)\n"
 printf "6) nWatch website node monitor (AL-dot-debug)\n\n"
 
 cat << "EOF"
-Donate:
+Donate to me:
 NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
 NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
@@ -1213,6 +1215,8 @@ broken node, which you'll have to reinstall. Enjoy :D
 
 nkndeploy.sh -flag 'value'
 
+DO NOT REMOVE SINGLE QUOTES FROM FLAG VALUES!!
+
 EXAMPLE:
 
 nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
@@ -1223,7 +1227,7 @@ nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
 
 -h , --help           Display help and exit
 
-Donate:
+Donate to me:
 NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
 NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
@@ -1280,7 +1284,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 13"
+version="1.5 dev 14"
 
 # Flags
 while [[ $1 != "" ]]; do
@@ -1292,6 +1296,7 @@ case "$1" in
 		;;
 	--password | -p)
 		shift
+		# Check if theres a value for this flag
 		if [[ $# -gt 0 ]]; then
 				export userpassword=$1
 				username="nkn"
