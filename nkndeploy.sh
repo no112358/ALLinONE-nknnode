@@ -1186,7 +1186,7 @@ NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
 EOF
 
-printf "0) Exit\n\n"
+printf "\n0) Exit\n\n"
 
 printf "Enter selection: "
 read -r selection
@@ -1280,7 +1280,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 12"
+version="1.5 dev 13"
 
 # Flags
 while [[ $1 != "" ]]; do
