@@ -1211,11 +1211,11 @@ If you give all three flags you can install the node directly without
 messing with any menus. Any mistakes with the values will lead to a
 broken node, which you'll have to reinstall. Enjoy :D
 
-nkndeploy.sh -flag "value"
+nkndeploy.sh -flag 'value'
 
 EXAMPLE:
 
-nkndeploy.sh -p "password" -b "beneficiaryaddress" -w "chaindbURL"
+nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
 
 -p , --password       Set password
 -b , --benaddress     Set beneficiary address where you get paid
@@ -1280,10 +1280,10 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 9"
+version="1.5 dev 11"
 
 # Flags
-while [[ "$1" != "" ]]; do
+while [[ $1 != "" ]]; do
 flags="1"
 case "$1" in
 	--help | -h)
