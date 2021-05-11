@@ -1280,7 +1280,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5 dev 11"
+version="1.5 dev 12"
 
 # Flags
 while [[ $1 != "" ]]; do

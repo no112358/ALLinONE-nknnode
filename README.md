@@ -57,9 +57,9 @@ Node server runs it's own firewall, so there's no need for VPS provider firewall
 
    `sudo su -`
 
-2. **Start the script in terminal with this command:**
+2. **Start the script in terminal with this command (be sure to single quote the flag values:**
 
-   `wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh -p password -b beneficiaryaddress -w chaindbURL`
+   `wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'`
 
 ## Debugging after installation:
 
