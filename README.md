@@ -63,7 +63,9 @@ Node server runs it's own firewall, so there's no need for VPS provider firewall
 
 ## Donate to me:
 NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
+
 NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
+
 BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
 
 ## Debugging after installation:
