@@ -1286,17 +1286,19 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 4"
+version="1.6.0 dev 5"
 
-# NKN-commercial URL selector
+# Detect architecture and select proper NKN-commercial version/URL
+# Detect architecture
 arch=$(uname -m)
+
 # 64bit CPUs
 if [[ $arch == "x86_64" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
 	read -s -r -p "Press enter to continue!"
-# Older CPUs with 32 bit
+# Older CPUs 32 bit
 elif [[ $arch == "i686" ]]; then
 	nknsoftwareURL="https://github.com/nknorg/nkn/releases/download/v2.1.3/linux-386.zip"
 	printf "%s\n" "$arch"
