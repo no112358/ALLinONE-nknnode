@@ -1286,7 +1286,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 2"
+version="1.6.0 dev 3"
 
 # NKN-commercial URL selector
 arch=$(uname -m)
@@ -1295,19 +1295,19 @@ if [[ $arch == "x86_64" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
-	sleep 5
+	read -s -r -p "Press enter to continue!"
 # Older CPUs with 32 bit
 elif [[ $arch == "i686" ]]; then
 	nknsoftwareURL="https://github.com/nknorg/nkn/releases/download/v2.1.3/linux-386.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
-	sleep 5
+	read -s -r -p "Press enter to continue!"
 # Raspberry Pi
 elif [[ $arch == "armv7l" ]]; then
 	nknsoftwareURL="https://github.com/nknorg/nkn/releases/download/v2.1.3/linux-armv7.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
-	sleep 5
+	read -s -r -p "Press enter to continue!"
 else
 	printf "Architecture %s is not supported.\n" "$arch"
 	exit 1
