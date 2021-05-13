@@ -590,7 +590,7 @@ printf "DONE!\n"
 # Install NKN node miner software
 printf "Downloading NKN node software........................................... "
 cd /home/"$username" > /dev/null 2>&1 || exit
-wget --quiet --continue https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip > /dev/null 2>&1
+wget --quiet --continue "$nknsoftwareURL" > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Installing NKN node software............................................ "
@@ -1286,7 +1286,32 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5.0"
+version="1.6.0 dev 1"
+
+# NKN-commercial URL selector
+arch=$(uname -m)
+if [[ $arch == "x86_64"]]; then
+	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
+	printf "%s\n" "$arch"
+	printf "%s\n" "$nknsoftwareURL"
+	sleep 5
+elif [[ $arch == "i686"]]; then
+	nknsoftwareURL="https://github.com/nknorg/nkn/releases/download/v2.1.3/linux-386.zip"
+	printf "%s\n" "$arch"
+	printf "%s\n" "$nknsoftwareURL"
+	sleep 5
+elif [[ $arch == "armv7l"]]; then
+	nknsoftwareURL="https://github.com/nknorg/nkn/releases/download/v2.1.3/linux-armv7.zip"
+	printf "%s\n" "$arch"
+	printf "%s\n" "$nknsoftwareURL"
+	sleep 5
+else
+	printf "Architecture %s is not supported.\n" "$arch"
+	exit 1
+fi
+
+#https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip
+
 
 # Flags
 while [[ $1 != "" ]]; do
