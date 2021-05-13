@@ -1286,7 +1286,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 3"
+version="1.6.0 dev 4"
 
 # NKN-commercial URL selector
 arch=$(uname -m)
@@ -1312,9 +1312,6 @@ else
 	printf "Architecture %s is not supported.\n" "$arch"
 	exit 1
 fi
-
-#https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip
-
 
 # Flags
 while [[ $1 != "" ]]; do
