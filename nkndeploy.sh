@@ -594,9 +594,11 @@ wget --quiet --continue "$nknsoftwareURL" > /dev/null 2>&1
 printf "DONE!\n"
 
 printf "Installing NKN node software............................................ "
-unzip linux-amd64.zip > /dev/null 2>&1
-rm -f linux-amd64.zip > /dev/null 2>&1
-mv linux-amd64 nkn-commercial > /dev/null 2>&1
+filename=${nknsoftwareURL##*/} > /dev/null 2>&1
+unzip "$filename" > /dev/null 2>&1
+rm -f "$filename" > /dev/null 2>&1
+filename=${filename%.*} > /dev/null 2>&1
+mv "$filename" nkn-commercial > /dev/null 2>&1
 
 chown -R "$username":"$username" /home/"$username" > /dev/null 2>&1
 chmod -R 755 /home/"$username" > /dev/null 2>&1
@@ -1286,7 +1288,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 8"
+version="1.6.0 dev 9"
 
 # Detect architecture and select proper NKN-commercial version/URL
 # Detect architecture
