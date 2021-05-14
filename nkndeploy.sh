@@ -1035,7 +1035,7 @@ until [[ $selection == "0" ]]; do
 clear
 
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 cat << "EOF"
 WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
 to the IP database and check on your node status. It will show the node status.
@@ -1072,7 +1072,7 @@ until [[ $selection = "0" ]]; do
 clear
 
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 cat << "EOF"
 NKN ChainDB creation:
 1) Download ChainDB from NKN.org and host it on THIS server
@@ -1172,7 +1172,7 @@ menu() {
 until [[ $selection == "0" ]]; do
 clear
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 
 printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
 
@@ -1273,7 +1273,7 @@ apt-get install unzip glances ufw sed grep pv curl sudo bc -y
 apt-get autoremove -y
 
 # ASCII for menus
-ascii_sp="$(cat << "EOF"
+IFS='' read -r -d '' ascii_sp <<"EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
    .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
@@ -1289,14 +1289,12 @@ ascii_sp="$(cat << "EOF"
 
 ================================================================================
 EOF
-)"
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 11"
+version="1.6.0 dev 12"
 
 # Detect architecture and select proper NKN-commercial version/URL
-# Detect architecture
 arch=$(uname -m)
 
 # 64bit CPUs
