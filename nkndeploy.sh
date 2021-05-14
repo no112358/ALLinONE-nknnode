@@ -870,7 +870,7 @@ clear
 	done < "$input"
 
 printf "\nRefresh every 2 minutes, press [ENTER] to exit to menu!\n"
-read -s -N 1 -t 120 key
+read -r -s -N 1 -t 120 key
 
 if [[ $key == $'\x0a' ]]; # exit loop if ENTER is pressed
 then
@@ -1323,7 +1323,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 18"
+version="1.6.0 dev 19"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
