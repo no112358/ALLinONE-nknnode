@@ -551,7 +551,7 @@ EOF
 printf "%s" "$normal"
 
 read -s -r -p "Press Enter to continue!"
-exit
+menu
 }
 
 ################################### Uninstall######################################
@@ -566,6 +566,7 @@ To force exit this script press CTRL+C
 
 EOF
 
+# uninstall NKN miner, kill all user processes, remove user and userfolder
 /home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
 cd / > /dev/null 2>&1
 pkill -KILL -u "$username" > /dev/null 2>&1
@@ -574,7 +575,7 @@ deluser --remove-home "$username" > /dev/null 2>&1
 printf "Uninstall complete!\n\n"
 
 read -s -r -p "Press Enter to continue!"
-exit
+menu
 }
 
 ################################## Install #####################################
@@ -1320,7 +1321,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 15"
+version="1.6.0 dev 16"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
