@@ -946,7 +946,8 @@ if [[ ! -f /var/www/html/nodes-example.txt ]]; then
 	cp -rf nWatch-main/* . > /dev/null 2>&1
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
-	rm -f *.png > /dev/null 2>&1
+	find . -type f -name '*.png' -delete
+	#rm -f *.png > /dev/null 2>&1
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -968,7 +969,8 @@ else
 	cp -rf nWatch-main/* . > /dev/null 2>&1
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
-	rm -f *.png > /dev/null 2>&1
+	find . -type f -name '*.png' -delete
+	#rm -f *.png > /dev/null 2>&1
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -1298,7 +1300,7 @@ fi
 
 # Update && upgrade system
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances ufw sed grep pv curl sudo bc -y
+apt-get install unzip glances ufw sed grep pv curl sudo bc vnstat -y
 apt-get autoremove -y
 
 # ASCII for menus
@@ -1321,7 +1323,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 16"
+version="1.6.0 dev 18"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
