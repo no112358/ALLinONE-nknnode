@@ -554,6 +554,28 @@ read -s -r -p "Press Enter to continue!"
 exit
 }
 
+################################### Uninstall######################################
+function uninstall(){
+clear
+# revert all changes
+/home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
+cd / > /dev/null 2>&1
+pkill -KILL -u "$username" > /dev/null 2>&1
+deluser --remove-home "$username" > /dev/null 2>&1
+
+cat << "EOF"
+================================================================================
+Setup: uninstall
+To force exit this script press CTRL+C
+================================================================================
+
+EOF
+printf "Uninstall complete!\n\n"
+
+read -s -r -p "Press Enter to continue!"
+exit
+}
+
 ################################## Install #####################################
 
 function install1(){
@@ -1090,6 +1112,8 @@ NKN Node server install
 NKN NODE ID / WALLET TRANSFER
 8) Transfer NODE ID / wallet
 
+9) Uninstall NKN node and revert changes
+
 10) Go back to first menu
 0) Exit
 
@@ -1107,6 +1131,7 @@ case $selection in
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
 	8 ) nodeWalletTransfer ;;
+	9 ) uninstall ;;
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
@@ -1294,7 +1319,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 13"
+version="1.6.0 dev 14"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
