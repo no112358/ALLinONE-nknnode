@@ -558,7 +558,7 @@ exit
 
 function install1(){
 clear
-cat << "EOF"
+IFS='' read -r -d '' fire <<"EOF"
            (                 ,&&&.
             )                .,.&&
            (  (              \=__/
@@ -570,13 +570,13 @@ cat << "EOF"
      (_;-// | \ \-'.\    <_,\_\`--'|
      ( `.__ _  ___,')      <_,-'__,'
       `'(_ )_)(_)_)'
-
 ================================================================================
 This will take some time. Please be patient.
 To force exit this script press CTRL+C
 ================================================================================
-
 EOF
+printf "%s\n" "$fire"
+
 # disable firewall for the installation
 ufw --force disable > /dev/null 2>&1
 
@@ -611,7 +611,10 @@ printf "DONE!\n"
 # Wait for DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
 if [[ $database == "no" ]]; then
-	# script skips DB download and continues
+	# script waits for wallet generation and skips DB download and continues
+	while [[ ! -f "$DIR"wallet.json ]]; do
+		sleep 5
+	done
     install3
 else
 	printf "Waiting for NKN node software to start.................................. "
@@ -1290,7 +1293,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 10"
+version="1.6.0 dev 11"
 
 # Detect architecture and select proper NKN-commercial version/URL
 # Detect architecture
@@ -1302,12 +1305,6 @@ if [[ $arch == "x86_64" ]]; then
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
 	read -s -r -p "Press enter to continue!"
-# Older CPUs 32 bit
-#elif [[ $arch == "i686" ]]; then
-#	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-386.zip"
-#	printf "%s\n" "$arch"
-#	printf "%s\n" "$nknsoftwareURL"
-#	read -s -r -p "Press enter to continue!"
 # Raspberry Pi 32bit
 elif [[ $arch == "armv6l" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv6.zip"
