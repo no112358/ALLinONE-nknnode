@@ -558,11 +558,6 @@ exit
 function uninstall(){
 clear
 # revert all changes
-/home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
-cd / > /dev/null 2>&1
-pkill -KILL -u "$username" > /dev/null 2>&1
-deluser --remove-home "$username" > /dev/null 2>&1
-
 cat << "EOF"
 ================================================================================
 Setup: uninstall
@@ -570,6 +565,12 @@ To force exit this script press CTRL+C
 ================================================================================
 
 EOF
+
+/home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
+cd / > /dev/null 2>&1
+pkill -KILL -u "$username" > /dev/null 2>&1
+deluser --remove-home "$username" > /dev/null 2>&1
+
 printf "Uninstall complete!\n\n"
 
 read -s -r -p "Press Enter to continue!"
@@ -1319,7 +1320,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 14"
+version="1.6.0 dev 15"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
