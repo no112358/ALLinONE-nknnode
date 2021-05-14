@@ -947,7 +947,6 @@ if [[ ! -f /var/www/html/nodes-example.txt ]]; then
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
 	find . -type f -name '*.png' -delete
-	#rm -f *.png > /dev/null 2>&1
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -970,7 +969,6 @@ else
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
 	find . -type f -name '*.png' -delete
-	#rm -f *.png > /dev/null 2>&1
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -1323,7 +1321,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 19"
+version="1.6.0 dev 20"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
@@ -1356,7 +1354,7 @@ else
 	exit 1
 fi
 
-# Flags
+# Flags logic
 while [[ $1 != "" ]]; do
 flags="1"
 case "$1" in
@@ -1372,7 +1370,7 @@ case "$1" in
 				username="nkn"
 				database="yes"
 		else
-				echo "No password specified"
+				printf "No password specified\n"
 				exit 1
 		fi
 		shift
@@ -1382,7 +1380,7 @@ case "$1" in
 		if [[ $# -gt 0 ]]; then
 				export benaddress=$1
 		else
-				echo "No beneficiary address specified"
+				printf "No beneficiary address specified\n"
 				exit 1
 		fi
 		shift
@@ -1392,7 +1390,7 @@ case "$1" in
 		if [[ $# -gt 0 ]]; then
 				export websource=$1
 		else
-				echo "No ChainDB URL address specified"
+				printf "No ChainDB URL address specified\n"
 				exit 1
 		fi
 		shift
@@ -1407,7 +1405,7 @@ done
 # Check if flags present
 if [[ $flags == "1" ]]; then
     if [[ $userpassword == "" ]] || [[ $benaddress == "" ]] || [[ $websource == "" ]]; then
-		echo "Provide all three flags: password, benaddress, websource!";
+		printf "Provide all three flags: password, benaddress, websource!\n";
         exit 1;
     else
 		# Flag direct to install start up of the script
