@@ -606,30 +606,30 @@ ufw --force disable > /dev/null 2>&1
 
 # Create a new SUDO user
 printf "Creating a new Super User account....................................... "
-pass=$(perl -e 'print crypt($ARGV[0], "password")' "$userpassword") > /dev/null 2>&1
-useradd -m -p "$pass" -s /bin/bash "$username" > /dev/null 2>&1
-usermod -a -G sudo "$username" > /dev/null 2>&1
+pass=$(perl -e 'print crypt($ARGV[0], "password")' "$userpassword")
+useradd -m -p "$pass" -s /bin/bash "$username"
+usermod -a -G sudo "$username"
 printf "DONE!\n"
 
 # Install NKN node miner software
 printf "Downloading NKN node software........................................... "
-cd /home/"$username" > /dev/null 2>&1 || exit
-wget --quiet --continue "$nknsoftwareURL" > /dev/null 2>&1
+cd /home/"$username" || exit
+wget --quiet --continue "$nknsoftwareURL"
 printf "DONE!\n"
 
 printf "Installing NKN node software............................................ "
 # extract filename and extension from URL
-filename=${nknsoftwareURL##*/} > /dev/null 2>&1
-unzip "$filename" > /dev/null 2>&1
-rm -f "$filename" > /dev/null 2>&1
+filename=${nknsoftwareURL##*/}
+unzip "$filename"
+rm -f "$filename"
 # remove extension from filename
-filename=${filename%.*} > /dev/null 2>&1
-mv "$filename" nkn-commercial > /dev/null 2>&1
+filename=${filename%.*}
+mv "$filename" nkn-commercial
 
-chown -R "$username":"$username" /home/"$username" > /dev/null 2>&1
-chmod -R 755 /home/"$username" > /dev/null 2>&1
+chown -R "$username":"$username" /home/"$username"
+chmod -R 755 /home/"$username"
 
-/home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install > /dev/null 2>&1
+/home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install
 printf "DONE!\n"
 
 # Wait for DIR and wallet creation
