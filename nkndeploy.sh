@@ -639,6 +639,7 @@ if [[ $database == "no" ]]; then
 	printf "Waiting for NKN node software to start.................................. "
 	while [[ ! -f "$DIR"wallet.json ]]; do
 		sleep 5
+		printf "wallet not created yet\n"
 	done
 	printf "DONE!\n"
     install3
@@ -1321,7 +1322,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 22"
+version="1.6.0 dev 23"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
