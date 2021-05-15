@@ -1321,7 +1321,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 20"
+version="1.6.0 dev 21"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
@@ -1338,13 +1338,13 @@ elif [[ $arch == "armv6l" ]]; then
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
 	read -s -r -p "Press enter to continue!"
-elif [[ $arch == "armv7l" ]]; then
+elif [[ $arch == "armv7l" ]] || [[ $arch == "aarch64" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv7.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
 	read -s -r -p "Press enter to continue!"
 # Raspberry Pi 64bit
-elif [[ $arch == "aarch64" ]] || [[ $arch == "armv8b" ]] || [[ $arch == "armv8l" ]] || [[ $arch == "aarch64_be" ]]; then
+elif [[ $arch == "armv8b" ]] || [[ $arch == "armv8l" ]] || [[ $arch == "aarch64_be" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-arm64.zip"
 	printf "%s\n" "$arch"
 	printf "%s\n" "$nknsoftwareURL"
