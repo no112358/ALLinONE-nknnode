@@ -13,8 +13,8 @@ printf "\033[2A\033[2K"
 cat << "EOF"
 
 Requirements:
-1. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
-2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+1. ChainDB HOST ONLY, need 25 GB+ storage space, 1+ cpu, 512+MB ram
+2. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+GB ram
 ================================================================================
 
 EOF
@@ -87,7 +87,7 @@ To force exit this script press CTRL+C
 
 Requirements:
 1. NKN node syncState: "PERSIST_FINISHED"
-2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+2. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+GB ram
 ================================================================================
 
 EOF
@@ -161,7 +161,7 @@ to the web host server.
 
 You need to provide a WEB HOST SERVER! Make another VPS server which you will
 use to host the ChainDB file, so you can deploy your next NKN nodes faster!
-Requirement: web host with 1 core, 512 MB RAM, 20GB storage minimum.
+Requirement: web host with 1 core, 512 MB RAM, 25+GB storage minimum.
 
 EOF
 read -s -r -p "Press Enter to continue!"
@@ -294,8 +294,8 @@ To force exit this script press CTRL+C
 
 Requirements:
 1. Fresh Server only!
-2. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
-3. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+2. ChainDB HOST ONLY, need 25+ GB storage space, 1+ cpu, 512+ MB ram
+3. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+ GB ram
 ================================================================================
 
 EOF
@@ -717,19 +717,22 @@ printf "========================================================================
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
-printf "%s" "$blue"
-printf "NKN wallet (beneficiary adddress) where you get paid:\n\n"
+printf "%s" "$red"
+printf "Check the status of your new node on www.nstatus.org\n"
+printf "Use this server IP address: %s\n\n" "$PUBLIC_IP"
 
-printf "%s\n\n" "$benaddress"
+printf "The new NKN server will take some time to sync up, keep checking it until the site\n"
+printf "will give you this error: No ID in this account...\n"
+printf "Then send 10 NKN (mainnet token) to the address it provides AKA:\n"
+nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
+printf "%s\n\n" "$nodewallet"
+
+printf "Keep checking on nstatus to see when the server activates.\n\n"
 printf "%s" "$normal"
 
-# Get node wallet address
-nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
-printf "%s" "$red"
-printf "NKN NODE wallet this is the address where you have to send 10 NKN.\n"
-printf "If you don't send 10 NKN to this address, the node won't start mining.\n\n"
-
-printf "%s\n\n" "$nodewallet"
+printf "%s" "$blue"
+printf "NKN wallet (beneficiary adddress) where you get paid to:\n"
+printf "%s\n\n" "$benaddress"
 printf "%s" "$normal"
 
 printf "From now on use these settings to connect to your server:\n"
@@ -739,9 +742,6 @@ printf "Server IP: %s\n" "$PUBLIC_IP"
 printf "SSH login: ssh %s@%s\n" "$username" "$PUBLIC_IP"
 printf "Server username: %s\n" "$username"
 printf "Server password: %s\n\n" "$userpassword"
-
-printf "The server should be visible on nstatus.org in a few minutes.\n"
-printf "Enter the Server IP provided here!\n\n"
 
 printf "Thanks for using this script!\n\n"
 
@@ -1322,7 +1322,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 23"
+version="1.6.0 dev 24"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
