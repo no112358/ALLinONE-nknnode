@@ -32,8 +32,11 @@ If you come across any bugs please let me know. Thank you!
 
 VPS server sizes:
 To deploy a ChainDB and node: 40+ GB
+
 To deploy ChainDB only: 25+ GB
+
 To deploy NKN nodes: 30+ GB
+
 
 **Private IP check (Linode)**
 **Be sure to "disable" VPS provider firewalls!**
