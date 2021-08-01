@@ -1252,13 +1252,11 @@ If you give all three flags you can install the node directly without
 messing with any menus. Any mistakes with the values will lead to a
 broken node, which you'll have to reinstall. Enjoy :D
 
-nkndeploy.sh -flag 'value'
-
 DO NOT REMOVE SINGLE QUOTES FROM FLAG VALUES!!
 
 EXAMPLE:
 
-nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
+wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
 
 -p , --password       Set password
 -b , --benaddress     Set beneficiary address where you get paid
@@ -1330,20 +1328,20 @@ arch=$(uname -m)
 # 64bit CPUs
 if [[ $arch == "x86_64" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
-	printf "%s\n" "$arch"
-	printf "%s\n" "$nknsoftwareURL"
-	read -s -r -p "Press enter to continue!"
+	#printf "%s\n" "$arch"
+	#printf "%s\n" "$nknsoftwareURL"
+	#read -s -r -p "Press enter to continue!"
 # Raspberry Pi 32bit
 elif [[ $arch == "armv6l" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv6.zip"
-	printf "%s\n" "$arch"
-	printf "%s\n" "$nknsoftwareURL"
-	read -s -r -p "Press enter to continue!"
+	#printf "%s\n" "$arch"
+	#printf "%s\n" "$nknsoftwareURL"
+	#read -s -r -p "Press enter to continue!"
 elif [[ $arch == "armv7l" ]] || [[ $arch == "aarch64" ]] || [[ $arch == "armv8b" ]] || [[ $arch == "armv8l" ]] || [[ $arch == "aarch64_be" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv7.zip"
-	printf "%s\n" "$arch"
-	printf "%s\n" "$nknsoftwareURL"
-	read -s -r -p "Press enter to continue!"
+	#printf "%s\n" "$arch"
+	#printf "%s\n" "$nknsoftwareURL"
+	#read -s -r -p "Press enter to continue!"
 else
 	printf "Architecture %s is not supported.\n" "$arch"
 	exit 1
@@ -1400,7 +1398,7 @@ done
 # Check if flags present
 if [[ $flags == "1" ]]; then
     if [[ $userpassword == "" ]] || [[ $benaddress == "" ]] || [[ $websource == "" ]]; then
-		printf "Provide all three flags: password, benaddress, websource!\n";
+		printf "Provide all three flags: password, benaddress and ChainDB websource!\n";
         exit 1;
     else
 		# Flag direct to install start up of the script
