@@ -16,7 +16,7 @@ NKN network miners need a blockchain database to operate, where every new miner 
 - in-script NKN node & wallet status monitor
 - nWatch website NKN node & wallet status monitor
 - Flags for fast installation
-- Support for ARM, 386
+- Added script support for ARM
 
 This script was tested on Ubuntu 20.04 server.
 If you come across any bugs please let me know. Thank you!
