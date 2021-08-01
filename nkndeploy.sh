@@ -721,9 +721,10 @@ printf "%s" "$red"
 printf "Check the status of your new node on www.nstatus.org\n"
 printf "Use this server IP address: %s\n\n" "$PUBLIC_IP"
 
-printf "The new NKN server will take some time to sync up, keep checking it until the site\n"
-printf "will give you this error: No ID in this account...\n"
-printf "Then send 10 NKN (mainnet token) to the address it provides AKA:\n"
+printf "The new NKN server will take some time to sync up, keep checking it\n"
+printf "until the site gives you this error: No ID in this account...\n\n"
+
+printf "Then send 10 NKN (mainnet token) to the address it provides, AKA:\n"
 nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
 printf "%s\n\n" "$nodewallet"
 
@@ -731,7 +732,7 @@ printf "Keep checking on nstatus to see when the server activates.\n\n"
 printf "%s" "$normal"
 
 printf "%s" "$blue"
-printf "NKN wallet (beneficiary adddress) where you get paid to:\n"
+printf "NKN wallet (beneficiary adddress) where you will get paid to:\n"
 printf "%s\n\n" "$benaddress"
 printf "%s" "$normal"
 
