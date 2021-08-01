@@ -31,9 +31,9 @@ If you come across any bugs please let me know. Thank you!
 4. Deploying a server on VPS provider: use Ubuntu as operating system and for the very first server choose a server with 35+ GB of storage, so we can create a node and a ChainDB server on it.
 
 VPS server sizes:
-To deploy a ChainDB and node: 35+ GB
-To deploy ChainDB only: 25 GB
-To deploy NKN nodes: 25 GB
+To deploy a ChainDB and node: 40+ GB
+To deploy ChainDB only: 25+ GB
+To deploy NKN nodes: 30+ GB
 
 **Private IP check (Linode)**
 **Be sure to "disable" VPS provider firewalls!**
