@@ -50,7 +50,8 @@ websource="http://94.7.27.39/ChainDB.tar.gz"
 #read -r websource
 #printf "\n"
 
-if curl --output /dev/null --silent --head "$websource"; then
+#if curl --output /dev/null --silent --head --fail "$websource"; then
+if curl --connect-timeout 5 --output /dev/null --silent --head --fail "$websource"; then
 	# URL OK
 	wget --quiet --continue --show-progress $websource
 	printf "Downloading ChainDB archive............................................. DONE!\n\n"
@@ -1341,7 +1342,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 30"
+version="1.6.0 dev 31"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
