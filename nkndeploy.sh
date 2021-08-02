@@ -47,7 +47,7 @@ websource="http://94.7.27.39/ChainDB.tar.gz"
 #original
 #websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
 
-#read -r websource
+read -r websource
 #printf "\n"
 
 if curl --output /dev/null --silent --head --fail "$websource"; then
@@ -1341,7 +1341,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 28"
+version="1.6.0 dev 29"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
