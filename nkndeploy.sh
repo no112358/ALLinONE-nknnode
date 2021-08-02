@@ -346,9 +346,11 @@ rm -f index.html > /dev/null 2>&1
 # NEW websource for the install
 websource="http://$PUBLIC_IP/ChainDB.tar.gz"
 
-printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
+# END output
+printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n"
+printf "Copy paste it somewhere safe!\n\n"
 printf "%s" "$red"
-printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
+printf "URL: http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
 # Question
@@ -1320,7 +1322,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 37"
+version="1.6.0 dev 38"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
