@@ -41,9 +41,9 @@ printf "Downloading ChainDB archive.............................................
 #check if URL ok
 #DELETE
 #not working
-websource="http://94.7.27.39/ChainDB.tar.gz"
+#websource="http://94.7.27.39/ChainDB.tar.gz"
 #working
-#websource="http://94.237.27.39/ChainDB.tar.gz"
+websource="http://94.237.27.39/ChainDB.tar.gz"
 #original
 #websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
 
@@ -1342,7 +1342,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 31"
+version="1.6.0 dev 32"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
