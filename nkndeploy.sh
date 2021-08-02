@@ -4,6 +4,9 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Download ChainDB from NKN.org and host it on THIS server
+
+Hosting your own ChaindDB archive server will make making new NKN nodes faster.
+
 To force exit this script press CTRL+C
 ================================================================================
 
@@ -22,6 +25,7 @@ read -s -r -p "Press Enter to continue!"
 printf "\r\033[K"
 fi
 
+# Install Apache web server
 printf "Installing Apache Web Server............................................ "
 apt-get install apache2 -y > /dev/null 2>&1
 printf "DONE!\n"
@@ -34,63 +38,47 @@ ufw allow 443 > /dev/null 2>&1
 ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
+# Download the ChainDB archive from nkn.org
+websource="http://94.237.27.39/ChainDB.tar.gz"
+
+#websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
 
-#check if URL ok
-#DELETE
-#not working
-#websource="http://94.7.27.39/ChainDB.tar.gz"
-#working
-websource="http://94.237.27.39/ChainDB.tar.gz"
-#original
-#websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
-
-#read -r websource
-#printf "\n"
-
-#if curl --output /dev/null --silent --head --fail "$websource"; then
+# Check URL
 if curl --connect-timeout 5 --output /dev/null --silent --head --fail "$websource"; then
 	# URL OK
 	wget --quiet --continue --show-progress $websource
 	printf "Downloading ChainDB archive............................................. DONE!\n\n"
 else
-	# URL fail
-	printf "ERROR URL does NOT exist: %s\n\n" "$websource"
-	read -s -r -p "Press Enter to continue!"
+	# URL FAIL
+	printf "URL: %s, does NOT exist. Server down?\n\n" "$websource"
+	read -s -r -p "Press Enter to go back to the menu!"
 	menu
 fi
 
 # cleanup
-filename=${websource##*/}
-mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
-rm -f index.html > /dev/null 2>&1
+filename=${websource##*/} # read the URL filename
+mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1 # fix the original filename to ChainDB.tar.gz
+rm -f index.html > /dev/null 2>&1 # remove Apache auto generated index.html
 
-# NEW websource for the install
-#websource="http://$PUBLIC_IP/ChainDB.tar.gz"
-
-#printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
-
-#printf "%s" "$red"
-#printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-#printf "%s" "$normal"
-
-printf "This is your new ChainDB archive URL:\n\n"
+# END output
+printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n\n"
 printf "%s" "$red"
-printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
+printf "URL: http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
-# if from beginner menu, then also install a node on this server
+# if from beginner menu, ask if they want to install a node on this server
 if [[ $mode == "beginner" ]]; then
 	# Question
 	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
 	case "$response" in
 		[yY][eE][sS]|[yY])
-		# correct continue script
+		# YES continue script
 		installation="local" ; userdata1 ;;
 		*)
-		# wrong exit
+		# NO back to menu
 		menu ;;
 	esac
 else
@@ -1342,7 +1330,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 32"
+version="1.6.0 dev 33"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
