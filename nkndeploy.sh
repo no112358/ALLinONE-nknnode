@@ -309,7 +309,6 @@ printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
 read -r websource
 printf "\n"
 
-# FIX?
 # URL CHECK
 if curl --output /dev/null --silent --head --fail "$websource"; then
 	printf "URL OK: %s\n" "$websource"
@@ -346,12 +345,6 @@ rm -f index.html > /dev/null 2>&1
 
 # NEW websource for the install
 websource="http://$PUBLIC_IP/ChainDB.tar.gz"
-
-printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
-
-printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
 printf "%s" "$red"
@@ -1327,7 +1320,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 36"
+version="1.6.0 dev 37"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
