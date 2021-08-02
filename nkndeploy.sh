@@ -1153,7 +1153,7 @@ STEP 1: I have no NKN nodes / servers:
 YOU NEED TO DO THIS STEP ONLY ONE TIME!
 
 Hosting the ChainDB archive yourself is essential to deploy your nodes
-fast. Get the cheapest server with 1GB+ RAM and 35+ GB of storage
+fast. Get the cheapest server with 1GB+ RAM and 40+ GB of storage
 to store the ChainDB archive and start your first NKN node.
 
 Free credits for server providers: https://vpstrial.net/vps/
@@ -1168,7 +1168,7 @@ cat << "EOF"
 STEP 2: Deploy new nodes:
 
 RUN STEP 2 ONLY ON NEW SERVERS, not on the first one you created!
-Make a new 1core, 1GB RAM, minium 25GB storage ubuntu 20.04+ server
+Make a new 1 core, 1GB RAM, minium 30+ GB storage ubuntu 20.04+ server
 and use the custom URL address provided to you in the first part of the
 script to deploy new node servers.
 
@@ -1321,29 +1321,25 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 25"
+version="1.6.0 dev 26"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
 
-# 64bit CPUs
+# 64bit X86 CPUs
 if [[ $arch == "x86_64" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
-	#printf "%s\n" "$arch"
-	#printf "%s\n" "$nknsoftwareURL"
-	#read -s -r -p "Press enter to continue!"
+
 # Raspberry Pi 32bit
 elif [[ $arch == "armv6l" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv6.zip"
-	#printf "%s\n" "$arch"
-	#printf "%s\n" "$nknsoftwareURL"
-	#read -s -r -p "Press enter to continue!"
+
+# Raspberry Pi 64bit
 elif [[ $arch == "armv7l" ]] || [[ $arch == "aarch64" ]] || [[ $arch == "armv8b" ]] || [[ $arch == "armv8l" ]] || [[ $arch == "aarch64_be" ]]; then
 	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv7.zip"
-	#printf "%s\n" "$arch"
-	#printf "%s\n" "$nknsoftwareURL"
-	#read -s -r -p "Press enter to continue!"
+
 else
+	# Error if unsupported architecture
 	printf "Architecture %s is not supported.\n" "$arch"
 	exit 1
 fi
