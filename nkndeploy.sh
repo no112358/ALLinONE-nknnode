@@ -74,7 +74,8 @@ read -s -r -p "Press Enter to continue!"
 
 # "from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
-	installation="local" ; userdata1 ;;
+	installation="local"
+	userdata1
 else
 	menu
 fi
@@ -1345,7 +1346,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 34"
+version="1.6.0 dev 35"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
