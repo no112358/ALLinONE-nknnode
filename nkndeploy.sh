@@ -39,8 +39,8 @@ ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
 # Download the ChainDB archive from nkn.org
+#delete after testing
 websource="http://94.237.27.39/ChainDB.tar.gz"
-
 #websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
@@ -52,7 +52,7 @@ if curl --connect-timeout 5 --output /dev/null --silent --head --fail "$websourc
 	wget --quiet --continue --show-progress $websource
 	printf "Downloading ChainDB archive............................................. DONE!\n\n"
 else
-	# URL FAIL
+	# URL FAIL / timeout
 	printf "URL: %s, does NOT exist. Server down?\n\n" "$websource"
 	read -s -r -p "Press Enter to go back to the menu!"
 	menu
@@ -64,34 +64,47 @@ mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1 # fix the original filename to
 rm -f index.html > /dev/null 2>&1 # remove Apache auto generated index.html
 
 # END output
-printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n\n"
+printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n"
+printf "Copy paste it somewhere safe!\n\n"
 printf "%s" "$red"
 printf "URL: http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
-# if from beginner menu, ask if they want to install a node on this server
+read -s -r -p "Press Enter to continue!"
+
+# "from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
-	# Question
-	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
-	case "$response" in
-		[yY][eE][sS]|[yY])
-		# YES continue script
-		installation="local" ; userdata1 ;;
-		*)
-		# NO back to menu
-		menu ;;
-	esac
+	installation="local" ; userdata1 ;;
 else
-    read -s -r -p "Press Enter to continue!"
 	menu
 fi
+
+
+
+# if from beginner menu, ask if they want to install a node on this server
+#if [[ $mode == "beginner" ]]; then
+	# Question
+#	read -r -p "Do you also want to install a NKN node on this server? [y/n] " response
+#	case "$response" in
+#		[yY][eE][sS]|[yY])
+		# YES continue script
+#		installation="local" ; userdata1 ;;
+#		*)
+		# NO back to menu
+#		menu ;;
+#	esac
+#else
+#    read -s -r -p "Press Enter to continue!"
+#	menu
+#fi
 }
 
 method2(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Create ChainDB from own NKN node and host on the SAME server
+Setup: Create ChainDB from own existing NKN node and host on the SAME server
+
 To force exit this script press CTRL+C
 
 Requirements:
@@ -1159,16 +1172,18 @@ printf "%s" "$blue"
 cat << "EOF"
 STEP 1: I have no NKN nodes / servers:
 
-YOU NEED TO DO THIS STEP ONLY ONE TIME!
+YOU NEED TO DO THIS STEP ONLY ONCE!
 
-Hosting the ChainDB archive yourself is essential to deploy your nodes
-fast. Get the cheapest server with 1GB+ RAM and 40+ GB of storage
-to store the ChainDB archive and start your first NKN node.
+Hosting the ChainDB archive yourself is essential to deploy your
+future NKN nodes faster. You only need one ChainDB server.
+
+Server requirements: 1+ CPU, 1+ GB RAM, 40+ GB of storage
 
 Free credits for server providers: https://vpstrial.net/vps/
 
-If THIS server already has enough storage space, then you don't
-need to create a new one you can just continue by selecting STEP 1.
+If THIS server already has enough storage space, continue by
+selecting STEP 1. Otherwise exit this script and provision a new
+VPS server.
 
 EOF
 printf "%s" "$normal"
@@ -1176,7 +1191,7 @@ printf "%s" "$magenta"
 cat << "EOF"
 STEP 2: Deploy new nodes:
 
-RUN STEP 2 ONLY ON NEW SERVERS, not on the first one you created!
+RUN STEP 2 ONLY ON NEW SERVERS, not on the ChainDB server!!!
 Make a new 1 core, 1GB RAM, minium 30+ GB storage ubuntu 20.04+ server
 and use the custom URL address provided to you in the first part of the
 script to deploy new node servers.
@@ -1330,7 +1345,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 33"
+version="1.6.0 dev 34"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
