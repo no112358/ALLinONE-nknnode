@@ -37,7 +37,9 @@ printf "DONE!\n"
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
-websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
+#DELETE
+websource="http://72.14.191.229/ChainDB.tar.gz"
+#websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
 wget --quiet --continue --show-progress $websource
 printf "Downloading ChainDB archive............................................. DONE!\n\n"
 
@@ -47,15 +49,15 @@ mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
 rm -f index.html > /dev/null 2>&1
 
 # NEW websource for the install
-websource="http://$PUBLIC_IP/ChainDB.tar.gz"
+#websource="http://$PUBLIC_IP/ChainDB.tar.gz"
 
-printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
+#printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "%s" "$normal"
+#printf "%s" "$red"
+#printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
+#printf "%s" "$normal"
 
-printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
+printf "This is your new ChainDB archive URL:\n\n"
 printf "%s" "$red"
 printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
@@ -1321,7 +1323,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 26"
+version="1.6.0 dev 27"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
