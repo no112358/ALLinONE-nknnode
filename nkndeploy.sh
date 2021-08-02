@@ -37,11 +37,29 @@ printf "DONE!\n"
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
+
+#check if URL ok
 #DELETE
-websource="http://72.14.191.229/ChainDB.tar.gz"
+#not working
+websource="http://94.7.27.39/ChainDB.tar.gz"
+#working
+#websource="http://94.237.27.39/ChainDB.tar.gz"
+#original
 #websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
-wget --quiet --continue --show-progress $websource
-printf "Downloading ChainDB archive............................................. DONE!\n\n"
+
+#read -r websource
+#printf "\n"
+
+if curl --output /dev/null --silent --head --fail "$websource"; then
+	# URL OK
+	wget --quiet --continue --show-progress $websource
+	printf "Downloading ChainDB archive............................................. DONE!\n\n"
+else
+	# URL fail
+	printf "ERROR URL does NOT exist: %s\n\n" "$websource"
+	read -s -r -p "Press Enter to continue!"
+	menu
+fi
 
 # cleanup
 filename=${websource##*/}
@@ -1323,7 +1341,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 27"
+version="1.6.0 dev 28"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
