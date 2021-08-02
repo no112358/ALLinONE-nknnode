@@ -538,7 +538,7 @@ cat << "EOF"
 A modem/router or VPS provided firewall is prohobiting access to the internet!
 
 For home modem, configure the ports correctly.
-For VPS disable the VPS provider firewall and allow all internet through.
+For VPS, disable the VPS provider firewall and allow all internet through.
 
 The system changes were REVERTED, once you fix the firewall settings
 restart the server and just run the same script again
