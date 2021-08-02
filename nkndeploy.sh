@@ -39,9 +39,7 @@ ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
 # Download the ChainDB archive from nkn.org
-#delete after testing
-websource="http://94.237.27.39/ChainDB.tar.gz"
-#websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
+websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
@@ -72,32 +70,13 @@ printf "%s" "$normal"
 
 read -s -r -p "Press Enter to continue!"
 
-# "from beginner menu" also install NKN node
+# "if from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
 	installation="local"
 	userdata1
 else
 	menu
 fi
-
-
-
-# if from beginner menu, ask if they want to install a node on this server
-#if [[ $mode == "beginner" ]]; then
-	# Question
-#	read -r -p "Do you also want to install a NKN node on this server? [y/n] " response
-#	case "$response" in
-#		[yY][eE][sS]|[yY])
-		# YES continue script
-#		installation="local" ; userdata1 ;;
-#		*)
-		# NO back to menu
-#		menu ;;
-#	esac
-#else
-#    read -s -r -p "Press Enter to continue!"
-#	menu
-#fi
 }
 
 method2(){
@@ -262,7 +241,8 @@ method4(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Update existing ChainDB on THIS server
+Setup: Update existing ChainDB archive on THIS server
+
 To force exit this script press CTRL+C
 
 Requirement:
@@ -292,7 +272,7 @@ printf "DONE!\n"
 
 printf "Creating NEW ChainDB archive............................................ \n"
 tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
-# bug somehow the tar process changes ownership of files ?? rechown
+# bug somehow the tar/gzip process changes ownership of files ?? rechown
 chown -R "$username":"$username" ChainDB/ > /dev/null 2>&1
 printf "Create NEW ChainDB archive.............................................. DONE!\n"
 
@@ -329,6 +309,7 @@ printf "Enter the custom URL address where the ChainDB*.tar.gz is located at:\n"
 read -r websource
 printf "\n"
 
+# FIX?
 # URL CHECK
 if curl --output /dev/null --silent --head --fail "$websource"; then
 	printf "URL OK: %s\n" "$websource"
@@ -1346,7 +1327,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 35"
+version="1.6.0 dev 36"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
