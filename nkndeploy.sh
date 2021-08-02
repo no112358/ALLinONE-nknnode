@@ -619,7 +619,7 @@ printf "DONE!\n"
 printf "Installing NKN node software............................................ "
 # extract filename and extension from URL
 filename=${nknsoftwareURL##*/}
-unzip "$filename"
+unzip "$filename" > /dev/null 2>&1
 rm -f "$filename"
 # remove extension from filename
 filename=${filename%.*}
@@ -628,27 +628,39 @@ mv "$filename" nkn-commercial
 chown -R "$username":"$username" /home/"$username"
 chmod -R 755 /home/"$username"
 
-/home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install
+/home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install > /dev/null 2>&1
 printf "DONE!\n"
 
-# Wait for DIR and wallet creation
+# Wait for ChainDB DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
+
+# No ChainDB install
 if [[ $database == "no" ]]; then
-	# script waits for wallet generation and skips DB download and continues
+	# script waits for wallet generation and then skips DB download and continues
 	printf "Waiting for NKN node software to start.................................. "
-	while [[ ! -f "$DIR"wallet.json ]]; do
-		sleep 5
-		printf "wallet not created yet\n"
+	
+	timestart=$(date +%s)
+	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
+		if [[ ! -f "$DIR"wallet.json ]]; then
+			# if file doesn't exist wait and repeat check
+			sleep 5
+		else
+			# when wallet.json file is detected
+			printf "DONE!\n"
+			install3
+		fi
 	done
-	printf "DONE!\n"
-    install3
+	# when timer runs out go to the firewall warning
+	firewallwarn
+
+# ChainDB install	
 else
 	printf "Waiting for NKN node software to start.................................. "
 
 	timestart=$(date +%s)
 	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
 		if [[ ! -d "$DIR"ChainDB ]] && [[ ! -f "$DIR"wallet.json ]]; then
-			# if folder and file don't exist wait and repeat check
+			# if folder and file don't exist yet wait and repeat check
 			sleep 5
 		else
 			# when file is detected
@@ -1322,7 +1334,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 38"
+version="1.6.0 dev 39"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
