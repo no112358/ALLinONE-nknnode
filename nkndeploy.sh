@@ -4,6 +4,9 @@ clear
 cat << "EOF"
 ================================================================================
 Setup: Download ChainDB from NKN.org and host it on THIS server
+
+Hosting your own ChaindDB archive server will make making new NKN nodes faster.
+
 To force exit this script press CTRL+C
 ================================================================================
 
@@ -13,8 +16,8 @@ printf "\033[2A\033[2K"
 cat << "EOF"
 
 Requirements:
-1. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
-2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+1. ChainDB HOST ONLY, need 25 GB+ storage space, 1+ cpu, 512+MB ram
+2. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+GB ram
 ================================================================================
 
 EOF
@@ -22,6 +25,7 @@ read -s -r -p "Press Enter to continue!"
 printf "\r\033[K"
 fi
 
+# Install Apache web server
 printf "Installing Apache Web Server............................................ "
 apt-get install apache2 -y > /dev/null 2>&1
 printf "DONE!\n"
@@ -34,46 +38,43 @@ ufw allow 443 > /dev/null 2>&1
 ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
+# Download the ChainDB archive from nkn.org
+websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
-websource="https://nkn.org/ChainDB_pruned_latest.tar.gz"
-wget --quiet --continue --show-progress $websource
-printf "Downloading ChainDB archive............................................. DONE!\n\n"
+
+# Check URL
+if curl --connect-timeout 5 --output /dev/null --silent --head --fail "$websource"; then
+	# URL OK
+	wget --quiet --continue --show-progress $websource
+	printf "Downloading ChainDB archive............................................. DONE!\n\n"
+else
+	# URL FAIL / timeout
+	printf "URL: %s, does NOT exist. Server down?\n\n" "$websource"
+	read -s -r -p "Press Enter to go back to the menu!"
+	menu
+fi
 
 # cleanup
-filename=${websource##*/}
-mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1
-rm -f index.html > /dev/null 2>&1
+filename=${websource##*/} # read the URL filename
+mv -f "$filename" ChainDB.tar.gz > /dev/null 2>&1 # fix the original filename to ChainDB.tar.gz
+rm -f index.html > /dev/null 2>&1 # remove Apache auto generated index.html
 
-# NEW websource for the install
-websource="http://$PUBLIC_IP/ChainDB.tar.gz"
-
-printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
-
+# END output
+printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n"
+printf "Copy paste it somewhere safe!\n\n"
 printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
+printf "URL: http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
-printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "%s" "$red"
-printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
-printf "%s" "$normal"
+read -s -r -p "Press Enter to continue!"
 
-# if from beginner menu, then also install a node on this server
+# "if from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
-	# Question
-	read -r -p "Do you also want to install a NKN node on this server ? [y/n] " response
-	case "$response" in
-		[yY][eE][sS]|[yY])
-		# correct continue script
-		installation="local" ; userdata1 ;;
-		*)
-		# wrong exit
-		menu ;;
-	esac
+	installation="local"
+	userdata1
 else
-    read -s -r -p "Press Enter to continue!"
 	menu
 fi
 }
@@ -82,12 +83,13 @@ method2(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Create ChainDB from own NKN node and host on the SAME server
+Setup: Create ChainDB from own existing NKN node and host on the SAME server
+
 To force exit this script press CTRL+C
 
 Requirements:
 1. NKN node syncState: "PERSIST_FINISHED"
-2. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+2. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+GB ram
 ================================================================================
 
 EOF
@@ -161,7 +163,7 @@ to the web host server.
 
 You need to provide a WEB HOST SERVER! Make another VPS server which you will
 use to host the ChainDB file, so you can deploy your next NKN nodes faster!
-Requirement: web host with 1 core, 512 MB RAM, 20GB storage minimum.
+Requirement: web host with 1 core, 512 MB RAM, 25+GB storage minimum.
 
 EOF
 read -s -r -p "Press Enter to continue!"
@@ -239,7 +241,8 @@ method4(){
 clear
 cat << "EOF"
 ================================================================================
-Setup: Update existing ChainDB on THIS server
+Setup: Update existing ChainDB archive on THIS server
+
 To force exit this script press CTRL+C
 
 Requirement:
@@ -269,7 +272,7 @@ printf "DONE!\n"
 
 printf "Creating NEW ChainDB archive............................................ \n"
 tar cf - ./ChainDB -P | pv -s "$(du -sb ./ChainDB | awk '{print $1}')" | gzip > /var/www/html/ChainDB.tar.gz
-# bug somehow the tar process changes ownership of files ?? rechown
+# bug somehow the tar/gzip process changes ownership of files ?? rechown
 chown -R "$username":"$username" ChainDB/ > /dev/null 2>&1
 printf "Create NEW ChainDB archive.............................................. DONE!\n"
 
@@ -294,8 +297,8 @@ To force exit this script press CTRL+C
 
 Requirements:
 1. Fresh Server only!
-2. ChainDB HOST ONLY, need 20 GB+ storage space, 1+ cpu, 512+MB ram
-3. ChainDB HOST + NKN node, need 35+ GB storage space, 1+ cpu, 1+GB ram
+2. ChainDB HOST ONLY, need 25+ GB storage space, 1+ cpu, 512+ MB ram
+3. ChainDB HOST + NKN node, need 40+ GB storage space, 1+ cpu, 1+ GB ram
 ================================================================================
 
 EOF
@@ -343,15 +346,11 @@ rm -f index.html > /dev/null 2>&1
 # NEW websource for the install
 websource="http://$PUBLIC_IP/ChainDB.tar.gz"
 
-printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
-
+# END output
+printf "This is your new ChainDB archive URL use it to deploy your new NKN nodes.\n"
+printf "Copy paste it somewhere safe!\n\n"
 printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "%s" "$normal"
-
-printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
-printf "%s" "$red"
-printf "http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
+printf "URL: http://%s/ChainDB.tar.gz\n\n" "$PUBLIC_IP"
 printf "%s" "$normal"
 
 # Question
@@ -539,7 +538,7 @@ cat << "EOF"
 A modem/router or VPS provided firewall is prohobiting access to the internet!
 
 For home modem, configure the ports correctly.
-For VPS disable the VPS provider firewall and allow all internet through.
+For VPS, disable the VPS provider firewall and allow all internet through.
 
 The system changes were REVERTED, once you fix the firewall settings
 restart the server and just run the same script again
@@ -551,14 +550,41 @@ EOF
 printf "%s" "$normal"
 
 read -s -r -p "Press Enter to continue!"
-exit
+menu
+}
+
+################################### Uninstall######################################
+function uninstall(){
+clear
+# revert all changes
+cat << "EOF"
+================================================================================
+Setup: Uninstall NKN node
+
+To force exit this script press CTRL+C
+================================================================================
+
+EOF
+read -s -r -p "Press Enter to continue!"
+printf "\r\033[K"
+
+# uninstall NKN miner, kill all user processes, remove user and userfolder
+/home/"$username"/nkn-commercial/nkn-commercial uninstall > /dev/null 2>&1
+cd / > /dev/null 2>&1
+pkill -KILL -u "$username" > /dev/null 2>&1
+deluser --remove-home "$username" > /dev/null 2>&1
+
+printf "Uninstall complete!\n\n"
+
+read -s -r -p "Press Enter to continue!"
+menu
 }
 
 ################################## Install #####################################
 
 function install1(){
 clear
-cat << "EOF"
+IFS='' read -r -d '' fire <<"EOF"
            (                 ,&&&.
             )                .,.&&
            (  (              \=__/
@@ -570,52 +596,74 @@ cat << "EOF"
      (_;-// | \ \-'.\    <_,\_\`--'|
      ( `.__ _  ___,')      <_,-'__,'
       `'(_ )_)(_)_)'
-
 ================================================================================
 This will take some time. Please be patient.
 To force exit this script press CTRL+C
 ================================================================================
-
 EOF
+printf "%s\n" "$fire"
+
 # disable firewall for the installation
 ufw --force disable > /dev/null 2>&1
 
 # Create a new SUDO user
 printf "Creating a new Super User account....................................... "
-pass=$(perl -e 'print crypt($ARGV[0], "password")' "$userpassword") > /dev/null 2>&1
-useradd -m -p "$pass" -s /bin/bash "$username" > /dev/null 2>&1
-usermod -a -G sudo "$username" > /dev/null 2>&1
+pass=$(perl -e 'print crypt($ARGV[0], "password")' "$userpassword")
+useradd -m -p "$pass" -s /bin/bash "$username"
+usermod -a -G sudo "$username"
 printf "DONE!\n"
 
 # Install NKN node miner software
 printf "Downloading NKN node software........................................... "
-cd /home/"$username" > /dev/null 2>&1 || exit
-wget --quiet --continue https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip > /dev/null 2>&1
+cd /home/"$username" || exit
+wget --quiet --continue "$nknsoftwareURL"
 printf "DONE!\n"
 
 printf "Installing NKN node software............................................ "
-unzip linux-amd64.zip > /dev/null 2>&1
-rm -f linux-amd64.zip > /dev/null 2>&1
-mv linux-amd64 nkn-commercial > /dev/null 2>&1
+# extract filename and extension from URL
+filename=${nknsoftwareURL##*/}
+unzip "$filename" > /dev/null 2>&1
+rm -f "$filename"
+# remove extension from filename
+filename=${filename%.*}
+mv "$filename" nkn-commercial
 
-chown -R "$username":"$username" /home/"$username" > /dev/null 2>&1
-chmod -R 755 /home/"$username" > /dev/null 2>&1
+chown -R "$username":"$username" /home/"$username"
+chmod -R 755 /home/"$username"
 
 /home/"$username"/nkn-commercial/nkn-commercial -b "$benaddress" -d /home/"$username"/nkn-commercial/ -u "$username" install > /dev/null 2>&1
 printf "DONE!\n"
 
-# Wait for DIR and wallet creation
+# Wait for ChainDB DIR and wallet creation
 DIR="/home/$username/nkn-commercial/services/nkn-node/"
+
+# No ChainDB install
 if [[ $database == "no" ]]; then
-	# script skips DB download and continues
-    install3
+	# script waits for wallet generation and then skips DB download and continues
+	printf "Waiting for NKN node software to start.................................. "
+	
+	timestart=$(date +%s)
+	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
+		if [[ ! -f "$DIR"wallet.json ]]; then
+			# if file doesn't exist wait and repeat check
+			sleep 5
+		else
+			# when wallet.json file is detected
+			printf "DONE!\n"
+			install3
+		fi
+	done
+	# when timer runs out go to the firewall warning
+	firewallwarn
+
+# ChainDB install	
 else
 	printf "Waiting for NKN node software to start.................................. "
 
 	timestart=$(date +%s)
 	while [[ $(($(date +%s) - timestart)) -lt 300 ]]; do # 300sec 5 min
 		if [[ ! -d "$DIR"ChainDB ]] && [[ ! -f "$DIR"wallet.json ]]; then
-			# if folder and file don't exist wait and repeat check
+			# if folder and file don't exist yet wait and repeat check
 			sleep 5
 		else
 			# when file is detected
@@ -683,19 +731,23 @@ printf "========================================================================
 printf "Congratulations, you deployed a NKN node!\n"
 printf "===============================================================================\n\n"
 
-printf "%s" "$blue"
-printf "NKN wallet (beneficiary adddress) where you get paid:\n\n"
+printf "%s" "$red"
+printf "Check the status of your new node on www.nstatus.org\n"
+printf "Use this server IP address: %s\n\n" "$PUBLIC_IP"
 
-printf "%s\n\n" "$benaddress"
+printf "The new NKN server will take some time to sync up, keep checking it\n"
+printf "until the site gives you this error: No ID in this account...\n\n"
+
+printf "Then send 10 NKN (mainnet token) to the address it provides, AKA:\n"
+nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
+printf "%s\n\n" "$nodewallet"
+
+printf "Keep checking on nstatus to see when the server activates.\n\n"
 printf "%s" "$normal"
 
-# Get node wallet address
-nodewallet=$(sed -r 's/^.*Address":"([^"]+)".*/\1/' "$DIR"wallet.json)
-printf "%s" "$red"
-printf "NKN NODE wallet this is the address where you have to send 10 NKN.\n"
-printf "If you don't send 10 NKN to this address, the node won't start mining.\n\n"
-
-printf "%s\n\n" "$nodewallet"
+printf "%s" "$blue"
+printf "NKN wallet (beneficiary adddress) where you will get paid to:\n"
+printf "%s\n\n" "$benaddress"
 printf "%s" "$normal"
 
 printf "From now on use these settings to connect to your server:\n"
@@ -705,9 +757,6 @@ printf "Server IP: %s\n" "$PUBLIC_IP"
 printf "SSH login: ssh %s@%s\n" "$username" "$PUBLIC_IP"
 printf "Server username: %s\n" "$username"
 printf "Server password: %s\n\n" "$userpassword"
-
-printf "The server should be visible on nstatus.org in a few minutes.\n"
-printf "Enter the Server IP provided here!\n\n"
 
 printf "Thanks for using this script!\n\n"
 
@@ -837,7 +886,7 @@ clear
 	done < "$input"
 
 printf "\nRefresh every 2 minutes, press [ENTER] to exit to menu!\n"
-read -s -N 1 -t 120 key
+read -r -s -N 1 -t 120 key
 
 if [[ $key == $'\x0a' ]]; # exit loop if ENTER is pressed
 then
@@ -913,7 +962,7 @@ if [[ ! -f /var/www/html/nodes-example.txt ]]; then
 	cp -rf nWatch-main/* . > /dev/null 2>&1
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
-	rm -f *.png > /dev/null 2>&1
+	find . -type f -name '*.png' -delete
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -935,7 +984,7 @@ else
 	cp -rf nWatch-main/* . > /dev/null 2>&1
 	rm -rf nWatch-main/ > /dev/null 2>&1
 	rm -f main.zip > /dev/null 2>&1
-	rm -f *.png > /dev/null 2>&1
+	find . -type f -name '*.png' -delete
 
 	chown -R www-data:www-data /var/www/html/ > /dev/null 2>&1
 	service apache2 restart > /dev/null 2>&1
@@ -1028,7 +1077,7 @@ until [[ $selection == "0" ]]; do
 clear
 
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 cat << "EOF"
 WORKS ONLY ON A SERVER WITH A NKN NODE INSTALLED! Add your NKN node IP addresses
 to the IP database and check on your node status. It will show the node status.
@@ -1065,7 +1114,7 @@ until [[ $selection = "0" ]]; do
 clear
 
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 cat << "EOF"
 NKN ChainDB creation:
 1) Download ChainDB from NKN.org and host it on THIS server
@@ -1080,6 +1129,8 @@ NKN Node server install
 
 NKN NODE ID / WALLET TRANSFER
 8) Transfer NODE ID / wallet
+
+9) Uninstall NKN node and revert changes
 
 10) Go back to first menu
 0) Exit
@@ -1098,6 +1149,7 @@ case $selection in
 	6 ) installtype="custom" ; database="yes" ; userdata1 ;;
     7 ) database="no" ; websource="none" ; userdata1 ;;
 	8 ) nodeWalletTransfer ;;
+	9 ) uninstall ;;
 	10 ) menu ;;
 	0 ) clear ; exit ;;
 	* ) read -s -r -p "Wrong selection press Enter to continue!" ;;
@@ -1112,16 +1164,18 @@ printf "%s" "$blue"
 cat << "EOF"
 STEP 1: I have no NKN nodes / servers:
 
-YOU NEED TO DO THIS STEP ONLY ONE TIME!
+YOU NEED TO DO THIS STEP ONLY ONCE!
 
-Hosting the ChainDB archive yourself is essential to deploy your nodes
-fast. Get the cheapest server with 1GB+ RAM and 35+ GB of storage
-to store the ChainDB archive and start your first NKN node.
+Hosting the ChainDB archive yourself is essential to deploy your
+future NKN nodes faster. You only need one ChainDB server.
+
+Server requirements: 1+ CPU, 1+ GB RAM, 40+ GB of storage
 
 Free credits for server providers: https://vpstrial.net/vps/
 
-If THIS server already has enough storage space, then you don't
-need to create a new one you can just continue by selecting STEP 1.
+If THIS server already has enough storage space, continue by
+selecting STEP 1. Otherwise exit this script and provision a new
+VPS server.
 
 EOF
 printf "%s" "$normal"
@@ -1129,8 +1183,8 @@ printf "%s" "$magenta"
 cat << "EOF"
 STEP 2: Deploy new nodes:
 
-RUN STEP 2 ONLY ON NEW SERVERS, not on the first one you created!
-Make a new 1core, 1GB RAM, minium 25GB storage ubuntu 20.04+ server
+RUN STEP 2 ONLY ON NEW SERVERS, not on the ChainDB server!!!
+Make a new 1 core, 1GB RAM, minium 30+ GB storage ubuntu 20.04+ server
 and use the custom URL address provided to you in the first part of the
 script to deploy new node servers.
 
@@ -1165,7 +1219,7 @@ menu() {
 until [[ $selection == "0" ]]; do
 clear
 # ASCII south park
-printf "%s\n\n" "$ascii_sp"
+printf "%s\n" "$ascii_sp"
 
 printf "Welcome to no112358 script for deploying NKN node servers! Version: %s\n\n" "$version"
 
@@ -1215,13 +1269,11 @@ If you give all three flags you can install the node directly without
 messing with any menus. Any mistakes with the values will lead to a
 broken node, which you'll have to reinstall. Enjoy :D
 
-nkndeploy.sh -flag 'value'
-
 DO NOT REMOVE SINGLE QUOTES FROM FLAG VALUES!!
 
 EXAMPLE:
 
-nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
+wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnode/main/nkndeploy.sh'; bash nkndeploy.sh -p 'password' -b 'beneficiaryaddress' -w 'chaindbURL'
 
 -p , --password       Set password
 -b , --benaddress     Set beneficiary address where you get paid
@@ -1262,11 +1314,11 @@ fi
 
 # Update && upgrade system
 apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances ufw sed grep pv curl sudo bc -y
+apt-get install unzip glances ufw sed grep pv curl sudo bc vnstat -y
 apt-get autoremove -y
 
 # ASCII for menus
-ascii_sp="$(cat << "EOF"
+IFS='' read -r -d '' ascii_sp <<"EOF"
          _          __________                              __
      _.-(_)._     ."          ".      .--""--.          _.-{__}-._
    .'________'.   | .--------. |    .'        '.      .:-'`____`'-:.
@@ -1282,13 +1334,33 @@ ascii_sp="$(cat << "EOF"
 
 ================================================================================
 EOF
-)"
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.5.0"
+version="1.6.0"
 
-# Flags
+# Detect architecture and select proper NKN-commercial version/URL
+arch=$(uname -m)
+
+# 64bit X86 CPUs
+if [[ $arch == "x86_64" ]]; then
+	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-amd64.zip"
+
+# Raspberry Pi 32bit
+elif [[ $arch == "armv6l" ]]; then
+	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv6.zip"
+
+# Raspberry Pi 64bit
+elif [[ $arch == "armv7l" ]] || [[ $arch == "aarch64" ]] || [[ $arch == "armv8b" ]] || [[ $arch == "armv8l" ]] || [[ $arch == "aarch64_be" ]]; then
+	nknsoftwareURL="https://commercial.nkn.org/downloads/nkn-commercial/linux-armv7.zip"
+
+else
+	# Error if unsupported architecture
+	printf "Architecture %s is not supported.\n" "$arch"
+	exit 1
+fi
+
+# Flags logic
 while [[ $1 != "" ]]; do
 flags="1"
 case "$1" in
@@ -1304,7 +1376,7 @@ case "$1" in
 				username="nkn"
 				database="yes"
 		else
-				echo "No password specified"
+				printf "No password specified\n"
 				exit 1
 		fi
 		shift
@@ -1314,7 +1386,7 @@ case "$1" in
 		if [[ $# -gt 0 ]]; then
 				export benaddress=$1
 		else
-				echo "No beneficiary address specified"
+				printf "No beneficiary address specified\n"
 				exit 1
 		fi
 		shift
@@ -1324,7 +1396,7 @@ case "$1" in
 		if [[ $# -gt 0 ]]; then
 				export websource=$1
 		else
-				echo "No ChainDB URL address specified"
+				printf "No ChainDB URL address specified\n"
 				exit 1
 		fi
 		shift
@@ -1339,7 +1411,7 @@ done
 # Check if flags present
 if [[ $flags == "1" ]]; then
     if [[ $userpassword == "" ]] || [[ $benaddress == "" ]] || [[ $websource == "" ]]; then
-		echo "Provide all three flags: password, benaddress, websource!";
+		printf "Provide all three flags: password, benaddress and ChainDB websource!\n";
         exit 1;
     else
 		# Flag direct to install start up of the script
