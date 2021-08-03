@@ -1337,7 +1337,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0 dev 41"
+version="1.6.0"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
