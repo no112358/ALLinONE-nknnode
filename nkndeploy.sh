@@ -118,15 +118,15 @@ printf "Create ChainDB archive..................................................
 
 printf "Starting NKN node software.............................................. "
 systemctl start nkn-commercial.service > /dev/null 2>&1
-printf "DONE!\n"
+printf "DONE!\n\n"
 
 rm -f /var/www/html/index.html > /dev/null 2>&1
 
-printf "\nYou can now start the script on NEW servers you wanna deploy a node on with:\n\n"
+#printf "\nYou can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "%s" "$normal"
+#printf "%s" "$red"
+#printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
+#printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
 printf "%s" "$red"
@@ -220,13 +220,13 @@ printf "Upload complete.........................................................
 
 printf "Starting NKN node software.............................................. "
 systemctl start nkn-commercial.service > /dev/null 2>&1
-printf "DONE!\n"
+printf "DONE!\n\n"
 
-printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
+#printf "You can now start the script on NEW servers you wanna deploy a node on with:\n\n"
 
-printf "%s" "$red"
-printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
-printf "%s" "$normal"
+#printf "%s" "$red"
+#printf "wget -O nkndeploy.sh 'http://107.152.46.244/nkndeploy.sh'; bash nkndeploy.sh\n\n"
+#printf "%s" "$normal"
 
 printf "Custom URL to the ChainDB archive. You will need this URL, make a copy of it!\n\n"
 printf "%s" "$red"
@@ -282,7 +282,7 @@ printf "DONE!\n\n"
 
 printf "The ChainDB.tar.gz archive was updated.\n\n"
 
-printf "Next time you install a node, it will use the new database.\n\n"
+printf "Next time you install a node, it will use the updated database.\n\n"
 
 read -s -r -p "Press Enter to continue!"
 menu
@@ -1184,7 +1184,7 @@ cat << "EOF"
 STEP 2: Deploy new nodes:
 
 RUN STEP 2 ONLY ON NEW SERVERS, not on the ChainDB server!!!
-Make a new 1 core, 1GB RAM, minium 30+ GB storage ubuntu 20.04+ server
+Make a new 1 core, 1GB RAM, minimum 25+ GB storage ubuntu 20.04+ server
 and use the custom URL address provided to you in the first part of the
 script to deploy new node servers.
 
@@ -1337,7 +1337,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.0"
+version="1.6.1"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
