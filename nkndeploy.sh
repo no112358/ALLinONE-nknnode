@@ -72,6 +72,7 @@ read -s -r -p "Press Enter to continue!"
 
 # "if from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
+	websource="http://$PUBLIC_IP/ChainDB.tar.gz" # set to local ChainDB file
 	installation="local"
 	userdata1
 else
