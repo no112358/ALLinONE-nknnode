@@ -40,6 +40,7 @@ printf "DONE!\n"
 
 # Download the ChainDB archive from nkn.org
 websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
+#websource="http://194.137.17.39/ChainDB.tar.gz" # TEST ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
@@ -72,6 +73,7 @@ read -s -r -p "Press Enter to continue!"
 
 # "if from beginner menu" also install NKN node
 if [[ $mode == "beginner" ]]; then
+	websource="http://$PUBLIC_IP/ChainDB.tar.gz" # set to local ChainDB file
 	installation="local"
 	userdata1
 else
@@ -1337,7 +1339,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.1"
+version="1.6.2"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
