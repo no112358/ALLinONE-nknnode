@@ -39,8 +39,8 @@ ufw --force enable > /dev/null 2>&1
 printf "DONE!\n"
 
 # Download the ChainDB archive from nkn.org
-#websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
-websource="http://94.237.27.39/ChainDB.tar.gz" # TEST ChainDB URL
+websource="https://nkn.org/ChainDB_pruned_latest.tar.gz" # NKN.org ChainDB URL
+#websource="http://194.137.17.39/ChainDB.tar.gz" # TEST ChainDB URL
 cd /var/www/html/ > /dev/null 2>&1 || exit
 
 printf "Downloading ChainDB archive............................................. \n"
