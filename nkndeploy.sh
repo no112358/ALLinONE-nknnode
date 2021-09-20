@@ -1314,10 +1314,19 @@ printf "%s" "$normal"
 exit
 fi
 
-# Update && upgrade system
-apt-get update -y; apt-get upgrade -y
-apt-get install unzip glances ufw sed grep pv curl sudo bc vnstat -y
-apt-get autoremove -y
+# Update, upgrade, install system software
+apt update -y
+apt upgrade -y
+apt install unzip -y
+apt install ufw -y
+apt install sed -y
+apt install grep -y
+apt install pv -y
+apt install curl -y
+apt install sudo -y
+apt install bc -y
+apt install vnstat -y
+apt autoremove -y
 
 # ASCII for menus
 IFS='' read -r -d '' ascii_sp <<"EOF"
@@ -1339,7 +1348,7 @@ EOF
 
 # Public IP and script version
 PUBLIC_IP=$(wget -q http://ipecho.net/plain -O -)
-version="1.6.2"
+version="1.6.3"
 
 # Detect architecture and select proper NKN-commercial version/URL
 arch=$(uname -m)
