@@ -1284,8 +1284,6 @@ wget -O nkndeploy.sh 'https://raw.githubusercontent.com/no112358/ALLinONE-nknnod
 -h , --help           Display help and exit
 
 Donate to me:
-NKN ERC-20: 0x66b328fc3d429031ee98f81ace49b401f53f2afd
-NKN MAINNET: NKNFLRkm3uWZBxohoZAAfBgXPfs3Tp9oY4VQ
 BCH: 1Hn2wqtxj7paiXWqLwfgbuPoLpvvvFVFnW
 EOF
 }
